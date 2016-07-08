@@ -3,14 +3,15 @@
 
 
 #include "Clause.h"
-#include "Rejecting.h"
+#include "Ternary.h"
 
 using namespace std;
 
 class Formula : public Printable<Formula>
 {
 private:
-    Rejecting rejecting = UNDEFINED;
+    mutable Ternary rejecting = UNDEFINED;
+    mutable Ternary is_false = UNDEFINED;
 
     static Formula* FALSE_FORMULA;
 
@@ -35,7 +36,7 @@ public:
 
     static Formula* falseFormula ();
 
-    bool isFalse ();
+    bool isFalse () const;
 
 };
 

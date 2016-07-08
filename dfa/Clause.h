@@ -5,7 +5,7 @@ class Formula;
 
 #include "Box.h"
 #include "Formula.h"
-#include "Rejecting.h"
+#include "Ternary.h"
 
 typedef unsigned long long int uint;
 
@@ -14,7 +14,7 @@ using namespace std;
 class Clause : public Printable<Clause>
 {
 private:
-    Rejecting rejecting = UNDEFINED;
+    Ternary rejecting = UNDEFINED;
 public:
     vector<Box*> boxes;
 

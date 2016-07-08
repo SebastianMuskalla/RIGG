@@ -10,6 +10,6 @@ typedef enum
     NO = 0,
     YES = 1,
     UNDEFINED = 2
-} Rejecting;
+} Ternary;
 
 #endif //RIGG_REJECTING_H

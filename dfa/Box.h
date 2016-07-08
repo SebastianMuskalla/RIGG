@@ -11,7 +11,7 @@ class Clause;
 #include <c++/4.8.3/map>
 #include <c++/4.8.3/algorithm>
 #include "../common/Printable.h"
-#include "Rejecting.h"
+#include "Ternary.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ using namespace std;
 class Box : public Printable<Box>
 {
 private:
-    Rejecting rejecting = UNDEFINED;
+    Ternary rejecting = UNDEFINED;
 
 public:
     NFA* A;

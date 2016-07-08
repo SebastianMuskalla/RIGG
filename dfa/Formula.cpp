@@ -20,6 +20,11 @@ Formula* Formula::composeWith (Formula* G)
 
 string Formula::toString () const
 {
+//    if (isFalse())
+//    {
+//        return "FALSE";
+//    }
+
     string res = "";
     bool first = true;
     for (Clause* c : clauses)
@@ -80,17 +85,22 @@ Formula* Formula::wrap (Box* box)
 {
     Clause* cl = Clause::wrap(box);
     return wrap(cl);
-
 }
 
 Formula* Formula::wrap (Clause* c)
 {
     Formula* res = new Formula();
     res->clauses.push_back(c);
+    return res;
 }
 
 Formula* Formula::formulaAnd (Formula* other)
 {
+    if (isFalse() || other->is_false)
+    {
+        return Formula::falseFormula();
+    }
+
     Formula* res = new Formula();
     res->clauses.insert(res->clauses.end(), this->clauses.begin(), this->clauses.end());
     res->clauses.insert(res->clauses.end(), other->clauses.begin(), other->clauses.end());
@@ -99,6 +109,15 @@ Formula* Formula::formulaAnd (Formula* other)
 
 Formula* Formula::formulaOr (Formula* other)
 {
+    if (isFalse())
+    {
+        return other;
+    }
+    if (other->isFalse())
+    {
+        return this;
+    }
+
     Formula* res = new Formula();
     for (Clause* c1 : clauses)
     {
@@ -131,20 +150,27 @@ Formula* Formula::falseFormula ()
     }
 }
 
-bool Formula::isFalse ()
+bool Formula::isFalse () const
 {
+    if (is_false == YES)
+        return true;
+    if (is_false == NO)
+        return false;
+
     if (clauses.empty())
     {
-        throw new string("HODENKOBOLD!");
+        throw new string("Formula TRUE - Should not occur!");
     }
 
     for (Clause* c : clauses)
     {
         if (c->boxes.empty())
         {
+            is_false = YES;
             return true;
         }
     }
+    is_false = NO;
     return false;
 }
 

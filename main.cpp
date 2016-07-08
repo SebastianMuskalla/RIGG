@@ -1,28 +1,36 @@
 #include <iostream>
+#include <c++/4.8.3/chrono>
+#include <c++/4.8.3/atomic>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/Solver.h"
 
 using namespace std;
 
+/**
+ * Hacky hackfix to avoid optimization breaking time measurement
+ */
+#define milestone lock.store(!lock.load(), memory_order::memory_order_seq_cst)
+
 
 int main ()
 {
+    atomic_bool lock;
 
     Alphabet* Sigma = new Alphabet();
     Letter* a = Sigma->addLetter("a");
     Letter* b = Sigma->addLetter("b");
 
     Alphabet* Nprover = new Alphabet();
-    Letter* X = Nprover->addLetter("X");
+    Letter* Y = Nprover->addLetter("Y");
 
     Alphabet* Nrefuter = new Alphabet();
-    Letter* Y = Nrefuter->addLetter("Y");
+    Letter* X = Nrefuter->addLetter("X");
 
     GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
-    G->addRule(X, {b, Y});
+    G->addRule(X, {a, Y});
     G->addRule(X, {});
-    G->addRule(Y, {a, X});
+    G->addRule(Y, {b, X});
 
     Alphabet* Q = new Alphabet();
     Letter* q0 = Q->addLetter("q0");
@@ -32,6 +40,18 @@ int main ()
     NFA* A = new NFA(Sigma, Q, q0, finals);
     A->addTransition(q0, a, q1);
     A->addTransition(q1, b, q0);
+
+
+//    for (auto pair : G->rules)
+//    {
+//        cout << "key: " << *pair.first << " value: ";
+//        for (Letter* l : pair.second)
+//        {
+//            cout << *l;
+//        }
+//        cout << endl;
+//
+//    }
 
 //
 //    Box* rho_a = A->boxFor(a);
@@ -105,12 +125,28 @@ int main ()
 //    cout << (FALSEFORM->implies(F)) << endl;
 //    cout << (F->implies(FALSEFORM)) << endl;
 
+
+
+    auto start = chrono::high_resolution_clock::now();
+
     Solver* s = new Solver(A, G);
     s->solve();
-    Formula* F = s->formulaFor({a, X, Y, b});
-    cout << *F << endl;
-    cout << F->isRejecting() << endl;
 
+    auto end = chrono::high_resolution_clock::now();
+
+
+    cout << chrono::duration_cast<chrono::nanoseconds>(end - start).count() << endl;
+
+
+    cout << "from X: (expected result: prover wins, not rejecting)" << endl;
+    Formula* solX = s->formulaFor({X});
+    cout << "formula: " << *solX << endl;
+    cout << "rejecting: " << solX->isRejecting() << endl;
+
+    cout << "from Y: (expected result: refuter wins, is rejecting)" << endl;
+    Formula* solY = s->formulaFor({Y});
+    cout << "formula: " << *solY << endl;
+    cout << "rejecting: " << solY->isRejecting() << endl;
 
 //    Our Stuff
 //    1. Create system of equations from Grammar
