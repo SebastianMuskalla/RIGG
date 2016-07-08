@@ -25,7 +25,7 @@ public:
 
     void addRule (Letter* lhs, vector<Letter*> rhs)
     {
-        rules.emplace(lhs, rhs);
+        rules.insert(make_pair(lhs, rhs));
     }
 
     bool isNonterminal (Letter* l) const

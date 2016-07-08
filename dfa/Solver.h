@@ -35,42 +35,13 @@ private:
 
     set<Letter*> todo;
 
-    void populate ()
-    {
-        populateSolutionAndWorklist();
-        populateDependencies();
-    }
+    bool cout_debug = false;
 
-    void populateSolutionAndWorklist ()
-    {
-        for (Letter* l : Nprover->letters)
-        {
-            solution.insert(make_pair(l, Formula::falseFormula()));
-            todo.insert(l);
-        }
-        for (Letter* l : Nprover->letters)
-        {
-            solution.insert(make_pair(l, Formula::falseFormula()));
-            todo.insert(l);
-        }
+    void populate ();
 
-    }
+    void populateSolutionAndWorklist ();
 
-    void populateDependencies ()
-    {
-        for (auto rule : G->rules)
-        {
-            Letter* lhs = rule.first;
-            vector<Letter*> rhs = rule.second;
-            for (Letter* l : rhs)
-            {
-                if (G->isNonterminal(l))
-                {
-                    dependencies.emplace(l, lhs);
-                }
-            }
-        }
-    }
+    void populateDependencies ();
 
     Formula* recomputeValue (Letter* pLetter);
 
