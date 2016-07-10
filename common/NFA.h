@@ -12,7 +12,7 @@ class Box;
 
 using namespace std;
 
-class NFA
+class NFA : public Printable<NFA>
 {
 
 
@@ -26,10 +26,15 @@ public:
 
     Transition* addTransition (Letter* origin, Letter* label, Letter* target);
 
+    void addTransition (Transition* t);
+
+
     Box* boxFor (Letter* a);
 
     Letter* initial_state;
     set<Letter*> final_states;
+
+    virtual string toString () const;
 };
 
 

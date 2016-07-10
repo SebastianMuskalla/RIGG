@@ -62,7 +62,6 @@ void Solver::solve ()
 
     while (!todo.empty())
     {
-
         Letter* l = *todo.begin();
         todo.erase(todo.begin());
 

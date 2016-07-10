@@ -8,14 +8,13 @@
 
 using namespace std;
 
-class GameGrammar
+class GameGrammar : public Printable<GameGrammar>
 {
 public:
     Alphabet* Sigma;
     Alphabet* Nprover;
     Alphabet* Nrefuter;
     multimap<Letter*, vector<Letter*>> rules;
-
 
     GameGrammar (Alphabet* Sigma, Alphabet* Nprover, Alphabet* Nrefuter) :
             Sigma(Sigma),
@@ -32,6 +31,8 @@ public:
     {
         return (l->alphabet == Nprover || l->alphabet == Nrefuter);
     }
+
+    virtual string toString () const;
 };
 
 

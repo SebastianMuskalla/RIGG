@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Transition
+class Transition : public Printable<Transition>
 {
 
 
@@ -20,6 +20,8 @@ public:
     Letter* label;
     Letter* origin;
     Letter* target;
+
+    virtual string toString () const;
 };
 
 
