@@ -4,6 +4,7 @@
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/Solver.h"
+#include "cachat/Determinizer.h"
 
 using namespace std;
 
@@ -162,6 +163,18 @@ int main ()
 //    5. Check whether given word is accepted by saturated AFA
 
 
+    Determinizer* det = new Determinizer(A);
+    NFA* D = det->determinize();
+
+    cout << *A << endl;
+
+    cout << endl;
+
+    cout << *D << endl;
+
+    cout << endl;
+
+    cout << *G << endl;
 
     return 0;
 }

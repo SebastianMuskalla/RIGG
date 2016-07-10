@@ -44,8 +44,6 @@ private:
     void populateDependencies ();
 
     Formula* recomputeValue (Letter* pLetter);
-
-
 };
 
 

@@ -1,12 +1,12 @@
-#include "Alphabet.h"
+#include "Determinizer.h"
 
 using namespace std;
 
-string Alphabet::toString () const
+string Determinizer::setToString (set<Letter*> set)
 {
+    string res = "{";
     bool first = true;
-    string res;
-    for (Letter* l : letters)
+    for (Letter* l : set)
     {
         if (first)
         {
@@ -18,6 +18,7 @@ string Alphabet::toString () const
         }
         res.append(l->toString());
     }
+    res.append("}");
     return res;
 }
 

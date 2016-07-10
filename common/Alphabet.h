@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Alphabet
+class Alphabet : public Printable<Alphabet>
 {
 public:
 
@@ -32,6 +32,8 @@ public:
         letters.push_back(l);
         return l;
     }
+
+    virtual string toString () const;
 
 };
 

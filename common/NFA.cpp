@@ -36,3 +36,45 @@ Box* NFA::boxFor (Letter* a)
     boxes.emplace(a, res);
     return res;
 }
+
+void NFA::addTransition (Transition* t)
+{
+    transitions.insert(t);
+}
+
+string NFA::toString () const
+{
+    string res;
+    res.append("Input alphabet: ");
+    res.append(Sigma->toString());
+    res.append("\nStates: ");
+    res.append(states->toString());
+    res.append("\nInitial state: ");
+    res.append(initial_state->toString());
+    res.append("\nFinal states: ");
+
+    bool first = true;
+    for (Letter* f : final_states)
+    {
+        if (first)
+        {
+            first = false;
+        }
+        else
+        {
+            res.append(",");
+        }
+        res.append(f->toString());
+    }
+
+    res.append("\nTransition relation:");
+    for (Transition* t : transitions)
+    {
+        res.append("\n").append(t->toString());
+    }
+    return res;
+}
+
+
+
+
