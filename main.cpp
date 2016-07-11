@@ -1,6 +1,5 @@
 #include <iostream>
 #include <c++/4.8.3/chrono>
-#include <c++/4.8.3/atomic>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/Solver.h"
@@ -10,16 +9,100 @@
 
 using namespace std;
 
-/**
- * Hacky hackfix to avoid optimization breaking time measurement
- */
-#define milestone lock.store(!lock.load(), memory_order::memory_order_seq_cst)
-
-
-int main ()
+void box_composition_test ()
 {
-    atomic_bool lock;
+    Box* ba = Box::test("a");
+    Box* bb = Box::test("b");
+    Box* bc = Box::test("c");
+    Box* bd = Box::test("d");
+    Box* be = Box::test("e");
+    Box* bf = Box::test("f");
+    Box* bg = Box::test("g");
+    Box* bh = Box::test("h");
 
+    Clause* c1 = new Clause();
+    c1->boxes.push_back(ba);
+    c1->boxes.push_back(bb);
+
+    Clause* c2 = new Clause();
+    c2->boxes.push_back(bc);
+    c2->boxes.push_back(bd);
+
+    Clause* c3 = new Clause();
+    c3->boxes.push_back(be);
+    c3->boxes.push_back(bf);
+
+    Clause* c4 = new Clause();
+    c4->boxes.push_back(bg);
+    c4->boxes.push_back(bh);
+
+    Formula* F = new Formula();
+    F->clauses.push_back(c1);
+    F->clauses.push_back(c2);
+
+    Formula* G = new Formula();
+    G->clauses.push_back(c3);
+    G->clauses.push_back(c4);
+
+    cout << *c1 << endl;
+    cout << *c2 << endl;
+    cout << *c3 << endl;
+    cout << *c4 << endl;
+
+    cout << *F << endl;
+    cout << *G << endl;
+
+    Formula* FG = (F->composeWith(G));
+    cout << *FG << endl;
+
+    cout << F->implies(G) << endl;
+    cout << FG->implies(F) << endl;
+    cout << F->implies(FG) << endl;
+
+    Formula* TRUEFORM = new Formula();
+    Formula* FALSEFORM = new Formula();
+    FALSEFORM->clauses.push_back(new Clause());
+
+    cout << (TRUEFORM->implies(F)) << endl;
+    cout << (F->implies(TRUEFORM)) << endl;
+    cout << (FALSEFORM->implies(F)) << endl;
+    cout << (F->implies(FALSEFORM)) << endl;
+};
+
+pair<bool, bool> ourSolution (NFA* A, GameGrammar* G, Letter* X, Letter* Y)
+{
+    Solver* s = new Solver(A, G);
+    s->solve();
+    Formula* solX = s->formulaFor({X});
+    Formula* solY = s->formulaFor({Y});
+    bool resX = solX->isRejecting();
+    bool resY = solY->isRejecting();
+    return make_pair(resX, resY);
+}
+
+pair<bool, bool> cachat (NFA* A, GameGrammar* G, Letter* X, Letter* Y)
+{
+    Determinizer* det = new Determinizer(A);
+    NFA* D = det->determinize();
+
+    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
+    tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
+    GamePDS* P = get<0>(restuple);
+    PAFA* AFA = get<1>(restuple);
+    Letter* init_refuter = get<2>(restuple);
+    Letter* init_prover = get<3>(restuple);
+    Cachat* cachat = new Cachat(P, AFA);
+    cachat->saturate();
+
+    vector<Letter*> stack_X = cachatifier->wordToStackWord({X});
+    vector<Letter*> stack_Y = cachatifier->wordToStackWord({Y});
+    bool resX = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_X);
+    bool resY = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y);
+    return make_pair(resX, resY);
+}
+
+void time_measuring ()
+{
     Alphabet* Sigma = new Alphabet();
     Letter* a = Sigma->addLetter("a");
     Letter* b = Sigma->addLetter("b");
@@ -45,117 +128,84 @@ int main ()
     A->addTransition(q1, b, q0);
 
 
-//    for (auto pair : G->rules)
-//    {
-//        cout << "key: " << *pair.first << " value: ";
-//        for (Letter* l : pair.second)
-//        {
-//            cout << *l;
-//        }
-//        cout << endl;
-//
-//    }
+    auto start = chrono::steady_clock::now();
+    auto x = ourSolution(A, G, X, Y);
 
-//
-//    Box* rho_a = A->boxFor(a);
-//    Box* rho_b = A->boxFor(b);
-//    Box* rho_ab = rho_a->composeWith(rho_b);
-//
-//
-//    cout << *rho_a << endl;
-//    cout << *rho_b << endl;
-//    cout << *rho_ab << endl;
-//
-//    Box* rho_abab = rho_ab->composeWith(rho_ab);
-//
-//    cout << (*rho_abab == *rho_ab) << endl;
-//
-//
-//    Box* ba = Box::test("a");
-//    Box* bb = Box::test("b");
-//    Box* bc = Box::test("c");
-//    Box* bd = Box::test("d");
-//    Box* be = Box::test("e");
-//    Box* bf = Box::test("f");
-//    Box* bg = Box::test("g");
-//    Box* bh = Box::test("h");
-//
-//    Clause* c1 = new Clause();
-//    c1->boxes.push_back(ba);
-//    c1->boxes.push_back(bb);
-//
-//    Clause* c2 = new Clause();
-//    c2->boxes.push_back(bc);
-//    c2->boxes.push_back(bd);
-//
-//    Clause* c3 = new Clause();
-//    c3->boxes.push_back(be);
-//    c3->boxes.push_back(bf);
-//
-//    Clause* c4 = new Clause();
-//    c4->boxes.push_back(bg);
-//    c4->boxes.push_back(bh);
-//
-//    Formula* F = new Formula();
-//    F->clauses.push_back(c1);
-//    F->clauses.push_back(c2);
-//
-//    Formula* G = new Formula();
-//    G->clauses.push_back(c3);
-//    G->clauses.push_back(c4);
-//
-//    cout << *c1 << endl;
-//    cout << *c2 << endl;
-//    cout << *c3 << endl;
-//    cout << *c4 << endl;
-//
-//    cout << *F << endl;
-//    cout << *G << endl;
-//
-//    Formula* FG = (F->composeWith(G));
-//    cout << *FG << endl;
-//
-//    cout << F->implies(G) << endl;
-//    cout << FG->implies(F) << endl;
-//    cout << F->implies(FG) << endl;
-//
-//    Formula* TRUEFORM = new Formula();
-//    Formula* FALSEFORM = new Formula();
-//    FALSEFORM->clauses.push_back(new Clause());
-//
-//    cout << (TRUEFORM->implies(F)) << endl;
-//    cout << (F->implies(TRUEFORM)) << endl;
-//    cout << (FALSEFORM->implies(F)) << endl;
-//    cout << (F->implies(FALSEFORM)) << endl;
+    auto middle = chrono::steady_clock::now();
+    auto y = cachat(A, G, X, Y);
+
+    auto end = chrono::steady_clock::now();
+
+    auto our = chrono::duration_cast<chrono::microseconds>(middle - start).count();
+    auto cach = chrono::duration_cast<chrono::microseconds>(end - middle).count();
+
+    cout << "Duration of our proc.: " << our << "ns : " << x.first << ", " << x.second << endl;
+    cout << "Duration of our proc.: " << cach << "ns : " << y.first << ", " << y.second << endl;
+
+}
 
 
+void print_everything ()
+{
 
-    auto start = chrono::high_resolution_clock::now();
+    Alphabet* Sigma = new Alphabet();
+    Letter* a = Sigma->addLetter("a");
+    Letter* b = Sigma->addLetter("b");
 
-    Solver* s = new Solver(A, G);
-    s->solve();
+    Alphabet* Nprover = new Alphabet();
+    Letter* Y = Nprover->addLetter("Y");
 
-    auto end = chrono::high_resolution_clock::now();
+    Alphabet* Nrefuter = new Alphabet();
+    Letter* X = Nrefuter->addLetter("X");
 
+    GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
+    G->addRule(X, {a, Y});
+    G->addRule(X, {});
+    G->addRule(Y, {b, X});
 
-    cout << chrono::duration_cast<chrono::nanoseconds>(end - start).count() << endl;
+    Alphabet* Q = new Alphabet();
+    Letter* q0 = Q->addLetter("q0");
+    Letter* q1 = Q->addLetter("q1");
+    set<Letter*> finals = {q0};
 
-//
-    cout << "from X: (expected result: prover wins, not rejecting)" << endl;
-    Formula* solX = s->formulaFor({X});
-//    cout << "formula: " << *solX << endl;
-    cout << "rejecting: " << solX->isRejecting() << endl;
-
-    cout << "from Y: (expected result: refuter wins, is rejecting)" << endl;
-    Formula* solY = s->formulaFor({Y});
-//    cout << "formula: " << *solY << endl;
-    cout << "rejecting: " << solY->isRejecting() << endl;
+    NFA* A = new NFA(Sigma, Q, q0, finals);
+    A->addTransition(q0, a, q1);
+    A->addTransition(q1, b, q0);
 
 //    Our Stuff
 //    1. Create system of equations from Grammar
 //    2. Solve system of equations over the CNF-formula domain using Kleene-Worklist-Procedure
 //    3. Compute formula for given word
 //    4. Check whether it is rejecting
+
+
+    Solver* s = new Solver(A, G);
+    s->solve();
+
+    cout << "GRAMMAR:" << endl;
+    cout << *G << endl;
+
+    cout << endl;
+
+    cout << "AUTOMATON:" << endl;
+    cout << *A << endl;
+
+    cout << endl << endl;
+
+    cout << "OUR SOLUTION:" << endl;
+
+    cout << "For X: (expected result: prover wins ~ not rejecting)" << endl;
+    Formula* solX = s->formulaFor({X});
+    cout << "Formula: " << *solX << endl;
+    cout << "Rejecting: " << solX->isRejecting() << endl;
+
+    cout << "For Y: (expected result: refuter wins ~ is rejecting)" << endl;
+    Formula* solY = s->formulaFor({Y});
+    cout << "Formula: " << *solY << endl;
+    cout << "Rejecting: " << solY->isRejecting() << endl;
+
+
+    cout << endl << endl;
 
 //    Cachat
 //    1. Upfront determinization of the automaton
@@ -164,19 +214,17 @@ int main ()
 //    4. Saturate AFA
 //    5. Check whether given word is accepted by saturated AFA
 
-
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
 
-    cout << *A << endl;
 
-    cout << endl;
+    cout << "CACHAT:" << endl;
+
+    cout << "DFA:" << endl;
 
     cout << *D << endl;
 
     cout << endl;
-
-    cout << *G << endl;
 
 
     GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
@@ -186,41 +234,45 @@ int main ()
     Letter* init_refuter = get<2>(restuple);
     Letter* init_prover = get<3>(restuple);
 
-    cout << endl;
+    cout << "PUSHDOWN SYSTEM:" << endl;
 
     cout << *P << endl;
 
     cout << endl;
 
+    cout << "INITIAL AFA:" << endl;
+
     cout << *AFA << endl;
-
-    cout << "init refuter: " << *init_refuter << endl;
-
-    cout << "init prover: " << *init_prover << endl;
 
     cout << endl;
 
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
 
-    cout << endl;
+    cout << "SATURATED AFA:" << endl;
 
     cout << *AFA << endl;
 
     cout << endl;
 
-
-    cout << "checking X (expect: player0 does not win)" << endl;
+    cout << "For X (expected result: player0 (= refuter) does not win)" << endl;
 
     vector<Letter*> stack_X = cachatifier->wordToStackWord({X});
 
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_X) << endl;
 
-    cout << "checking Y (expect: player0 wins)" << endl;
+    cout << "For Y (expected result: player1 (= refuter) does win)" << endl;
 
     vector<Letter*> stack_Y = cachatifier->wordToStackWord({Y});
 
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
+}
+
+int main ()
+{
+    //print_everything();
+
+    time_measuring();
 
     return 0;
 }

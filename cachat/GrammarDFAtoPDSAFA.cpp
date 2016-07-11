@@ -45,12 +45,12 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
 
     for (Letter* q : player0_states->letters)
     {
-        Letter* q_AFA = res_afa->control_states->addLetter(q->toString().append("^a"));
+        Letter* q_AFA = res_afa->control_states->addLetter(q->toString());
         res_afa->pds_state_to_afa_state.emplace(q, q_AFA);
     }
     for (Letter* q : player1_states->letters)
     {
-        Letter* q_AFA = res_afa->control_states->addLetter(q->toString().append("^a"));
+        Letter* q_AFA = res_afa->control_states->addLetter(q->toString());
         res_afa->pds_state_to_afa_state.emplace(q, q_AFA);
     }
 
@@ -58,8 +58,8 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     {
         if (DFA->final_states.find(q) == DFA->final_states.end())
         {
-            Letter* q_prover = prover_states.find(q)->second;
-            Letter* q_refuter = refuter_states.find(q)->second;
+            Letter* q_prover = prover_states[q];
+            Letter* q_refuter = refuter_states[q];
             Letter* q_prover_afa = res_afa->pds_state_to_afa_state.find(q_prover)->second;
             Letter* q_refuter_afa = res_afa->pds_state_to_afa_state.find(q_refuter)->second;
             res_afa->final_states.insert(q_prover_afa);
@@ -88,11 +88,11 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     // transitions that process terminals
     for (Transition* t : DFA->transitions)
     {
-        Letter* source_refuter = refuter_states.find(t->origin)->second;
-        Letter* source_prover = prover_states.find(t->origin)->second;
-        Letter* target_refuter = refuter_states.find(t->target)->second;
-        Letter* target_prover = prover_states.find(t->target)->second;
-        Letter* x = stack_terminals.find(t->label)->second;
+        Letter* source_refuter = refuter_states[t->origin];
+        Letter* source_prover = prover_states[t->origin];
+        Letter* target_refuter = refuter_states[t->target];
+        Letter* target_prover = prover_states[t->target];
+        Letter* x = stack_terminals[t->label];
 
         PDSTransition* p1 = new PDSTransition(source_refuter, x, {}, target_refuter);
         PDSTransition* p2 = new PDSTransition(source_prover, x, {}, target_prover);
@@ -117,17 +117,17 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
             {
                 if (l->alphabet == Sigma)
                 {
-                    Letter* x = stack_terminals.find(l)->second;
+                    Letter* x = stack_terminals[l];
                     stack_word.push_back(x);
                 }
                 if (l->alphabet == Nprover)
                 {
-                    Letter* x = stack_prover_nonterminals.find(l)->second;
+                    Letter* x = stack_prover_nonterminals[l];
                     stack_word.push_back(x);
                 }
                 if (l->alphabet == Nrefuter)
                 {
-                    Letter* x = stack_refuter_nonterminals.find(l)->second;
+                    Letter* x = stack_refuter_nonterminals[l];
                     stack_word.push_back(x);
                 }
             }
@@ -144,7 +144,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     for (Letter* Y : Nprover->letters)
     {
 
-        Letter* stack_Y = stack_prover_nonterminals.find(Y)->second;
+        Letter* stack_Y = stack_prover_nonterminals[Y];
 
         auto itrpair = G->rules.equal_range(Y);
 
@@ -156,17 +156,17 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
             {
                 if (l->alphabet == Sigma)
                 {
-                    Letter* x = stack_terminals.find(l)->second;
+                    Letter* x = stack_terminals[l];
                     stack_word.push_back(x);
                 }
                 if (l->alphabet == Nprover)
                 {
-                    Letter* x = stack_prover_nonterminals.find(l)->second;
+                    Letter* x = stack_prover_nonterminals[l];
                     stack_word.push_back(x);
                 }
                 if (l->alphabet == Nrefuter)
                 {
-                    Letter* x = stack_refuter_nonterminals.find(l)->second;
+                    Letter* x = stack_refuter_nonterminals[l];
                     stack_word.push_back(x);
                 }
             }
@@ -179,8 +179,8 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
         }
     }
 
-    Letter* init_refuter = refuter_states.find(DFA->initial_state)->second;
-    Letter* init_prover = prover_states.find(DFA->initial_state)->second;
+    Letter* init_refuter = refuter_states[DFA->initial_state];
+    Letter* init_prover = prover_states[DFA->initial_state];
 
     return make_tuple(res_pds, res_afa, init_refuter, init_prover);
 
