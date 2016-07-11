@@ -17,6 +17,13 @@ public:
     Letter* target_state;
 
 
+    PDSTransition (Letter* source_state, Letter* read, const vector<Letter*> &write, Letter* target_state) :
+            source_state(source_state),
+            read(read),
+            write(write),
+            target_state(target_state)
+    { }
+
     virtual string toString () const;
 };
 

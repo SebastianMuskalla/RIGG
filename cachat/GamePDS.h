@@ -14,11 +14,17 @@ public:
 
     virtual string toString () const;
 
-
+    Alphabet* player0_states;
     Alphabet* player1_states;
     Alphabet* stack_alphabet;
-    Alphabet* player2_states;
     set<PDSTransition*> transitions;
+
+    GamePDS () :
+            player0_states(),
+            player1_states(),
+            stack_alphabet(),
+            transitions()
+    { }
 };
 
 

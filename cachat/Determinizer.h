@@ -28,7 +28,12 @@ public:
             A(A),
             Q(A->states),
             Sigma(A->Sigma),
-            nfa_trans(A->transitions)
+            nfa_trans(A->transitions),
+            set_to_state(),
+            todo(),
+            done(),
+            dfa_trans(),
+            dfa_final_states()
     {
         PQ = new Alphabet();
         set<Letter*> init_set;

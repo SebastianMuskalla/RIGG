@@ -49,7 +49,7 @@ public:
 
     bool isRejecting ();
 
-    bool operator== (const Box &other)
+    bool operator== (const Box &other) const
     {
 //        if (A != other.A || Q != other.Q )
 //            return false;

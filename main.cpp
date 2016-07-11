@@ -5,6 +5,8 @@
 #include "common/NFA.h"
 #include "dfa/Solver.h"
 #include "cachat/Determinizer.h"
+#include "cachat/GrammarDFAtoPDSAFA.h"
+#include "cachat/Cachat.h"
 
 using namespace std;
 
@@ -138,15 +140,15 @@ int main ()
 
     cout << chrono::duration_cast<chrono::nanoseconds>(end - start).count() << endl;
 
-
+//
     cout << "from X: (expected result: prover wins, not rejecting)" << endl;
     Formula* solX = s->formulaFor({X});
-    cout << "formula: " << *solX << endl;
+//    cout << "formula: " << *solX << endl;
     cout << "rejecting: " << solX->isRejecting() << endl;
 
     cout << "from Y: (expected result: refuter wins, is rejecting)" << endl;
     Formula* solY = s->formulaFor({Y});
-    cout << "formula: " << *solY << endl;
+//    cout << "formula: " << *solY << endl;
     cout << "rejecting: " << solY->isRejecting() << endl;
 
 //    Our Stuff
@@ -175,6 +177,50 @@ int main ()
     cout << endl;
 
     cout << *G << endl;
+
+
+    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
+    tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
+    GamePDS* P = get<0>(restuple);
+    PAFA* AFA = get<1>(restuple);
+    Letter* init_refuter = get<2>(restuple);
+    Letter* init_prover = get<3>(restuple);
+
+    cout << endl;
+
+    cout << *P << endl;
+
+    cout << endl;
+
+    cout << *AFA << endl;
+
+    cout << "init refuter: " << *init_refuter << endl;
+
+    cout << "init prover: " << *init_prover << endl;
+
+    cout << endl;
+
+    Cachat* cachat = new Cachat(P, AFA);
+    cachat->saturate();
+
+    cout << endl;
+
+    cout << *AFA << endl;
+
+    cout << endl;
+
+
+    cout << "checking X (expect: player0 does not win)" << endl;
+
+    vector<Letter*> stack_X = cachatifier->wordToStackWord({X});
+
+    cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_X) << endl;
+
+    cout << "checking Y (expect: player0 wins)" << endl;
+
+    vector<Letter*> stack_Y = cachatifier->wordToStackWord({Y});
+
+    cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
 
     return 0;
 }

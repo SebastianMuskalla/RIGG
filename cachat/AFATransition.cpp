@@ -19,5 +19,6 @@ string AFATransition::toString () const
         }
         res.append(t->toString());
     }
+    return res;
 }
 
