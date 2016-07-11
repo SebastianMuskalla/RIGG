@@ -21,14 +21,7 @@ public:
     set<AFATransition*> transitions;
 
 
-    PAFA (Alphabet* Gamma, GamePDS* P) :
-            Gamma(Gamma),
-            P(P),
-            control_states(),
-            pds_state_to_afa_state(),
-            final_states(),
-            transitions()
-    { }
+    PAFA (Alphabet* Gamma, GamePDS* P);
 
     set<set<Letter*>> reachableFromControlState (Letter* control_state, vector<Letter*> word);
 

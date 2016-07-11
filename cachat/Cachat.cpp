@@ -3,11 +3,9 @@
 void Cachat::saturate ()
 {
     bool done = false;
-    int itr = 0;
 
     while (!done)
     {
-        itr++;
         done = true;
 
         // player 0 states (refuter)
@@ -42,25 +40,11 @@ void Cachat::saturate ()
         } // for p : player0
 
 
-        cout << "iteration " << itr << endl;
-        cout << *A << endl;
-
         // player 1 states (prover)
         for (Letter* p : P->player1_states->letters)
         {
             for (Letter* a : P->stack_alphabet->letters)
             {
-                bool important = false;
-                if (p->name == "{}_p" && a->name == "X")
-                {
-                    important = true;
-                }
-
-                if (important)
-                {
-                    cout << "state: " << *p << ", Letter: " << *a << endl;
-                }
-
 
                 // collect (q_i, v_i) states such that (p,a) -> (q_i, v_i) in the PDS
                 set<pair<Letter*, vector<Letter*>>> all_qvi;
@@ -77,21 +61,6 @@ void Cachat::saturate ()
 
                     }
                 }
-
-                if (important)
-                {
-                    for (auto qvi : all_qvi)
-                    {
-                        cout << "q: " << *qvi.first << ", v: ";
-                        for (auto itr : qvi.second)
-                        {
-                            cout << *itr;
-                        }
-                        cout << endl;
-                    }
-
-                }
-
 
 
 //                    // compute for each i all possible S such that q_i - v_i -> S in the AFA
@@ -117,15 +86,6 @@ void Cachat::saturate ()
 
                     for (set<Letter*> S_i : possible_S_i)
                     {
-                        if (important)
-                        {
-                            cout << "    current S_i: ";
-                            for (Letter* s : S_i)
-                            {
-                                cout << *s;
-                            }
-                            cout << endl;
-                        }
 
                         for (set<Letter*> old_S : unions)
                         {
@@ -140,23 +100,6 @@ void Cachat::saturate ()
                     unions = unions_new;
                 }
 
-                if (important)
-                {
-                    for (set<Letter*> S : unions)
-                    {
-                        cout << "    possible S: ";
-                        for (Letter* q : S)
-                        {
-                            cout << *q;
-                        }
-                        cout << endl;
-
-
-                    }
-
-                }
-
-
                 for (set<Letter*> S : unions)
                 {
 
@@ -168,9 +111,6 @@ void Cachat::saturate ()
                 }
             }
         } // for p : player1
-
-        cout << "iteration " << itr << ", player1 " << endl;
-        cout << *A << endl;
 
     } // while !done
 }

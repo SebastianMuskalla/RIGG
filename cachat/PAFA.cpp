@@ -1,28 +1,11 @@
 #include "PAFA.h"
 
 using namespace std;
-//
-//bool PAFA::acceptsFromPState (Letter* p_state, vector<Letter*> word)
-//{
-//    auto control_state_itr = pds_state_to_afa_state.find(p_state);
-//    if (control_state_itr == pds_state_to_afa_state.end())
-//    {
-//        throw new string("invalid state!?");
-//    }
-//    Letter* control_state = control_state_itr->second;
-//    return acceptsFromControlState(control_state, word);
-//}
+
 
 bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
 {
     set<Letter*> S = final_states;
-
-    cout << "initial S: ";
-    for (Letter* l : S)
-    {
-        cout << *l;
-    }
-    cout << endl;
 
     // backwards search
     for (auto ritr = word.rbegin(); ritr != word.rend(); ++ritr)
@@ -32,36 +15,21 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
             return false;
         }
 
-        cout << " current S: ";
-        for (Letter* l : S)
-        {
-            cout << *l;
-        }
-        cout << endl;
-
-        cout << "Letter: " << **ritr << endl;
 
         set<Letter*> new_S;
         for (AFATransition* t : transitions)
         {
             if (t->label == *ritr)
             {
-                cout << "applicable transition " << *t << endl;
 
                 // check that all target states are contained in the old S
                 for (Letter* x : t->targets)
                 {
-                    cout << "checking containment of " << *x << " in S" << endl;
-
-
                     if (S.find(x) == S.end())
                     {
-                        cout << "not contained" << endl;
                         goto _continue_label;
                     }
                 }
-
-                cout << "was contained, insert!" << endl;
 
                 // ... if yes, insert the source state into the new S
                 new_S.insert(t->origin);
@@ -72,38 +40,14 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
 
         S = new_S;
 
-        cout << "new S: ";
-        for (Letter* l : S)
-        {
-            cout << *l;
-        }
-        cout << endl;
     }
 
     return (S.find(control_state) != S.end());
 }
 
-//set<set<Letter*>> PAFA::reachableFromPState (Letter* p_state, vector<Letter*> word)
-//{
-//    auto control_state_itr = pds_state_to_afa_state.find(p_state);
-//    if (control_state_itr == pds_state_to_afa_state.end())
-//    {
-//        throw new string("invalid state!?");
-//    }
-//    Letter* control_state = control_state_itr->second;
-//    return reachableFromControlState(control_state, word);
-//}
-
 set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector<Letter*> word)
 {
 
-    bool important = false;
-
-    if (!word.empty() && control_state->name == "{}_r" && word[0]->name == "X")
-    {
-        important = true;
-        cout << "        important!" << endl;
-    }
 
     // disjunction of sets of states, each inner set representing a conjunction
     set<set<Letter*>> current;
@@ -115,10 +59,6 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
 
     for (Letter* a : word)
     {
-        if (important)
-        {
-            cout << "        Handling letter " << *a << endl;
-        }
 
         next.clear();
 
@@ -134,17 +74,10 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
                 // iterate over all successors
                 for (AFATransition* t : transitions)
                 {
-                    if (important)
-                    {
-                        cout << "        checking transition " << *t << endl;
-                    }
+
 
                     if (t->label == a && t->origin == state)
                     {
-                        if (important)
-                        {
-                            cout << "        transition " << *t << endl;
-                        }
 
                         for (set<Letter*>* set_pointer : tmp)
                         {
@@ -177,8 +110,6 @@ string PAFA::toString () const
     res.append(Gamma->toString());
     res.append("\nStates: ");
     res.append(control_states->toString());
-//    res.append("\nInitial state: ");
-//    res.append(initial_state->toString());
     res.append("\nFinal states: ");
 
     bool first = true;
@@ -233,8 +164,11 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
 }
 
 
-
-
-
-
-
+PAFA::PAFA (Alphabet* Gamma, GamePDS* P) :
+        Gamma(Gamma),
+        P(P),
+        control_states(),
+        pds_state_to_afa_state(),
+        final_states(),
+        transitions()
+{ }
