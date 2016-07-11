@@ -69,15 +69,18 @@ void box_composition_test ()
     cout << (F->implies(FALSEFORM)) << endl;
 };
 
-bool dfa (NFA* A, GameGrammar* G, vector<Letter*> word)
+pair<bool, bool> ourSolution (NFA* A, GameGrammar* G, Letter* X, Letter* Y)
 {
     Solver* s = new Solver(A, G);
     s->solve();
-    Formula* sol = s->formulaFor(word);
-    return sol->isRejecting();
+    Formula* solX = s->formulaFor({X});
+    Formula* solY = s->formulaFor({Y});
+    bool resX = solX->isRejecting();
+    bool resY = solY->isRejecting();
+    return make_pair(resX, resY);
 }
 
-bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
+pair<bool, bool> cachat (NFA* A, GameGrammar* G, Letter* X, Letter* Y)
 {
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
@@ -91,11 +94,14 @@ bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
 
-    vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
-    return AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
+    vector<Letter*> stack_X = cachatifier->wordToStackWord({X});
+    vector<Letter*> stack_Y = cachatifier->wordToStackWord({Y});
+    bool resX = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_X);
+    bool resY = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y);
+    return make_pair(resX, resY);
 }
 
-tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
+void time_measuring ()
 {
     Alphabet* Sigma = new Alphabet();
     Letter* a = Sigma->addLetter("a");
@@ -121,72 +127,20 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
     A->addTransition(q0, a, q1);
     A->addTransition(q1, b, q0);
 
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
-};
-
-tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
-{
-    Alphabet* Sigma = new Alphabet();
-    Letter* a = Sigma->addLetter("a");
-    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-
-    Alphabet* Nrefuter = new Alphabet();
-    Letter* X = Nrefuter->addLetter("X");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
-    G->addRule(X, {a, Y});
-    G->addRule(X, {b, Y});
-    G->addRule(Y, {a, X});
-    G->addRule(Y, {b, X});
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    Letter* qf = Q->addLetter("qf");
-    Letter* qa1 = Q->addLetter("qa1");
-    Letter* qa2 = Q->addLetter("qa2");
-    Letter* qb1 = Q->addLetter("qb1");
-    Letter* qb2 = Q->addLetter("qb2");
-    set<Letter*> finals = {qf};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-    A->addTransition(q0, a, qa1);
-    A->addTransition(qa1, a, qa2);
-    A->addTransition(qa2, a, qf);
-    A->addTransition(q0, b, qb1);
-    A->addTransition(qb1, b, qb2);
-    A->addTransition(qb2, b, qf);
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
-};
-
-pair<uint, uint> time_measuring (tuple<NFA*, GameGrammar*, vector<Letter*>> t)
-{
-    NFA* A = get<0>(t);
-    GameGrammar* G = get<1>(t);
-    vector<Letter*> word = get<2>(t);
 
     auto start = chrono::steady_clock::now();
-
-    auto x = dfa(A, G, word);
+    auto x = ourSolution(A, G, X, Y);
 
     auto middle = chrono::steady_clock::now();
-
-    auto y = cachat(A, G, word);
+    auto y = cachat(A, G, X, Y);
 
     auto end = chrono::steady_clock::now();
 
-    if (x != y)
-    {
-        throw new string("results differ!");
-    }
     auto our = chrono::duration_cast<chrono::microseconds>(middle - start).count();
     auto cach = chrono::duration_cast<chrono::microseconds>(end - middle).count();
-    return make_pair(our, cach);
-//
-//    cout << "Duration of our proc.: " << our << "ns : " << x.first << ", " << x.second << endl;
-//    cout << "Duration of our proc.: " << cach << "ns : " << y.first << ", " << y.second << endl;
+
+    cout << "Duration of our proc.: " << our << "ns : " << x.first << ", " << x.second << endl;
+    cout << "Duration of our proc.: " << cach << "ns : " << y.first << ", " << y.second << endl;
 
 }
 
@@ -318,10 +272,7 @@ int main ()
 {
     //print_everything();
 
-    auto t = example2();
-    auto pair = time_measuring(t);
+    time_measuring();
 
-    cout << "dfa time:    " << pair.first << endl;
-    cout << "cachat time: " << pair.second << endl;
     return 0;
 }
