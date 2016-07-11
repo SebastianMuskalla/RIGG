@@ -6,13 +6,13 @@
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Cachat.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/AFATransition.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/cachat/Cachat.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cachat/GrammarDFAtoPDSAFA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PAFA.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/cachat/GrammarNFAtoPDSAFA.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PDSTransition.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cachat/GrammarDFAtoPDSAFA.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PDSTransition.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/AFATransition.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/cachat/GrammarNFAtoPDSAFA.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cachat/Cachat.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/GamePDS.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PAFA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.h" isTestSource="false" />

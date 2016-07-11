@@ -10,7 +10,7 @@ string GamePDS::toString () const
     res.append("\nStates of Player I: ");
     res.append(player1_states->toString());
     res.append("\nStates of Player II: ");
-    res.append(player2_states->toString());
+    res.append(player0_states->toString());
     res.append("\nTransition relation:");
     for (PDSTransition* t : transitions)
     {

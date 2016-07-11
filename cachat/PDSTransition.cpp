@@ -10,5 +10,6 @@ string PDSTransition::toString () const
         res.append(w->toString());
     }
     res.append(" -> ").append(target_state->toString());
+    return res;
 }
 

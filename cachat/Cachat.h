@@ -22,10 +22,11 @@ public:
     { }
 
 
-    uint increment (uint* func, uint k, uint g,
-                    uint start);
-
     void saturate ();
 
+    Letter* convertToAFAState (Letter* p);
+
+    set<Letter*> convertToAFAStates (set<Letter*> S);
+};
 
 #endif //RIGG_CACHAT_H
