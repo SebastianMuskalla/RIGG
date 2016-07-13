@@ -35,7 +35,7 @@ private:
 
     set<Letter*> todo;
 
-    bool cout_debug = true;
+    bool cout_debug = false;
 
     void populate ();
 

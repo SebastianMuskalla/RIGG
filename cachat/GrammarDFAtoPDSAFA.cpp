@@ -54,14 +54,16 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
         res_afa->pds_state_to_afa_state.emplace(q, q_AFA);
     }
 
+
     for (Letter* q : DFA->states->letters)
     {
         if (DFA->final_states.find(q) == DFA->final_states.end())
         {
             Letter* q_prover = prover_states[q];
             Letter* q_refuter = refuter_states[q];
-            Letter* q_prover_afa = res_afa->pds_state_to_afa_state.find(q_prover)->second;
-            Letter* q_refuter_afa = res_afa->pds_state_to_afa_state.find(q_refuter)->second;
+            Letter* q_prover_afa = res_afa->pds_state_to_afa_state[q_prover];
+            Letter* q_refuter_afa = res_afa->pds_state_to_afa_state[q_refuter];
+
             res_afa->final_states.insert(q_prover_afa);
             res_afa->final_states.insert(q_refuter_afa);
         }
@@ -70,17 +72,20 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     // transitions that change between players
     for (Letter* q : DFA->states->letters)
     {
-        Letter* q_refuter = refuter_states.find(q)->second;
-        Letter* q_prover = prover_states.find(q)->second;
+        Letter* q_refuter = refuter_states[q];
+        Letter* q_prover = prover_states[q];
 
-
-        for (Letter* x : Gamma->letters)
+        for (Letter* x : Nrefuter->letters)
         {
-            PDSTransition* p1 = new PDSTransition(q_refuter, x, {x}, q_prover);
-            PDSTransition* p2 = new PDSTransition(q_prover, x, {x}, q_refuter);
-
-            res_pds->transitions.insert(p1);
-            res_pds->transitions.insert(p2);
+            Letter* X = stack_refuter_nonterminals[x];
+            PDSTransition* p = new PDSTransition(q_prover, X, {X}, q_refuter);
+            res_pds->transitions.insert(p);
+        }
+        for (Letter* y : Nprover->letters)
+        {
+            Letter* Y = stack_prover_nonterminals[y];
+            PDSTransition* p = new PDSTransition(q_refuter, Y, {Y}, q_prover);
+            res_pds->transitions.insert(p);
         }
     }
 
