@@ -1,4 +1,5 @@
 #include "PAFA.h"
+#include "../common/PointeeComparator.h"
 
 using namespace std;
 
@@ -142,7 +143,7 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
 
     AFATransition* t = new AFATransition(source, label, targets);
 
-    pointer_values_equal<AFATransition> eq = {t};
+    PointeeComparator<AFATransition> eq = {t};
 
     auto itr = find_if(transitions.begin(), transitions.end(), eq);
 

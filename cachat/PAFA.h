@@ -33,20 +33,5 @@ public:
 
 };
 
-template<typename T>
-struct pointer_values_equal
-{
-    const T* to_find;
-
-    pointer_values_equal (const T* to_find) :
-            to_find(to_find)
-    { }
-
-    bool operator() (const T* other) const
-    {
-        return *to_find == *other;
-    }
-};
-
 
 #endif //RIGG_PAFA_H

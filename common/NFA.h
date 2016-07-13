@@ -28,6 +28,7 @@ public:
 
     void addTransition (Transition* t);
 
+    bool tryAddTransition (Letter* origin, Letter* label, Letter* target);
 
     Box* boxFor (Letter* a);
 

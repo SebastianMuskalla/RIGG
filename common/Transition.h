@@ -22,6 +22,11 @@ public:
     Letter* target;
 
     virtual string toString () const;
+
+    bool operator== (const Transition &other) const
+    {
+        return label == other.label && origin == other.origin && target == other.target;
+    }
 };
 
 

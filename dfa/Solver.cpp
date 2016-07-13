@@ -25,7 +25,9 @@ Formula* Solver::recomputeValue (Letter* l)
     Formula* res = formulaFor(itr->second);
 
     if (cout_debug)
+    {
         cout << "    formula for first rule is: " << *res << endl;
+    }
 
     ++itr;
 
@@ -35,7 +37,9 @@ Formula* Solver::recomputeValue (Letter* l)
         Formula* tmp = formulaFor(itr->second);
 
         if (cout_debug)
+        {
             cout << "    formula for next rule is: " << *tmp << endl;
+        }
 
         if (and_mode)
         {
@@ -44,6 +48,11 @@ Formula* Solver::recomputeValue (Letter* l)
         else
         {
             res = res->formulaOr(tmp);
+        }
+
+        if (cout_debug)
+        {
+            cout << "    result of and/or is " << *res << endl;
         }
     }
 
@@ -55,10 +64,6 @@ Formula* Solver::recomputeValue (Letter* l)
 
 void Solver::solve ()
 {
-//    for (auto pair : solution)
-//    {
-//        cout << "key:" << *pair.first << ", value " << *pair.second << endl;
-//    }
 
     while (!todo.empty())
     {
@@ -66,16 +71,23 @@ void Solver::solve ()
         todo.erase(todo.begin());
 
         Formula* old_value = solution[l];
-        Formula* new_value = recomputeValue(l);
 
         if (cout_debug)
         {
             cout << "picked up " << *l << " from todo" << endl;
             cout << "old value: " << *old_value << endl;
-            cout << "new value:" << *new_value << endl;
+        }
+
+        Formula* new_value = recomputeValue(l);
+
+        if (cout_debug)
+        {
+            cout << "new value: " << *new_value << endl;
+            cout << "implication check..." << endl;
         }
 
         // we always have  old_value implies new_value
+
 
         if (new_value->implies(old_value))
         {
@@ -101,7 +113,6 @@ void Solver::solve ()
             {
                 todo.insert(itr->second);
             }
-            cout << endl;
         }
 
     }
@@ -144,7 +155,7 @@ Solver::Solver (NFA* A, GameGrammar* G) :
         cout << "initial values" << endl;
         for (auto pair : solution)
         {
-            cout << "key:" << *pair.first << ", value " << *pair.second << endl;
+            cout << "key: " << *pair.first << ", value: " << *pair.second << endl;
         }
     }
 
@@ -202,7 +213,9 @@ Formula* Solver::formulaFor (vector<Letter*> word)
     if (word.empty())
     {
         if (cout_debug)
+        {
             cout << "        epsilon: " << *id_formula << endl;
+        }
         return id_formula;
     }
 
@@ -210,7 +223,9 @@ Formula* Solver::formulaFor (vector<Letter*> word)
     Formula* res = formulaFor(*itr);
 
     if (cout_debug)
+    {
         cout << "        formula for first letter " << **itr << " is: " << *res << endl;
+    }
 
     ++itr;
     for (; itr != word.end(); ++itr)
