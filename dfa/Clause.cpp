@@ -7,26 +7,26 @@ vector<Clause*> Clause::composeWith (Formula* G)
 {
     vector<Clause*> res;
 
-    uint k = this->boxes.size();
-    uint* func = new uint[k]();
-    uint G_size = G->clauses.size() - 1;
-    uint start = 0;
+    uint nr_boxes = boxes.size();
+    uint* mapping = new uint[nr_boxes]();
+    uint nr_clauses = G->clauses.size();
+    uint start_index = 0;
 
     while (true)
     {
         Clause* clause = new Clause();
 
-//        for (int i = 0; i < k; i++)
+//        for (int i = 0; i < nr_boxes; i++)
 //        {
-//            cout << func[i];
+//            cout << mapping[i];
 //        }
 //        cout << endl;
 
 
-        for (uint i = 0; i < k; ++i)
+        for (uint i = 0; i < nr_boxes; ++i)
         {
             Box* rho = boxes.at(i);
-            Clause* H = G->clauses.at(func[i]);
+            Clause* H = G->clauses.at(mapping[i]);
             vector<Box*> tmp = rho->composeWith(H);
 
 //            for (Box* b : tmp)
@@ -40,15 +40,12 @@ vector<Clause*> Clause::composeWith (Formula* G)
 
         res.push_back(clause);
 
-        if (start == k)
+        start_index = increment(mapping, nr_boxes, nr_clauses - 1, start_index);
+
+        if (start_index == nr_boxes)
         {
             goto _postloop;
         }
-        else
-        {
-            start = increment(func, k, G_size, start);
-        }
-
 
     }
     _postloop:

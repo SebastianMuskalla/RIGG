@@ -1,4 +1,5 @@
 #include "NFA.h"
+#include "PointeeComparator.h"
 
 using namespace std;
 
@@ -74,6 +75,27 @@ string NFA::toString () const
     }
     return res;
 }
+
+bool NFA::tryAddTransition (Letter* origin, Letter* label, Letter* target)
+{
+    Transition* t = new Transition(origin, label, target);
+
+    PointeeComparator<Transition> eq = {t};
+
+    auto itr = find_if(transitions.begin(), transitions.end(), eq);
+
+    if (itr == transitions.end())
+    {
+        transitions.insert(t);
+        return true;
+    }
+    else
+    {
+        delete t;
+        return false;
+    }
+}
+
 
 
 

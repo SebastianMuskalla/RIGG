@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <c++/4.8.3/chrono>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
@@ -6,6 +8,8 @@
 #include "cachat/Determinizer.h"
 #include "cachat/GrammarDFAtoPDSAFA.h"
 #include "cachat/Cachat.h"
+#include "randomgen/TVAutomataGen.h"
+#include "randomgen/TVGrammarGen.h"
 
 using namespace std;
 
@@ -74,6 +78,7 @@ bool dfa (NFA* A, GameGrammar* G, vector<Letter*> word)
     Solver* s = new Solver(A, G);
     s->solve();
     Formula* sol = s->formulaFor(word);
+//    cout << *sol << endl;
     return sol->isRejecting();
 }
 
@@ -91,6 +96,9 @@ bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
 
+    cout << endl << endl << endl;
+    cout << *AFA << endl;
+
     vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
     return AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
 }
@@ -107,7 +115,7 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
     Alphabet* Nrefuter = new Alphabet();
     Letter* X = Nrefuter->addLetter("X");
 
-    GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
     G->addRule(X, {a, Y});
     G->addRule(X, {});
     G->addRule(Y, {b, X});
@@ -136,7 +144,7 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
     Alphabet* Nrefuter = new Alphabet();
     Letter* X = Nrefuter->addLetter("X");
 
-    GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
     G->addRule(X, {a, Y});
     G->addRule(X, {b, Y});
     G->addRule(Y, {a, X});
@@ -161,6 +169,43 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
     return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
 };
 
+tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
+{
+    Alphabet* Sigma = new Alphabet();
+    Letter* a = Sigma->addLetter("a");
+    Letter* b = Sigma->addLetter("b");
+
+    Alphabet* Nprover = new Alphabet();
+    Letter* Y = Nprover->addLetter("Y");
+    Letter* Z = Nprover->addLetter("Z");
+
+    Alphabet* Nrefuter = new Alphabet();
+    Letter* X = Nrefuter->addLetter("X");
+    Letter* W = Nrefuter->addLetter("W");
+
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
+    G->addRule(Y, {a, a});
+    G->addRule(Y, {b, a});
+    G->addRule(Z, {a});
+    G->addRule(Z, {a, Z});
+    G->addRule(X, {a, Y, b});
+    G->addRule(X, {b});
+    G->addRule(W, {b, a});
+    G->addRule(W, {b});
+
+
+    Alphabet* Q = new Alphabet();
+    Letter* q0 = Q->addLetter("q0");
+    Letter* q1 = Q->addLetter("q1");
+    Letter* q2 = Q->addLetter("q2");
+    set<Letter*> finals = {q1, q2};
+
+    NFA* A = new NFA(Sigma, Q, q0, finals);
+    A->addTransition(q2, a, q1);
+    A->addTransition(q1, b, q2);
+    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
+};
+
 pair<uint, uint> time_measuring (tuple<NFA*, GameGrammar*, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -179,7 +224,11 @@ pair<uint, uint> time_measuring (tuple<NFA*, GameGrammar*, vector<Letter*>> t)
 
     if (x != y)
     {
-        throw new string("results differ!");
+        string error = "results differ: ours: ";
+        error.append(to_string(x));
+        error.append(" cachat: ");
+        error.append(to_string(y));
+        throw error;
     }
     auto our = chrono::duration_cast<chrono::microseconds>(middle - start).count();
     auto cach = chrono::duration_cast<chrono::microseconds>(end - middle).count();
@@ -204,7 +253,7 @@ void print_everything ()
     Alphabet* Nrefuter = new Alphabet();
     Letter* X = Nrefuter->addLetter("X");
 
-    GameGrammar* G = new GameGrammar(Sigma, Nprover, Nrefuter);
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
     G->addRule(X, {a, Y});
     G->addRule(X, {});
     G->addRule(Y, {b, X});
@@ -316,12 +365,52 @@ void print_everything ()
 
 int main ()
 {
-    //print_everything();
+    // Redirect cout.
+    streambuf* oldCoutStreamBuf = cout.rdbuf();
+    ostringstream strCout;
+    cout.rdbuf(strCout.rdbuf());
 
-    auto t = example2();
-    auto pair = time_measuring(t);
+    while (true)
+    {
+        //print_everything();
 
-    cout << "dfa time:    " << pair.first << endl;
-    cout << "cachat time: " << pair.second << endl;
-    return 0;
+//    auto t = example2();
+//    auto pair = time_measuring(t);
+//
+//    cout << "dfa time:    " << pair.first << endl;
+//    cout << "cachat time: " << pair.second << endl;
+//    return 0;
+
+        NFA* A = TVAutomataGen(2, 2, 0.5, 0.5).generate();
+
+        GameGrammar* G = TVGrammarGen(A->Sigma, 2, 2, 0.5, 0.8, 0.8, 0.8).generate();
+
+        cout << *A << endl;
+
+        cout << endl << endl << endl;
+
+        cout << *G << endl;
+
+        try
+        {
+            auto pair = time_measuring(tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {G->Nprover->get(0)}));
+//        auto pair = time_measuring(example3());
+
+            cout << "dfa time:    " << pair.first << endl;
+            cout << "cachat time: " << pair.second << endl;
+        }
+        catch (string s)
+        {
+
+            cout.rdbuf(oldCoutStreamBuf);
+            cout << s << endl;
+            cout << strCout.str();
+
+            return 0;
+        }
+        strCout.str("");
+        strCout.clear();
+    }
+
+
 }

@@ -20,10 +20,10 @@ Formula* Formula::composeWith (Formula* G)
 
 string Formula::toString () const
 {
-//    if (isFalse())
-//    {
-//        return "FALSE";
-//    }
+    if (isFalse())
+    {
+        return "FALSE";
+    }
 
     string res = "";
     bool first = true;
@@ -96,13 +96,13 @@ Formula* Formula::wrap (Clause* c)
 
 Formula* Formula::formulaAnd (Formula* other)
 {
-    if (isFalse() || other->is_false)
+    if (isFalse() || other->isFalse())
     {
         return Formula::falseFormula();
     }
 
     Formula* res = new Formula();
-    res->clauses.insert(res->clauses.end(), this->clauses.begin(), this->clauses.end());
+    res->clauses.insert(res->clauses.end(), clauses.begin(), clauses.end());
     res->clauses.insert(res->clauses.end(), other->clauses.begin(), other->clauses.end());
     return res;
 }

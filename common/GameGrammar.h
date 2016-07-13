@@ -16,7 +16,8 @@ public:
     Alphabet* Nrefuter;
     multimap<Letter*, vector<Letter*>> rules;
 
-    GameGrammar (Alphabet* Sigma, Alphabet* Nprover, Alphabet* Nrefuter) :
+
+    GameGrammar (Alphabet* Sigma, Alphabet* Nrefuter, Alphabet* Nprover) :
             Sigma(Sigma),
             Nprover(Nprover),
             Nrefuter(Nrefuter)

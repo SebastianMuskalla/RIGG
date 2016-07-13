@@ -53,7 +53,8 @@ public:
     {
 //        if (A != other.A || Q != other.Q )
 //            return false;
-        return is_permutation(content.begin(), content.end(), other.content.begin());
+//        return is_permutation(content.begin(), content.end(), other.content.begin());
+        return content == other.content;
     }
 };
 
