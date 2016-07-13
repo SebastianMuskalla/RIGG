@@ -48,8 +48,6 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
 
 set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector<Letter*> word)
 {
-
-
     // disjunction of sets of states, each inner set representing a conjunction
     set<set<Letter*>> current;
     set<set<Letter*>> next;
@@ -60,43 +58,44 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
 
     for (Letter* a : word)
     {
-
         next.clear();
 
         for (set<Letter*> conjunction : current)
         {
             // we compute the successors for one conjunction at the time
-            set<set<Letter*>*> tmp;
-            set<Letter*>* empty = new set<Letter*>();
-            tmp.insert(empty);
+            set<set<Letter*>> inner_current;
+            set<set<Letter*>> inner_next;
+            inner_current.insert(set<Letter*>());
 
             for (Letter* state : conjunction)
             {
                 // iterate over all successors
                 for (AFATransition* t : transitions)
                 {
-
-
                     if (t->label == a && t->origin == state)
                     {
-
-                        for (set<Letter*>* set_pointer : tmp)
+                        for (set<Letter*> inner_set : inner_current)
                         {
-                            set_pointer->insert(t->targets.begin(), t->targets.end());
+                            set<Letter*> copy(inner_set);
+                            copy.insert(t->targets.begin(), t->targets.end());
+                            inner_next.insert(copy);
                         }
-                    }
 
+                    }
+                }
+                inner_current = inner_next;
+                inner_next.clear();
+            }
+
+            for (set<Letter*> inner_set : inner_current)
+            {
+                if (!inner_set.empty())
+                {
+                    next.insert(inner_set);
                 }
             }
 
-            for (set<Letter*>* set_pointer : tmp)
-            {
-                next.insert(*set_pointer);
-                delete set_pointer;
-            }
-
         }
-
 
         current = next;
     }
@@ -139,7 +138,9 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
 {
     // adding transitions with empty target set is not very helpful
     if (targets.empty())
+    {
         return false;
+    }
 
     AFATransition* t = new AFATransition(source, label, targets);
 

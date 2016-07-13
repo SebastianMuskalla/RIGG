@@ -14,6 +14,7 @@ class Cachat
     GamePDS* P;
     PAFA* A;
 
+    bool cout_debug = false;
 
 public:
     Cachat (GamePDS* P, PAFA* A) :

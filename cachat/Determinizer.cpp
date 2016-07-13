@@ -41,6 +41,10 @@ Determinizer::Determinizer (NFA* A) :
     init_letter = PQ->addLetter(setToString(init_set));
     set_to_state.emplace(init_set, init_letter);
 
+    if (A->final_states.find(A->initial_state) != A->final_states.end())
+    {
+        dfa_final_states.insert(init_letter);
+    }
 }
 
 NFA* Determinizer::determinize ()
@@ -84,15 +88,15 @@ NFA* Determinizer::determinize ()
                 target_letter = PQ->addLetter(setToString(target_set));
                 set_to_state.emplace(target_set, target_letter);
                 todo.insert(target_set);
+
+                if (isFinal)
+                {
+                    dfa_final_states.insert(target_letter);
+                }
             }
             else
             {
                 target_letter = target_letter_itr->second;
-            }
-
-            if (isFinal)
-            {
-                dfa_final_states.insert(target_letter);
             }
 
 
