@@ -3,7 +3,6 @@
 
 using namespace std;
 
-
 bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
 {
     set<Letter*> S = final_states;
@@ -15,7 +14,6 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
         {
             return false;
         }
-
 
         set<Letter*> new_S;
         for (AFATransition* t : transitions)
@@ -80,7 +78,6 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
                             copy.insert(t->targets.begin(), t->targets.end());
                             inner_next.insert(copy);
                         }
-
                     }
                 }
                 inner_current = inner_next;
@@ -101,7 +98,6 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
     }
     return current;
 }
-
 
 string PAFA::toString () const
 {
@@ -131,6 +127,7 @@ string PAFA::toString () const
     {
         res.append("\n").append(t->toString());
     }
+
     return res;
 }
 
@@ -162,9 +159,7 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
         return false;
     }
 
-
 }
-
 
 PAFA::PAFA (Alphabet* Gamma, GamePDS* P) :
         Gamma(Gamma),
