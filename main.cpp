@@ -11,7 +11,10 @@
 
 using namespace std;
 
-void box_composition_test ()
+/**
+ * Test for the formula composition
+ */
+void testFormulaComposition ()
 {
     Box* ba = Box::test("a");
     Box* bb = Box::test("b");
@@ -71,41 +74,66 @@ void box_composition_test ()
     cout << (F->implies(FALSEFORM)) << endl;
 };
 
+/**
+ * Given an NFA representing the regular goal language, a game grammar and an initial sentential form,
+ * return true iff refuter can win the non-inclusion game from the given sentential form
+ *
+ * Internally, fixed point iteration over the domain of box formulas is used
+ */
 bool dfa (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
     Solver* s = new Solver(A, G);
     s->solve();
     Formula* sol = s->formulaFor(word);
-//    cout << *sol << endl;
     return sol->isRejecting();
 }
 
+/**
+ * Given an NFA representing the regular goal language, a game grammar and an initial sentential form,
+ * return true iff refuter can win the non-inclusion game from the given sentential form
+ *
+ * Internally, the game is converted to a pushdown game a la Cachat and solved using his saturation procedure
+ */
 bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
+    // determinize the given automaton
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
 
+    // generate pushdown system and alternating automaton that define the equivalent game
     GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
     tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
     GamePDS* P = get<0>(restuple);
     PAFA* AFA = get<1>(restuple);
     Letter* init_refuter = get<2>(restuple);
     Letter* init_prover = get<3>(restuple);
+
+    // solve using cachats saturation procedure
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
     vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
     return AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
 }
 
-tuple<bool, uint, uint, uint> cachatMeasureAll (NFA* A, GameGrammar* G, vector<Letter*> word)
+/**
+ * Given an NFA representing the regular goal language, a game grammar and an initial sentential form,
+ * return true iff refuter can win the non-inclusion game from the given sentential form
+ *
+ * Internally, the game is converted to a pushdown game a la Cachat and solved using his saturation procedure
+ *
+ * Provides time measuring for the 3 phases of the procedure
+ */
+tuple<bool, uint, uint, uint> cachatWithMeasuring (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
     auto start = chrono::steady_clock::now();
 
+    // determinize the given automaton
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
 
     auto post_det = chrono::steady_clock::now();
 
+    // generate pushdown system and alternating automaton that define the equivalent game
     GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
     tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
     GamePDS* P = get<0>(restuple);
@@ -115,6 +143,7 @@ tuple<bool, uint, uint, uint> cachatMeasureAll (NFA* A, GameGrammar* G, vector<L
 
     auto post_gen = chrono::steady_clock::now();
 
+    // solve using cachats saturation procedure
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
     vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
@@ -129,6 +158,11 @@ tuple<bool, uint, uint, uint> cachatMeasureAll (NFA* A, GameGrammar* G, vector<L
     return tuple<bool, uint, uint, uint>(res, determinize_time, generate_time, saturate_time);
 }
 
+/**
+ * Grammar generating (ab)^*, Automaton accepting (ab)^*
+ *
+ * (Example from the Paper)
+ */
 tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
 {
     Alphabet* Sigma = new Alphabet();
@@ -158,6 +192,9 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
     return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
 };
 
+/**
+ * Grammar generating (ab)^*, automaton accepting words where three consecutive a's or b's appear
+ */
 tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
 {
     Alphabet* Sigma = new Alphabet();
@@ -175,6 +212,7 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
     G->addRule(X, {b, Y});
     G->addRule(Y, {a, X});
     G->addRule(Y, {b, X});
+    // termination rule is missing
 
     Alphabet* Q = new Alphabet();
     Letter* q0 = Q->addLetter("q0");
@@ -195,6 +233,9 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
     return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
 };
 
+/**
+ * Random example
+ */
 tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
 {
     Alphabet* Sigma = new Alphabet();
@@ -219,7 +260,6 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
     G->addRule(W, {b, a});
     G->addRule(W, {b});
 
-
     Alphabet* Q = new Alphabet();
     Letter* q0 = Q->addLetter("q0");
     Letter* q1 = Q->addLetter("q1");
@@ -232,118 +272,10 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
     return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
 };
 
-tuple<NFA*, GameGrammar*, vector<Letter*>> example4 ()
-{
-    Alphabet* Sigma = new Alphabet();
-//    Letter* a = Sigma->addLetter("a");
-//    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-    Letter* Z = Nprover->addLetter("Z");
-
-    Alphabet* Nrefuter = new Alphabet();
-//    Letter* X = Nrefuter->addLetter("X");
-//    Letter* W = Nrefuter->addLetter("W");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
-
-    G->addRule(Y, {});
-    G->addRule(Y, {Z});
-
-    G->addRule(Z, {});
-    G->addRule(Z, {Y});
-
-//
-//    G->addRule(X, {Y});
-//    G->addRule(X, {});
-//
-//    G->addRule(W, {});
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    set<Letter*> finals = {q0};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-//    A->addTransition(q2, a, q1);
-//    A->addTransition(q1, b, q2);
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
-};
-
-tuple<NFA*, GameGrammar*, vector<Letter*>> example5 ()
-{
-    Alphabet* Sigma = new Alphabet();
-    Letter* a = Sigma->addLetter("a");
-//    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-//    Letter* Z = Nprover->addLetter("Z");
-
-    Alphabet* Nrefuter = new Alphabet();
-//    Letter* X = Nrefuter->addLetter("X");
-//    Letter* W = Nrefuter->addLetter("W");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
-
-    G->addRule(Y, {a, a});
-    G->addRule(Y, {a});
-
-//    G->addRule(Y, {Z});
-//
-//    G->addRule(Z, {});
-//    G->addRule(Z, {Y});
-
-//
-//    G->addRule(X, {Y});
-//    G->addRule(X, {});
-//
-//    G->addRule(W, {});
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    set<Letter*> finals = {q0};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-//    A->addTransition(q2, a, q1);
-//    A->addTransition(q1, b, q2);
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
-};
-
-tuple<bool, uint, uint> time_measuring (tuple<NFA*, GameGrammar*, vector<Letter*>> t)
-{
-    NFA* A = get<0>(t);
-    GameGrammar* G = get<1>(t);
-    vector<Letter*> word = get<2>(t);
-
-    auto start = chrono::steady_clock::now();
-
-    auto x = dfa(A, G, word);
-
-    auto middle = chrono::steady_clock::now();
-
-    auto y = cachat(A, G, word);
-
-    auto end = chrono::steady_clock::now();
-
-    if (x != y)
-    {
-        string error = "results differ: ours: ";
-        error.append(to_string(x));
-        error.append(" cachat: ");
-        error.append(to_string(y));
-        throw error;
-    }
-    auto our = chrono::duration_cast<chrono::milliseconds>(middle - start).count();
-    auto cach = chrono::duration_cast<chrono::milliseconds>(end - middle).count();
-    return tuple<bool, uint, uint>(x, our, cach);
-//
-//    cout << "Duration of our proc.: " << our << "ns : " << x.first << ", " << x.second << endl;
-//    cout << "Duration of our proc.: " << cach << "ns : " << y.first << ", " << y.second << endl;
-
-}
-
-tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuringExplicit (
+/**
+ * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
+ */
+tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuring (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -358,8 +290,8 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuringExplicit (
 
     auto end = chrono::steady_clock::now();
 
-    auto cachat_1 = cachatMeasureAll(A, G, word1);
-    auto cachat_2 = cachatMeasureAll(A, G, word2);
+    auto cachat_1 = cachatWithMeasuring(A, G, word1);
+    auto cachat_2 = cachatWithMeasuring(A, G, word2);
 
     bool res_cachat_1 = get<0>(cachat_1);
     bool res_cachat_2 = get<0>(cachat_2);
@@ -377,7 +309,6 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuringExplicit (
         throw error;
     }
 
-
     auto our = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 2;
 
     uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
@@ -388,9 +319,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuringExplicit (
     return tuple<bool, bool, uint, uint, uint, uint, uint>(res_dfa_1, res_dfa_2, our, cachat_total, cachat_determinize,
                                                            cachat_generate,
                                                            cachat_saturate);
-
 }
 
+/**
+ * Prints the (ab)^* example from the paper in detail
+ */
 void print_everything ()
 {
 
@@ -424,7 +357,6 @@ void print_everything ()
 //    3. Compute formula for given word
 //    4. Check whether it is rejecting
 
-
     Solver* s = new Solver(A, G);
     s->solve();
 
@@ -450,19 +382,16 @@ void print_everything ()
     cout << "Formula: " << *solY << endl;
     cout << "Rejecting: " << solY->isRejecting() << endl;
 
-
     cout << endl << endl;
 
 //    Cachat
 //    1. Upfront determinization of the automaton
-//    2. Create pushdown system
-//    3. Create AFA
-//    4. Saturate AFA
-//    5. Check whether given word is accepted by saturated AFA
+//    2. Create pushdown system & AFA
+//    3. Saturate AFA
+//    4. Check whether given word is accepted by saturated AFA
 
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
-
 
     cout << "CACHAT:" << endl;
 
@@ -471,7 +400,6 @@ void print_everything ()
     cout << *D << endl;
 
     cout << endl;
-
 
     GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
     tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
@@ -514,7 +442,10 @@ void print_everything ()
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
 }
 
-void AFAreachabilityTest ()
+/**
+ * Tests the reachability algorithm for AFAs
+ */
+void testAFAReachability ()
 {
     Alphabet* Gamma = new Alphabet();
     Letter* a = Gamma->addLetter("a");
@@ -551,6 +482,9 @@ void AFAreachabilityTest ()
     }
 }
 
+/**
+ * Computes the every time Cachat's saturation algorithm needs for 10 random generated examples
+ */
 void averagify ()
 {
     uint total = 0;
@@ -559,8 +493,8 @@ void averagify ()
     {
         NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
         GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
-        auto res1 = cachatMeasureAll(A, G, {G->Nrefuter->get(0)});
-        auto res2 = cachatMeasureAll(A, G, {G->Nprover->get(0)});
+        auto res1 = cachatWithMeasuring(A, G, {G->Nrefuter->get(0)});
+        auto res2 = cachatWithMeasuring(A, G, {G->Nprover->get(0)});
         total += get<3>(res1);
         total += get<3>(res2);
     }
@@ -573,6 +507,9 @@ void averagify ()
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
 
+/**
+ * Generate random instances, solve them using both algorithms and print the needed time until the user terminates the program
+ */
 void measureAndPrint ()
 {
     while (true)
@@ -582,7 +519,7 @@ void measureAndPrint ()
 
         try
         {
-            auto t = timeMeasuringExplicit(
+            auto t = timeMeasuring(
                     tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>>(A, G, {G->Nrefuter->get(0)},
                                                                                 {G->Nprover->get(0)}));
 

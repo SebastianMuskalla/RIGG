@@ -5,6 +5,9 @@
 #ifndef RIGG_REJECTING_H
 #define RIGG_REJECTING_H
 
+/**
+ * Ternaty logic, i.e. true (YES), false (NO), and unknown (UNDEFINED)
+ */
 typedef enum
 {
     NO = 0,

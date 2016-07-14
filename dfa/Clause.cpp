@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 vector<Clause*> Clause::composeWith (Formula* G)
 {
     vector<Clause*> res;
@@ -16,24 +15,11 @@ vector<Clause*> Clause::composeWith (Formula* G)
     {
         Clause* clause = new Clause();
 
-//        for (int i = 0; i < nr_boxes; i++)
-//        {
-//            cout << mapping[i];
-//        }
-//        cout << endl;
-
-
         for (uint i = 0; i < nr_boxes; ++i)
         {
             Box* rho = boxes.at(i);
             Clause* H = G->clauses.at(mapping[i]);
             vector<Box*> tmp = rho->composeWith(H);
-
-//            for (Box* b : tmp)
-//            {
-//                cout << *b;
-//            }
-//            cout << endl;
 
             clause->boxes.insert(clause->boxes.end(), tmp.begin(), tmp.end());
         }
@@ -50,10 +36,7 @@ vector<Clause*> Clause::composeWith (Formula* G)
     }
     _postloop:
     return res;
-
-
 }
-
 
 uint Clause::increment (uint* func, uint k, uint g,
                         uint start)
@@ -111,9 +94,13 @@ string Clause::toString () const
 bool Clause::isRejecting ()
 {
     if (rejecting == YES)
+    {
         return true;
+    }
     if (rejecting == NO)
+    {
         return false;
+    }
 
     for (Box* b : boxes)
     {

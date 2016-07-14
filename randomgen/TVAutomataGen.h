@@ -5,11 +5,15 @@
 #ifndef RIGG_TVAUTOMATAGEN_H
 #define RIGG_TVAUTOMATAGEN_H
 
-
 #include "../common/Alphabet.h"
 #include "../common/Letter.h"
 #include "../common/NFA.h"
 
+/**
+ * Creates a random Automaton according to Tabakov-Vardi-model
+ *
+ * Use each instance only once!
+ */
 class TVAutomataGen
 {
     Alphabet* Sigma;
@@ -23,15 +27,14 @@ class TVAutomataGen
 
 public:
     TVAutomataGen (unsigned int nr_letters, unsigned int nr_states, double density,
-                   double final_rate) :
-            nr_letters(nr_letters),
-            nr_states(nr_states),
-            density(density),
-            final_rate(final_rate)
-    { }
+                   double final_rate);
 
+    /**
+     * Start generation and return generated NFA
+     *
+     * Only use once per instance!
+     */
     NFA* generate ();
 };
-
 
 #endif //RIGG_TVAUTOMATAGEN_H

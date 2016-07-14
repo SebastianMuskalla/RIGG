@@ -16,3 +16,7 @@ Alphabet* AlphabetGen::generate ()
     return res;
 }
 
+AlphabetGen::AlphabetGen (unsigned int nr_letters, string prefix) :
+        nr_letters(nr_letters),
+        prefix(prefix)
+{ }

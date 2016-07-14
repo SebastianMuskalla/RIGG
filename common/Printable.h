@@ -5,7 +5,6 @@
 #ifndef RIGG_PRINTABLE_H
 #define RIGG_PRINTABLE_H
 
-
 #include <c++/4.8.3/string>
 //#include <ostream>
 #include <c++/4.8.3/iostream>
@@ -13,16 +12,18 @@
 using namespace std;
 
 /**
- * Interface for printable classes.
- * Provides interface for toString() method.
- * Objects can be put into ostream.
+ * interface for printable classes.
+ *
+ * provides virtual toString() method
+ *
+ * printable objects can be put into ostream
  */
 template<class T>
 class Printable
 {
 public:
     /**
-     * Creates string representation.
+     * creates string representation
      */
     virtual string toString () const = 0;
 

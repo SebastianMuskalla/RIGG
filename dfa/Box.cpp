@@ -4,7 +4,6 @@ using namespace std;
 
 Box* Box::composeWith (Box* r)
 {
-
     Box* res = new Box(A, Q, this->name + r->name);
     for (pair<Letter*, Letter*> cnt : content)
     {
@@ -29,7 +28,6 @@ vector<Box*> Box::composeWith (Clause* r)
 
 string Box::toString () const
 {
-
     string s = "[";
     s.append(name);
     s.append(": ");
@@ -54,9 +52,13 @@ string Box::toString () const
 bool Box::isRejecting ()
 {
     if (rejecting == YES)
+    {
         return true;
+    }
     if (rejecting == NO)
+    {
         return false;
+    }
 
     Letter* init = A->initial_state;
     auto bounds = content.equal_range(init);
@@ -71,12 +73,10 @@ bool Box::isRejecting ()
     }
     rejecting = YES;
     return true;
-
 }
 
-
-
-
-
-
-
+Box::Box (NFA* A, Alphabet* Q, string name) :
+        A(A),
+        Q(Q),
+        name(name)
+{ }

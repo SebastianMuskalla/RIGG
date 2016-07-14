@@ -44,3 +44,10 @@ NFA* TVAutomataGen::generate ()
 
 }
 
+TVAutomataGen::TVAutomataGen (unsigned int nr_letters, unsigned int nr_states, double density,
+                              double final_rate) :
+        nr_letters(nr_letters),
+        nr_states(nr_states),
+        density(density),
+        final_rate(final_rate)
+{ }

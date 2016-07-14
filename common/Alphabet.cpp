@@ -21,3 +21,9 @@ string Alphabet::toString () const
     return res;
 }
 
+Letter* Alphabet::addLetter (string name)
+{
+    Letter* l = new Letter(this, size(), name);
+    letters.push_back(l);
+    return l;
+}
