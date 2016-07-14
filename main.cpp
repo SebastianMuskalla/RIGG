@@ -97,6 +97,38 @@ bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
     return AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
 }
 
+tuple<bool, uint, uint, uint> cachatMeasureAll (NFA* A, GameGrammar* G, vector<Letter*> word)
+{
+    auto start = chrono::steady_clock::now();
+
+    Determinizer* det = new Determinizer(A);
+    NFA* D = det->determinize();
+
+    auto post_det = chrono::steady_clock::now();
+
+    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
+    tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
+    GamePDS* P = get<0>(restuple);
+    PAFA* AFA = get<1>(restuple);
+    Letter* init_refuter = get<2>(restuple);
+    Letter* init_prover = get<3>(restuple);
+
+    auto post_gen = chrono::steady_clock::now();
+
+    Cachat* cachat = new Cachat(P, AFA);
+    cachat->saturate();
+    vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
+    bool res = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
+
+    auto end = chrono::steady_clock::now();
+
+    uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+    uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_det).count();
+    uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+
+    return tuple<bool, uint, uint, uint>(res, determinize_time, generate_time, saturate_time);
+}
+
 tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
 {
     Alphabet* Sigma = new Alphabet();
@@ -311,6 +343,53 @@ tuple<bool, uint, uint> time_measuring (tuple<NFA*, GameGrammar*, vector<Letter*
 
 }
 
+tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuringExplicit (
+        tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
+{
+    NFA* A = get<0>(t);
+    GameGrammar* G = get<1>(t);
+    vector<Letter*> word1 = get<2>(t);
+    vector<Letter*> word2 = get<3>(t);
+
+    auto start = chrono::steady_clock::now();
+
+    auto res_dfa_1 = dfa(A, G, word1);
+    auto res_dfa_2 = dfa(A, G, word2);
+
+    auto end = chrono::steady_clock::now();
+
+    auto cachat_1 = cachatMeasureAll(A, G, word1);
+    auto cachat_2 = cachatMeasureAll(A, G, word2);
+
+    bool res_cachat_1 = get<0>(cachat_1);
+    bool res_cachat_2 = get<0>(cachat_2);
+
+    if (res_dfa_1 != res_cachat_1 || res_dfa_2 != res_cachat_2)
+    {
+        string error = "results differ: ours: ";
+        error.append(to_string(res_dfa_1));
+        error.append(", ");
+        error.append(to_string(res_dfa_1));
+        error.append(" cachat: ");
+        error.append(to_string(res_cachat_1));
+        error.append(", ");
+        error.append(to_string(res_cachat_2));
+        throw error;
+    }
+
+
+    auto our = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 2;
+
+    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
+    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
+    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
+    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
+
+    return tuple<bool, bool, uint, uint, uint, uint, uint>(res_dfa_1, res_dfa_2, our, cachat_total, cachat_determinize,
+                                                           cachat_generate,
+                                                           cachat_saturate);
+
+}
 
 void print_everything ()
 {
@@ -472,56 +551,65 @@ void AFAreachabilityTest ()
     }
 }
 
-int main ()
+void averagify ()
 {
-//    print_everything();
+    uint total = 0;
+    uint nr_tries = 10;
+    for (int i = 0; i < nr_tries; ++i)
+    {
+        NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
+        GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
+        auto res1 = cachatMeasureAll(A, G, {G->Nrefuter->get(0)});
+        auto res2 = cachatMeasureAll(A, G, {G->Nprover->get(0)});
+        total += get<3>(res1);
+        total += get<3>(res2);
+    }
 
-//    // Redirect cout.
-//    streambuf* oldCoutStreamBuf = cout.rdbuf();
-//    ostringstream strCout;
-//    cout.rdbuf(strCout.rdbuf());
+    uint avg = total / (2 * nr_tries);
+    cout << avg << endl;
 
-//    auto t = example2();
-//    auto pair = time_measuring(t);
-//
-//    cout << "dfa time:    " << pair.first << endl;
-//    cout << "cachat time: " << pair.second << endl;
-//    return 0;
+}
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+
+void measureAndPrint ()
+{
     while (true)
     {
         NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
-
         GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
-
-//        cout << *A << endl;
-//
-//        cout << endl << endl << endl;
-//
-//        cout << *G << endl;
 
         try
         {
-            auto t = time_measuring(tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {G->Nrefuter->get(0)}));
+            auto t = timeMeasuringExplicit(
+                    tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>>(A, G, {G->Nrefuter->get(0)},
+                                                                                {G->Nprover->get(0)}));
 
-            if (get<0>(t))
+//            if (get<0>(t))
             {
-                cout << "dfa time:    " << get<1>(t) << endl;
-                cout << "cachat time: " << get<2>(t) << endl;
+                cout << "dfa time:    " << get<2>(t) << endl;
+                cout << "cachat time: " << get<3>(t) << endl;
+                cout << "    determinize: " << get<4>(t) << endl;
+                cout << "    generate:    " << get<5>(t) << endl;
+                cout << "    saturate:    " << get<6>(t) << endl;
             }
         }
         catch (string s)
         {
-
-//            cout.rdbuf(oldCoutStreamBuf);
             cout << s << endl;
-//            cout << strCout.str();
-
-            return 0;
+            return;
         }
-//        strCout.str("");
-//        strCout.clear();
     }
-//
+}
 
+#pragma clang diagnostic pop
+
+int main ()
+{
+//    print_everything();
+
+//    measureAndPrint();
+
+    averagify();
 }
