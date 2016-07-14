@@ -1,7 +1,6 @@
 #ifndef RIGG_CACHAT_H
 #define RIGG_CACHAT_H
 
-
 #include "GamePDS.h"
 #include "PAFA.h"
 
@@ -22,12 +21,12 @@ public:
             A(A)
     { }
 
-
     void saturate ();
 
-    Letter* convertToAFAState (Letter* p);
-
-    set<Letter*> convertToAFAStates (set<Letter*> S);
+    Letter* convertToAFAState (Letter* p)
+    {
+        return A->pds_state_to_afa_state[p];
+    }
 };
 
 #endif //RIGG_CACHAT_H
