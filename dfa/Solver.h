@@ -1,13 +1,15 @@
 #ifndef RIGG_SOLVER_H
 #define RIGG_SOLVER_H
 
-
 #include "../common/NFA.h"
 #include "../common/GameGrammar.h"
 #include "../common/Alphabet.h"
 
 using namespace std;
 
+/**
+ * Solver for grammar games based on Kleene-iteration over the domain of box-formulas
+ */
 class Solver
 {
 public:
@@ -18,12 +20,24 @@ public:
     Alphabet* Nrefuter;
     Alphabet* Sigma;
 
+    /**
+     * Generate solver for given game instance
+     */
     Solver (NFA* A, GameGrammar* G);
 
+    /**
+     * Computes the formula for a given sentential form (by composing the formulas for the single letters) according to the current solution
+     */
     Formula* formulaFor (vector<Letter*> word);
 
+    /**
+     * Computes the formula for a given letter (terminal or non-terminal of any of the two players)  according to the current solution
+     */
     Formula* formulaFor (Letter* l);
 
+    /**
+     * Start the iteration to the solution
+     */
     void solve ();
 
 private:
@@ -35,16 +49,30 @@ private:
 
     set<Letter*> todo;
 
+    /**
+     * Print debug information on the console during solution process
+     */
     bool cout_debug = false;
 
+    /**
+     * Initially populate solution, worklist and dependencies
+     */
     void populate ();
 
+    /**
+     * Initially populate solution and worklist
+     */
     void populateSolutionAndWorklist ();
 
+    /**
+     * Initially populate dependencies
+     */
     void populateDependencies ();
 
-    Formula* recomputeValue (Letter* pLetter);
+    /**
+     * Recompute the solution for a given non-terminal
+     */
+    Formula* recomputeValue (Letter* l);
 };
-
 
 #endif //RIGG_SOLVER_H

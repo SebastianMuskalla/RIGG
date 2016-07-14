@@ -31,7 +31,6 @@ Formula* Solver::recomputeValue (Letter* l)
 
     ++itr;
 
-
     for (; itr != itrpair.second; ++itr)
     {
         Formula* tmp = formulaFor(itr->second);
@@ -56,15 +55,11 @@ Formula* Solver::recomputeValue (Letter* l)
         }
     }
 
-
     return res;
-
-
 }
 
 void Solver::solve ()
 {
-
     while (!todo.empty())
     {
         Letter* l = *todo.begin();
@@ -88,11 +83,9 @@ void Solver::solve ()
 
         // we always have  old_value implies new_value
 
-
         if (new_value->implies(old_value))
         {
             // value was stable, dont need to do anything
-
             if (cout_debug)
             {
                 cout << "stable: new value implies old value" << endl;
@@ -114,10 +107,8 @@ void Solver::solve ()
                 todo.insert(itr->second);
             }
         }
-
     }
 }
-
 
 Formula* Solver::formulaFor (Letter* l)
 {
@@ -179,7 +170,6 @@ void Solver::populateSolutionAndWorklist ()
         solution[l] = Formula::falseFormula();
         todo.insert(l);
     }
-
 }
 
 void Solver::populateDependencies ()
@@ -230,7 +220,6 @@ Formula* Solver::formulaFor (vector<Letter*> word)
     ++itr;
     for (; itr != word.end(); ++itr)
     {
-
         res = res->composeWith(formulaFor(*itr));
 
         if (cout_debug)
