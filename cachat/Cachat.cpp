@@ -5,7 +5,6 @@ void Cachat::saturate ()
     unsigned int iteration = 0;
     bool done = false;
 
-
     if (cout_debug)
     {
         cout << "initial AFA" << endl;
@@ -16,7 +15,6 @@ void Cachat::saturate ()
         cout << endl << endl;
 
     }
-
 
     while (!done)
     {
@@ -43,10 +41,8 @@ void Cachat::saturate ()
                         vector<Letter*> v = t->write;
                         set<set<Letter*>> sets_S = A->reachableFromControlState(q_afa, v);
 
-
                         for (set<Letter*> S : sets_S)
                         {
-
                             // try to add transition (do not add it if already present)
                             if (A->addTransition(convertToAFAState(p), a, S))
                             {
@@ -54,7 +50,6 @@ void Cachat::saturate ()
                             }
                         }
                     }
-
                 }
             }
         } // for p : player0
@@ -66,13 +61,11 @@ void Cachat::saturate ()
             cout << endl;
         }
 
-
         // player 1 states (prover)
         for (Letter* p : P->player1_states->letters)
         {
             for (Letter* a : P->stack_alphabet->letters)
             {
-
                 if (cout_debug)
                 {
                     cout << "    Handling state " << *p << " and letter " << *a << endl;
@@ -90,7 +83,6 @@ void Cachat::saturate ()
 
                         vector<Letter*> v = t->write;
                         all_qvi.insert(make_pair(q_afa, v));
-
                     }
                 }
 
@@ -107,16 +99,8 @@ void Cachat::saturate ()
                     }
                 }
 
-
-//                    // compute for each i all possible S such that q_i - v_i -> S in the AFA
-//                    map<pair<Letter*, vector<Letter* >>, set<set<Letter* >>> possible_Si;
-//                    for (auto qvi : all_qvi)
-//                    {
-//                        possible_Si.emplace(qvi, A->reachableFromControlState(qvi.first, qvi.second));
-//                    }
-
-                // now we need to compute all possible unions... this is ugly!
-
+                // now we need to compute for each (qi vi) all possible S_i_j such that q_i - v_i -> S_i_j in the AFA
+                // then we need to compute all unions S_1_j(1) cup ... cup S_imax_j(imax)
                 set<set<Letter*>> unions;
                 set<set<Letter*>> unions_new;
 
@@ -127,26 +111,12 @@ void Cachat::saturate ()
                 {
                     cout << "####" << endl;
                 }
+
                 for (auto qvi : all_qvi)
                 {
                     unions_new.clear();
                     // compute for each i all possible S such that q_i - v_i -> S in the AFA
                     set<set<Letter*>> possible_S_i = A->reachableFromControlState(qvi.first, qvi.second);
-
-//
-//                    bool all_empty = true;
-//                    for (set<Letter*> S_i : possible_S_i)
-//                    {
-//                        if (!S_i.empty())
-//                        {
-//                            all_empty = false;
-//                        }
-//                    }
-//                    if (all_empty)
-//                    {
-//                        goto _postloop;
-//                    }
-
 
                     if (cout_debug)
                     {
@@ -185,7 +155,6 @@ void Cachat::saturate ()
                             {
                                 unions_new.insert(new_S);
                             }
-                            // unions_new.insert(new_S);
                         }
                     }
                     unions = unions_new;
@@ -199,8 +168,6 @@ void Cachat::saturate ()
                         done = false;
                     }
                 }
-
-                _postloop:;
             }
         } // for p : player1
 
@@ -210,26 +177,7 @@ void Cachat::saturate ()
             cout << *A << endl;
             cout << endl;
         }
-
-
     } // while !done
 }
-
-Letter* Cachat::convertToAFAState (Letter* p)
-{
-    return A->pds_state_to_afa_state[p];
-}
-
-set<Letter*> Cachat::convertToAFAStates (set<Letter*> S)
-{
-    set<Letter*> res;
-    for (Letter* s : S)
-    {
-        res.insert(A->pds_state_to_afa_state[s]);
-    }
-    return res;
-}
-
-
 
 
