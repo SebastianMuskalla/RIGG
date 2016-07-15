@@ -404,8 +404,7 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     bool res_cachat_min_1 = get<0>(cachat_min_1);
     bool res_cachat_min_2 = get<0>(cachat_min_2);
 
-    if (
-            res_naive_dfa_1 != res_worklist_dfa_1
+    if (res_naive_dfa_1 != res_worklist_dfa_1
             || res_naive_dfa_2 != res_worklist_dfa_2
             || res_cachat_1 != res_worklist_dfa_1
             || res_cachat_2 != res_worklist_dfa_2
