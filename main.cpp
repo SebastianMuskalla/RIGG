@@ -218,6 +218,14 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     Minimizer* min = new Minimizer(D);
     NFA* M = min->minimize();
 
+    cout << *D << endl;
+
+    cout << endl << endl;
+
+    cout << *M << endl;
+
+    cout << endl;
+
     auto post_min = chrono::steady_clock::now();
 
     // generate pushdown system and alternating automaton that define the equivalent game
@@ -392,11 +400,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto end2 = chrono::steady_clock::now();
 
-    auto cachat_1 = cachatWithMeasuring(A, G, word1);
-    auto cachat_2 = cachatWithMeasuring(A, G, word2);
-
-    bool res_cachat_1 = get<0>(cachat_1);
-    bool res_cachat_2 = get<0>(cachat_2);
+//    auto cachat_1 = cachatWithMeasuring(A, G, word1);
+//    auto cachat_2 = cachatWithMeasuring(A, G, word2);
+//
+//    bool res_cachat_1 = get<0>(cachat_1);
+//    bool res_cachat_2 = get<0>(cachat_2);
 
     auto cachat_min_1 = cachatMinWithMeasuring(A, G, word1);
     auto cachat_min_2 = cachatMinWithMeasuring(A, G, word2);
@@ -404,22 +412,32 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     bool res_cachat_min_1 = get<0>(cachat_min_1);
     bool res_cachat_min_2 = get<0>(cachat_min_2);
 
-    if (res_naive_dfa_1 != res_worklist_dfa_1
+    if (
+            res_naive_dfa_1 != res_worklist_dfa_1
             || res_naive_dfa_2 != res_worklist_dfa_2
-            || res_cachat_1 != res_worklist_dfa_1
-            || res_cachat_2 != res_worklist_dfa_2
+            //            || res_cachat_1 != res_worklist_dfa_1
+            //            || res_cachat_2 != res_worklist_dfa_2
             || res_cachat_min_1 != res_worklist_dfa_1
             || res_cachat_min_2 != res_worklist_dfa_2
             )
     {
-        string error = "results differ: ours: ";
+        string error = "results differ:";
+        error.append("\ndfa worklist:");
         error.append(to_string(res_worklist_dfa_1));
         error.append(", ");
-        error.append(to_string(res_worklist_dfa_1));
-        error.append(" cachat: ");
-        error.append(to_string(res_cachat_1));
+        error.append(to_string(res_worklist_dfa_2));
+        error.append("\ndfa naive:");
+        error.append(to_string(res_naive_dfa_1));
         error.append(", ");
-        error.append(to_string(res_cachat_2));
+        error.append(to_string(res_naive_dfa_2));
+//        error.append("\ncachat: ");
+//        error.append(to_string(res_cachat_1));
+//        error.append(", ");
+//        error.append(to_string(res_cachat_2));
+        error.append("\nmin cachat: ");
+        error.append(to_string(res_cachat_min_1));
+        error.append(", ");
+        error.append(to_string(res_cachat_min_2));
         throw error;
     }
 
@@ -527,15 +545,22 @@ void print_everything ()
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
 
+    Minimizer* min = new Minimizer(D);
+    NFA* M = min->minimize();
+
     cout << "CACHAT:" << endl;
 
     cout << "DFA:" << endl;
 
     cout << *D << endl;
 
+    cout << "minDFA:" << endl;
+
+    cout << *M << endl;
+
     cout << endl;
 
-    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(D, G);
+    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(M, G);
     tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
     GamePDS* P = get<0>(restuple);
     PAFA* AFA = get<1>(restuple);
@@ -719,9 +744,9 @@ void compareSubsumption ()
 
 int main ()
 {
-//    print_everything();
+    print_everything();
 
-    measureAndPrint();
+//    measureAndPrint();
 
 //    averagify();
 

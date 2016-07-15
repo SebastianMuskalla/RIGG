@@ -150,23 +150,28 @@ NFA* Minimizer::minimize ()
     set<Letter*> new_final_states;
     map<Letter*, Letter*> old_state_to_new_state;
 
-    bool found_initial = false;
+    cout << "final partition: " << endl;
 
     for (set<Letter*> Y : partition)
     {
-        bool is_final;
+        cout << "[]: ";
 
         string name = "[";
         for (Letter* l : Y)
         {
+            cout << *l;
             name.append(l->toString());
         }
+
+        cout << endl;
+
         name.append("]");
+
         Letter* state = PQ->addLetter(name);
 
         for (Letter* l : Y)
         {
-            old_state_to_new_state.emplace(l, state);
+            old_state_to_new_state[l] = state;
         }
 
         // if one state in Y is final, all states in Y are final
