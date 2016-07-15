@@ -14,7 +14,7 @@ class Determinizer
     Alphabet* Sigma;
     Alphabet* PQ;
     map<set<Letter*>, Letter*> set_to_state;
-    set<set<Letter*>> todo;
+    set<set<Letter*>> worklist;
     set<set<Letter*>> done;
     set<Transition*> nfa_trans;
     set<Transition*> dfa_trans;
@@ -28,6 +28,5 @@ public:
 
     NFA* determinize ();
 };
-
 
 #endif //RIGG_DETERMINIZER_H

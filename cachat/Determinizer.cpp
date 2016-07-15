@@ -28,7 +28,7 @@ Determinizer::Determinizer (NFA* A) :
         Sigma(A->Sigma),
         nfa_trans(A->transitions),
         set_to_state(),
-        todo(),
+        worklist(),
         done(),
         dfa_trans(),
         dfa_final_states()
@@ -36,7 +36,7 @@ Determinizer::Determinizer (NFA* A) :
     PQ = new Alphabet();
     set<Letter*> init_set;
     init_set.insert(A->initial_state);
-    todo.insert(init_set);
+    worklist.insert(init_set);
 
     init_letter = PQ->addLetter(setToString(init_set));
     set_to_state.emplace(init_set, init_letter);
@@ -49,11 +49,11 @@ Determinizer::Determinizer (NFA* A) :
 
 NFA* Determinizer::determinize ()
 {
-    while (!todo.empty())
+    while (!worklist.empty())
     {
         // pick state set from worklist for which transitions have not yet been processed
-        auto source_set = *todo.begin();
-        todo.erase(todo.begin());
+        auto source_set = *worklist.begin();
+        worklist.erase(worklist.begin());
         done.insert(source_set);
 
 
@@ -87,7 +87,7 @@ NFA* Determinizer::determinize ()
             {
                 target_letter = PQ->addLetter(setToString(target_set));
                 set_to_state.emplace(target_set, target_letter);
-                todo.insert(target_set);
+                worklist.insert(target_set);
 
                 if (isFinal)
                 {
