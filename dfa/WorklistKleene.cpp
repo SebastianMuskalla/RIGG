@@ -1,8 +1,8 @@
-#include "Solver.h"
+#include "WorklistKleene.h"
 
 using namespace std;
 
-Formula* Solver::recomputeValue (Letter* l)
+Formula* WorklistKleene::recomputeValue (Letter* l)
 {
     bool and_mode = l->alphabet == Nprover;
 
@@ -58,7 +58,7 @@ Formula* Solver::recomputeValue (Letter* l)
     return res;
 }
 
-void Solver::solve ()
+void WorklistKleene::solve ()
 {
     while (!todo.empty())
     {
@@ -93,7 +93,14 @@ void Solver::solve ()
         }
         else
         {
-            solution[l] = new_value;
+            if (use_subsumption)
+            {
+                solution[l] = new_value->simplify();
+            }
+            else
+            {
+                solution[l] = new_value;
+            }
 
             if (cout_debug)
             {
@@ -110,7 +117,7 @@ void Solver::solve ()
     }
 }
 
-Formula* Solver::formulaFor (Letter* l)
+Formula* WorklistKleene::formulaFor (Letter* l)
 {
     if (G->isNonterminal(l))
     {
@@ -122,15 +129,15 @@ Formula* Solver::formulaFor (Letter* l)
     }
 }
 
-Solver::Solver (NFA* A, GameGrammar* G) :
+WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption) :
         A(A),
         G(G),
         Q(A->states),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
-        Sigma(G->Sigma)
+        Sigma(G->Sigma),
+        use_subsumption(use_subsumption)
 {
-
     populate();
 
     id_box = new Box(A, Q, "ID");
@@ -152,13 +159,13 @@ Solver::Solver (NFA* A, GameGrammar* G) :
 
 }
 
-void Solver::populate ()
+void WorklistKleene::populate ()
 {
     populateSolutionAndWorklist();
     populateDependencies();
 }
 
-void Solver::populateSolutionAndWorklist ()
+void WorklistKleene::populateSolutionAndWorklist ()
 {
     for (Letter* l : Nprover->letters)
     {
@@ -172,7 +179,7 @@ void Solver::populateSolutionAndWorklist ()
     }
 }
 
-void Solver::populateDependencies ()
+void WorklistKleene::populateDependencies ()
 {
     for (auto rule : G->rules)
     {
@@ -188,7 +195,7 @@ void Solver::populateDependencies ()
     }
 }
 
-Formula* Solver::formulaFor (vector<Letter*> word)
+Formula* WorklistKleene::formulaFor (vector<Letter*> word)
 {
     if (cout_debug)
     {

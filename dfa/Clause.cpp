@@ -119,7 +119,7 @@ bool Clause::contains (Clause* c)
     for (Box* b : c->boxes)
     {
         bool found = false;
-        for (auto itr = boxes.begin(); itr != boxes.end() && !found; ++itr)
+        for (auto itr = boxes.begin(); !found && itr != boxes.end(); ++itr)
         {
             if ((**itr) == *b)
             {
