@@ -3,7 +3,7 @@
 
 using namespace std;
 
-NFA::NFA (Alphabet* Sigma, Alphabet* states, Letter* initial_state, set<Letter*> &final_states) :
+NFA::NFA (Alphabet* Sigma, Alphabet* states, Letter* initial_state, set<Letter*> final_states) :
         Sigma(Sigma),
         states(states),
         initial_state(initial_state),

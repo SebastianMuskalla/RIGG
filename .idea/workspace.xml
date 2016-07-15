@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="452" />
-    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="260" />
+    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="532" />
+    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="314" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" assignedExecutableTargets="true" buildAllGenerated="true">
     <generated>
@@ -16,17 +16,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.h" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cachat/Minimizer.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cachat/Minimizer.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/RIGG.iml" afterPath="$PROJECT_DIR$/.idea/RIGG.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Clause.cpp" afterPath="$PROJECT_DIR$/dfa/Clause.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Formula.cpp" afterPath="$PROJECT_DIR$/dfa/Formula.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Formula.h" afterPath="$PROJECT_DIR$/dfa/Formula.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Determinizer.cpp" afterPath="$PROJECT_DIR$/cachat/Determinizer.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Determinizer.h" afterPath="$PROJECT_DIR$/cachat/Determinizer.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/NFA.cpp" afterPath="$PROJECT_DIR$/common/NFA.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/NFA.h" afterPath="$PROJECT_DIR$/common/NFA.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dfa/Solver.cpp" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/dfa/Solver.h" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.h" />
     </list>
     <ignored path="RIGG.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,10 +47,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="406">
+              <caret line="603" column="30" selection-start-line="603" selection-start-column="30" selection-end-line="603" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="utility" pinned="false" current-in-tab="false">
+        <entry file="file://J:/MinGW/include/c++/4.8.3/utility">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="193">
+              <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="WorklistKleene.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
+            <state relative-caret-position="-369">
               <caret line="18" column="21" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="21" />
               <folding />
             </state>
@@ -87,11 +107,71 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.cpp">
+      <file leaf-file-name="NFA.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/NFA.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="537" column="5" selection-start-line="537" selection-start-column="5" selection-end-line="537" selection-end-column="5" />
+            <state relative-caret-position="193">
+              <caret line="52" column="80" selection-start-line="52" selection-start-column="80" selection-end-line="52" selection-end-column="80" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="unordered_map" pinned="false" current-in-tab="false">
+        <entry file="file://J:/MinGW/include/c++/4.8.3/unordered_map">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Minimizer.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cachat/Minimizer.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="18" column="84" selection-start-line="18" selection-start-column="32" selection-end-line="18" selection-end-column="84" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Minimizer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cachat/Minimizer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3145">
+              <caret line="185" column="5" selection-start-line="185" selection-start-column="5" selection-end-line="185" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Determinizer.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cachat/Determinizer.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Determinizer.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cachat/Determinizer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="778">
+              <caret line="54" column="35" selection-start-line="54" selection-start-column="27" selection-end-line="54" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NFA.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/NFA.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -106,8 +186,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/common/Rule.cpp" />
-        <option value="$PROJECT_DIR$/common/Rule.h" />
         <option value="$PROJECT_DIR$/common/Letter.cpp" />
         <option value="$PROJECT_DIR$/common/Rejecting.h" />
         <option value="$PROJECT_DIR$/common/Transition.cpp" />
@@ -122,13 +200,11 @@
         <option value="$PROJECT_DIR$/cachat/AFATransition.cpp" />
         <option value="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h" />
         <option value="$PROJECT_DIR$/main_old.cpp" />
-        <option value="$PROJECT_DIR$/cachat/Determinizer.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/common/Transition.h" />
         <option value="$PROJECT_DIR$/randomgen/AlphabetGen.cpp" />
         <option value="$PROJECT_DIR$/randomgen/TVAutomataGen.cpp" />
         <option value="$PROJECT_DIR$/randomgen/TVGrammarGen.cpp" />
-        <option value="$PROJECT_DIR$/common/NFA.cpp" />
         <option value="$PROJECT_DIR$/cachat/Determinizer.cpp" />
         <option value="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.cpp" />
         <option value="$PROJECT_DIR$/randomgen/AlphabetGen.h" />
@@ -143,7 +219,6 @@
         <option value="$PROJECT_DIR$/common/PointeeComparator.h" />
         <option value="$PROJECT_DIR$/common/Printable.h" />
         <option value="$PROJECT_DIR$/common/GameGrammar.h" />
-        <option value="$PROJECT_DIR$/common/NFA.h" />
         <option value="$PROJECT_DIR$/cachat/PAFA.h" />
         <option value="$PROJECT_DIR$/cachat/PAFA.cpp" />
         <option value="$PROJECT_DIR$/cachat/Cachat.cpp" />
@@ -156,7 +231,12 @@
         <option value="$PROJECT_DIR$/dfa/WorklistKleene.h" />
         <option value="$PROJECT_DIR$/dfa/NaiveKleene.h" />
         <option value="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
+        <option value="$PROJECT_DIR$/cachat/Determinizer.h" />
         <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/common/NFA.h" />
+        <option value="$PROJECT_DIR$/common/NFA.cpp" />
+        <option value="$PROJECT_DIR$/cachat/Minimizer.h" />
+        <option value="$PROJECT_DIR$/cachat/Minimizer.cpp" />
       </list>
     </option>
   </component>
@@ -345,7 +425,7 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32444444" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32815966" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32777777" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23666666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2113951" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -403,36 +483,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/MinGW/include/c++/4.8.3/bits/stl_algo.h" />
-    <entry file="file://$PROJECT_DIR$/main_old.cpp" />
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main2.cpp" />
-    <entry file="file://$PROJECT_DIR$/cachat/Determinizer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="28" column="11" selection-start-line="28" selection-start-column="11" selection-end-line="28" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="768">
           <caret line="32" column="29" selection-start-line="32" selection-start-column="29" selection-end-line="32" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cachat/Determinizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="93" column="59" selection-start-line="93" selection-start-column="59" selection-end-line="93" selection-end-column="59" />
           <folding />
         </state>
       </provider>
@@ -449,13 +503,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11543">
           <caret line="679" column="0" selection-start-line="679" selection-start-column="0" selection-end-line="679" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://J:/MinGW/include/c++/4.8.3/unordered_map">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -537,14 +584,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="799">
           <caret line="47" column="70" selection-start-line="47" selection-start-column="70" selection-end-line="47" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/NFA.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1377">
-          <caret line="81" column="28" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -637,14 +676,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/NFA.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="40" column="14" selection-start-line="40" selection-start-column="14" selection-end-line="40" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Formula.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1615">
@@ -733,9 +764,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://J:/MinGW/include/c++/4.8.3/bits/stl_set.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="459" column="6" selection-start-line="459" selection-start-column="6" selection-end-line="459" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Determinizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="778">
+          <caret line="54" column="35" selection-start-line="54" selection-start-column="27" selection-end-line="54" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://J:/MinGW/include/c++/4.8.3/utility">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
+        <state relative-caret-position="-369">
           <caret line="18" column="21" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="21" />
           <folding />
         </state>
@@ -765,10 +820,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://J:/MinGW/include/c++/4.8.3/unordered_map">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/NFA.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="52" column="80" selection-start-line="52" selection-start-column="80" selection-end-line="52" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Determinizer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="84" selection-start-line="18" selection-start-column="32" selection-end-line="18" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3145">
+          <caret line="185" column="5" selection-start-line="185" selection-start-column="5" selection-end-line="185" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/NFA.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="537" column="5" selection-start-line="537" selection-start-column="5" selection-end-line="537" selection-end-column="5" />
+        <state relative-caret-position="406">
+          <caret line="603" column="30" selection-start-line="603" selection-start-column="30" selection-end-line="603" selection-end-column="30" />
           <folding />
         </state>
       </provider>

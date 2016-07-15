@@ -9,6 +9,7 @@
 #include "randomgen/TVGrammarGen.h"
 #include "randomgen/TVAutomataGen.h"
 #include "dfa/NaiveKleene.h"
+#include "cachat/Minimizer.h"
 
 using namespace std;
 
@@ -174,6 +175,59 @@ tuple<bool, uint, uint, uint> cachatWithMeasuring (NFA* A, GameGrammar* G, vecto
 }
 
 /**
+ * Given an NFA representing the regular goal language, a game grammar and an initial sentential form,
+ * return true iff refuter can win the non-inclusion game from the given sentential form
+ *
+ * Internally, the game is converted to a pushdown game a la Cachat and solved using his saturation procedure
+ *
+ * Provides time measuring for the 3 phases of the procedure
+ */
+tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar* G, vector<Letter*> word)
+{
+    auto start = chrono::steady_clock::now();
+
+    // determinize the given automaton
+    Determinizer* det = new Determinizer(A);
+    NFA* D = det->determinize();
+
+    auto post_det = chrono::steady_clock::now();
+
+    // determinize the given automaton
+    Minimizer* min = new Minimizer(D);
+    NFA* M = min->minimize();
+
+    auto post_min = chrono::steady_clock::now();
+
+    // generate pushdown system and alternating automaton that define the equivalent game
+    GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(M, G);
+    tuple<GamePDS*, PAFA*, Letter*, Letter*> restuple = cachatifier->cachatify();
+    GamePDS* P = get<0>(restuple);
+    PAFA* AFA = get<1>(restuple);
+    Letter* init_refuter = get<2>(restuple);
+    Letter* init_prover = get<3>(restuple);
+
+    auto post_gen = chrono::steady_clock::now();
+
+    // solve using cachats saturation procedure
+    Cachat* cachat = new Cachat(P, AFA);
+    cachat->saturate();
+    vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
+    bool res = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
+
+    auto end = chrono::steady_clock::now();
+
+    uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+    uint minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
+    uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
+    uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+
+    cout << "A states: " << A->states->size() << endl;
+    cout << "D states: " << D->states->size() << endl;
+    cout << "M states: " << M->states->size() << endl;
+    return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
+}
+
+/**
  * Grammar generating (ab)^*, Automaton accepting (ab)^*
  *
  * (Example from the Paper)
@@ -290,7 +344,7 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
-tuple<bool, bool, uint, uint, uint, uint, uint, uint> timeMeasuring (
+tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint> timeMeasuring (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -316,8 +370,19 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint> timeMeasuring (
     bool res_cachat_1 = get<0>(cachat_1);
     bool res_cachat_2 = get<0>(cachat_2);
 
-    if (res_worklist_dfa_1 != res_cachat_1 || res_naive_dfa_1 != res_worklist_dfa_1 ||
-        res_worklist_dfa_2 != res_cachat_2 || res_naive_dfa_2 != res_worklist_dfa_2)
+    auto cachat_min_1 = cachatMinWithMeasuring(A, G, word1);
+    auto cachat_min_2 = cachatMinWithMeasuring(A, G, word2);
+
+    bool res_cachat_min_1 = get<0>(cachat_1);
+    bool res_cachat_min_2 = get<0>(cachat_2);
+
+    if (res_cachat_1 != res_worklist_dfa_1
+        || res_cachat_2 != res_worklist_dfa_2
+        || res_naive_dfa_1 != res_worklist_dfa_1
+        || res_naive_dfa_2 != res_worklist_dfa_2
+        || res_cachat_min_1 != res_worklist_dfa_1
+        || res_cachat_min_2 != res_worklist_dfa_2
+            )
     {
         string error = "results differ: ours: ";
         error.append(to_string(res_worklist_dfa_1));
@@ -339,11 +404,26 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint> timeMeasuring (
     uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
     uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
 
-    return tuple<bool, bool, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1, res_worklist_dfa_2, worklist_time,
-                                                                 cachat_total,
-                                                                 cachat_determinize,
-                                                                 cachat_generate,
-                                                                 cachat_saturate, naive_time);
+    uint cachat_min_determinize = (get<1>(cachat_min_1) + get<1>(cachat_min_2)) / 2;
+    uint cachat_min_minimize = (get<2>(cachat_min_1) + get<2>(cachat_min_2)) / 2;
+    uint cachat_min_generate = (get<3>(cachat_min_1) + get<3>(cachat_min_2)) / 2;
+    uint cachat_min_saturate = (get<4>(cachat_min_1) + get<4>(cachat_min_2)) / 2;
+    uint cachat_min_total = cachat_min_determinize + cachat_min_minimize + cachat_min_generate + cachat_min_saturate;
+
+    return tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1,
+                                                                                               res_worklist_dfa_2,
+                                                                                               worklist_time,
+                                                                                               cachat_total,
+                                                                                               cachat_determinize,
+                                                                                               cachat_generate,
+                                                                                               cachat_saturate,
+                                                                                               naive_time,
+                                                                                               cachat_min_total,
+                                                                                               cachat_min_determinize,
+                                                                                               cachat_min_minimize,
+                                                                                               cachat_min_generate,
+                                                                                               cachat_min_saturate
+    );
 }
 
 /**
@@ -518,10 +598,10 @@ void averagify ()
     {
         NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
         GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
-        auto res1 = cachatWithMeasuring(A, G, {G->Nrefuter->get(0)});
-        auto res2 = cachatWithMeasuring(A, G, {G->Nprover->get(0)});
-        total += get<3>(res1);
-        total += get<3>(res2);
+        auto res1 = cachatMinWithMeasuring(A, G, {G->Nrefuter->get(0)});
+        auto res2 = cachatMinWithMeasuring(A, G, {G->Nprover->get(0)});
+        total += get<4>(res1);
+        total += get<4>(res2);
     }
 
     uint avg = total / (2 * nr_tries);
@@ -556,6 +636,11 @@ void measureAndPrint ()
                 cout << "    determinize: " << get<4>(t) << endl;
                 cout << "    generate:    " << get<5>(t) << endl;
                 cout << "    saturate:    " << get<6>(t) << endl;
+                cout << "min cachat:   " << get<8>(t) << endl;
+                cout << "    determinize: " << get<9>(t) << endl;
+                cout << "    minimize:    " << get<10>(t) << endl;
+                cout << "    generate:    " << get<11>(t) << endl;
+                cout << "    saturate:    " << get<12>(t) << endl;
             }
         }
         catch (string s)

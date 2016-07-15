@@ -50,7 +50,7 @@ public:
      *
      * transitions can be added later
      */
-    NFA (Alphabet* Sigma, Alphabet* states, Letter* initial_state, set<Letter*> &final_states);
+    NFA (Alphabet* Sigma, Alphabet* states, Letter* initial_state, set<Letter*> final_states);
 
     /**
      * construct a given transition with specified origin, label and target, add it to the NFA and return a pointer to it

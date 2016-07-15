@@ -24,6 +24,7 @@
       <sourceFolder url="file://$MODULE_DIR$/cachat/GamePDS.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Cachat.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cachat/Minimizer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/AFATransition.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/GrammarDFAtoPDSAFA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PAFA.cpp" isTestSource="false" />
@@ -35,12 +36,13 @@
       <sourceFolder url="file://$MODULE_DIR$/cachat/GamePDS.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/PAFA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cachat/Minimizer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/common/NFA.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Letter.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Alphabet.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Letter.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/GameGrammar.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Printable.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/common/NFA.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/common/GameGrammar.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/GameGrammar.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Transition.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/common/Alphabet.cpp" isTestSource="false" />

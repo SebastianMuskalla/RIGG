@@ -69,7 +69,7 @@ void WorklistKleene::solve ()
 
         if (cout_debug)
         {
-            cout << "picked up " << *l << " from todo" << endl;
+            cout << "picked up " << *l << " from worklist" << endl;
             cout << "old value: " << *old_value << endl;
         }
 
