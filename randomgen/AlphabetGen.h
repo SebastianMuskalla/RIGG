@@ -28,6 +28,10 @@ private:
     unsigned int nr_letters;
 
     string prefix;
+
+    AlphabetGen (AlphabetGen const &) = delete;
+
+    AlphabetGen &operator= (AlphabetGen const &) = delete;
 };
 
 #endif //RIGG_ALPHABETGEN_H

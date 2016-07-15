@@ -54,6 +54,10 @@ public:
      * convers a sentential from of the grammar to the word containing the corresponding stack symbols
      */
     vector<Letter*> wordToStackWord (vector<Letter*> word);
+
+    GrammarDFAtoPDSAFA (GrammarDFAtoPDSAFA const &) = delete;
+
+    GrammarDFAtoPDSAFA &operator= (GrammarDFAtoPDSAFA const &) = delete;
 };
 
 #endif //RIGG_GRAMMARNFATOPDSAFA_H

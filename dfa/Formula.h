@@ -15,13 +15,20 @@ private:
     /**
      * memoization: values will be computed on first usage
      */
-    mutable Ternary rejecting = UNDEFINED;
-    mutable Ternary is_false = UNDEFINED;
+    mutable Ternary rejecting;
+    mutable Ternary is_false;
 
     static Formula* FALSE_FORMULA;
 
 public:
-    /**
+
+
+    Formula () :
+            rejecting(UNDEFINED),
+            is_false(UNDEFINED)
+    { }
+
+/**
      * list of clauses of the formula
      */
     vector<Clause*> clauses;
@@ -105,6 +112,10 @@ public:
     }
 
     Formula* simplify ();
+
+    Formula (Formula const &) = delete;
+
+    Formula &operator= (Formula const &) = delete;
 };
 
 #endif //RIGG_FORMULA_H

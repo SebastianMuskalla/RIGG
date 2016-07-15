@@ -80,6 +80,10 @@ private:
      * Recompute the solution for a given non-terminal
      */
     Formula* recomputeValue (Letter* l);
+
+    WorklistKleene (WorklistKleene const &) = delete;
+
+    WorklistKleene &operator= (WorklistKleene const &) = delete;
 };
 
 #endif //RIGG_SOLVER_H

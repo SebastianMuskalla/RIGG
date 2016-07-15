@@ -45,6 +45,11 @@ public:
      */
     void solve ();
 
+
+    NaiveKleene (NaiveKleene const &) = delete;
+
+    NaiveKleene &operator= (NaiveKleene const &) = delete;
+
 private:
     Box* identity_box;
     Formula* identity_formula;
@@ -66,6 +71,7 @@ private:
      * Recompute the solution for a given non-terminal
      */
     Formula* recomputeValue (Letter* l);
+
 };
 
 #endif //RIGG_NAIVEKLEENE_H

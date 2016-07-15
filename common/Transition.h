@@ -28,6 +28,10 @@ public:
     {
         return label == other.label && source == other.source && target == other.target;
     }
+
+    Transition (Transition const &) = delete;
+
+    Transition &operator= (Transition const &) = delete;
 };
 
 #endif //RIGG_TRANSITION_H

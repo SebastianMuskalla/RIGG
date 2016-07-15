@@ -159,7 +159,7 @@ NFA* Minimizer::minimize ()
         string name = "[";
         for (Letter* l : Y)
         {
-            cout << *l;
+            cout << l->toString();
             name.append(l->toString());
         }
 

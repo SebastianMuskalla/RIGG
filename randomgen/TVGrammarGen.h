@@ -49,6 +49,9 @@ public:
      */
     GameGrammar* generate ();
 
+    TVGrammarGen (TVGrammarGen const &) = delete;
+
+    TVGrammarGen &operator= (TVGrammarGen const &) = delete;
 };
 
 #endif //RIGG_TVGRAMMARGEN_H

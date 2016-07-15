@@ -35,6 +35,10 @@ public:
      * Only use once per instance!
      */
     NFA* generate ();
+
+    TVAutomataGen (TVAutomataGen const &) = delete;
+
+    TVAutomataGen &operator= (TVAutomataGen const &) = delete;
 };
 
 #endif //RIGG_TVAUTOMATAGEN_H

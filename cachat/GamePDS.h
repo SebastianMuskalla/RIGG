@@ -43,6 +43,10 @@ public:
         }
 
     }
+
+    GamePDS (GamePDS const &) = delete;
+
+    GamePDS &operator= (GamePDS const &) = delete;
 };
 
 #endif //RIGG_GAMEPDS_H

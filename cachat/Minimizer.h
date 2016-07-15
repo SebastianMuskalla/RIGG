@@ -49,6 +49,10 @@ public:
      * Minimize it and return the minimal DFA
      */
     NFA* minimize ();
+
+    Minimizer (Minimizer const &) = delete;
+
+    Minimizer &operator= (Minimizer const &) = delete;
 };
 
 #endif //RIGG_MINIMIZER_H

@@ -84,6 +84,10 @@ public:
     {
         return new Box(nullptr, new Alphabet(), name);
     }
+
+    Box (Box const &) = delete;
+
+    Box &operator= (Box const &) = delete;
 };
 
 #endif //RIGG_BOX_H

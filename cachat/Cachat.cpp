@@ -8,10 +8,10 @@ void Cachat::saturate ()
     if (cout_debug)
     {
         cout << "initial AFA" << endl;
-        cout << *AFA << endl;
+        cout << AFA->toString() << endl;
         cout << endl;
         cout << "PDS" << endl;
-        cout << *P << endl;
+        cout << P->toString() << endl;
         cout << endl << endl;
 
     }
@@ -57,7 +57,7 @@ void Cachat::saturate ()
         if (cout_debug)
         {
             cout << "AFA after iteration " << to_string(iteration) << ", player 0" << endl;
-            cout << *AFA << endl;
+            cout << AFA->toString() << endl;
             cout << endl;
         }
 
@@ -68,7 +68,7 @@ void Cachat::saturate ()
             {
                 if (cout_debug)
                 {
-                    cout << "    Handling state " << *p << " and letter " << *a << endl;
+                    cout << "    Handling state " << p->toString() << " and letter " << a->toString() << endl;
                 }
 
                 // collect (q_i, v_i) states such that (p,a) -> (q_i, v_i) in the PDS
@@ -90,10 +90,10 @@ void Cachat::saturate ()
                 {
                     for (auto qvi : all_qvi)
                     {
-                        cout << "        q: " << *qvi.first << ", v: ";
+                        cout << "        q: " << qvi.first->toString() << ", v: ";
                         for (Letter* l : qvi.second)
                         {
-                            cout << *l;
+                            cout << l->toString();
                         }
                         cout << endl;
                     }
@@ -121,10 +121,10 @@ void Cachat::saturate ()
                     if (cout_debug)
                     {
 
-                        cout << "        q: " << *qvi.first << ", v: ";
+                        cout << "        q: " << qvi.first->toString() << ", v: ";
                         for (Letter* l : qvi.second)
                         {
-                            cout << *l;
+                            cout << l->toString();
                         }
                         cout << endl;
 
@@ -135,7 +135,7 @@ void Cachat::saturate ()
 
                             for (Letter* s : S_i)
                             {
-                                cout << *s;
+                                cout << s->toString();
                             }
 
                             cout << ")";
@@ -174,7 +174,7 @@ void Cachat::saturate ()
         if (cout_debug)
         {
             cout << "AFA after iteration " << to_string(iteration) << ", player 1" << endl;
-            cout << *AFA << endl;
+            cout << AFA->toString() << endl;
             cout << endl;
         }
     } // while !done

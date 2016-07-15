@@ -18,6 +18,10 @@ public:
      */
     vector<Letter*> letters;
 
+
+    Alphabet ()
+    { }
+
     virtual ~Alphabet ();
 
 /**
@@ -39,6 +43,10 @@ public:
     Letter* addLetter (string name);
 
     virtual string toString () const;
+
+    Alphabet (Alphabet const &) = delete;
+
+    Alphabet &operator= (Alphabet const &) = delete;
 };
 
 #endif //RIGG_ALPHABET_H
