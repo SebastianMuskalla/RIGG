@@ -775,11 +775,11 @@ void compareSubsumption ()
 
 int main ()
 {
-    testMinimization();
+//    testMinimization();
 
 //    printEverything();
 
-//    measureAndPrint();
+    measureAndPrint();
 
 //    averagify();
 

@@ -15,33 +15,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/RIGG.iml" afterPath="$PROJECT_DIR$/.idea/RIGG.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/AFATransition.h" afterPath="$PROJECT_DIR$/cachat/AFATransition.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Cachat.cpp" afterPath="$PROJECT_DIR$/cachat/Cachat.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Cachat.h" afterPath="$PROJECT_DIR$/cachat/Cachat.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Determinizer.h" afterPath="$PROJECT_DIR$/cachat/Determinizer.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/GamePDS.h" afterPath="$PROJECT_DIR$/cachat/GamePDS.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h" afterPath="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Minimizer.cpp" afterPath="$PROJECT_DIR$/cachat/Minimizer.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Minimizer.h" afterPath="$PROJECT_DIR$/cachat/Minimizer.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/PAFA.h" afterPath="$PROJECT_DIR$/cachat/PAFA.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/PDSTransition.h" afterPath="$PROJECT_DIR$/cachat/PDSTransition.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/Alphabet.h" afterPath="$PROJECT_DIR$/common/Alphabet.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/GameGrammar.h" afterPath="$PROJECT_DIR$/common/GameGrammar.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/Letter.h" afterPath="$PROJECT_DIR$/common/Letter.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/NFA.h" afterPath="$PROJECT_DIR$/common/NFA.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/Transition.h" afterPath="$PROJECT_DIR$/common/Transition.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Box.h" afterPath="$PROJECT_DIR$/dfa/Box.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Clause.h" afterPath="$PROJECT_DIR$/dfa/Clause.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Formula.h" afterPath="$PROJECT_DIR$/dfa/Formula.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.h" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.h" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/randomgen/AlphabetGen.h" afterPath="$PROJECT_DIR$/randomgen/AlphabetGen.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/randomgen/TVAutomataGen.h" afterPath="$PROJECT_DIR$/randomgen/TVAutomataGen.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/randomgen/TVGrammarGen.h" afterPath="$PROJECT_DIR$/randomgen/TVGrammarGen.h" />
     </list>
     <ignored path="RIGG.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -65,7 +42,7 @@
       <file leaf-file-name="NFA.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/NFA.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1224">
+            <state relative-caret-position="0">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -75,7 +52,7 @@
       <file leaf-file-name="TVGrammarGen.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/randomgen/TVGrammarGen.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="567">
+            <state relative-caret-position="792">
               <caret line="33" column="7" selection-start-line="33" selection-start-column="7" selection-end-line="33" selection-end-column="7" />
               <folding />
             </state>
@@ -85,7 +62,7 @@
       <file leaf-file-name="Cachat.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cachat/Cachat.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="975">
+            <state relative-caret-position="4224">
               <caret line="176" column="20" selection-start-line="176" selection-start-column="20" selection-end-line="176" selection-end-column="20" />
               <folding />
             </state>
@@ -95,18 +72,18 @@
       <file leaf-file-name="NaiveKleene.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
+            <state relative-caret-position="1728">
               <caret line="72" column="49" selection-start-line="72" selection-start-column="49" selection-end-line="72" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Minimizer.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Minimizer.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cachat/Minimizer.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="63">
-              <caret line="161" column="20" selection-start-line="161" selection-start-column="20" selection-end-line="161" selection-end-column="20" />
+            <state relative-caret-position="1169">
+              <caret line="175" column="9" selection-start-line="175" selection-start-column="9" selection-end-line="175" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -115,7 +92,7 @@
       <file leaf-file-name="WorklistKleene.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="855">
+            <state relative-caret-position="5448">
               <caret line="227" column="36" selection-start-line="227" selection-start-column="36" selection-end-line="227" selection-end-column="36" />
               <folding />
             </state>
@@ -132,11 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="885">
-              <caret line="167" column="0" selection-start-line="167" selection-start-column="0" selection-end-line="167" selection-end-column="0" />
+            <state relative-caret-position="18312">
+              <caret line="763" column="20" selection-start-line="763" selection-start-column="20" selection-end-line="763" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -175,7 +152,7 @@
       <file leaf-file-name="WorklistKleene.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1213">
+            <state relative-caret-position="2040">
               <caret line="85" column="45" selection-start-line="85" selection-start-column="45" selection-end-line="85" selection-end-column="45" />
               <folding />
             </state>
@@ -185,7 +162,7 @@
       <file leaf-file-name="NaiveKleene.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="709">
+            <state relative-caret-position="1152">
               <caret line="48" column="34" selection-start-line="48" selection-start-column="34" selection-end-line="48" selection-end-column="34" />
               <folding />
             </state>
@@ -205,7 +182,7 @@
       <file leaf-file-name="Formula.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/Formula.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
+            <state relative-caret-position="408">
               <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
               <folding />
             </state>
@@ -215,7 +192,7 @@
       <file leaf-file-name="Box.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/Box.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="927">
+            <state relative-caret-position="2016">
               <caret line="84" column="22" selection-start-line="84" selection-start-column="19" selection-end-line="84" selection-end-column="22" />
               <folding />
             </state>
@@ -245,7 +222,7 @@
       <file leaf-file-name="Cachat.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cachat/Cachat.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="888">
+            <state relative-caret-position="864">
               <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
               <folding />
             </state>
@@ -315,7 +292,7 @@
       <file leaf-file-name="Clause.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/Clause.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
+            <state relative-caret-position="648">
               <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
               <folding />
             </state>
@@ -335,7 +312,7 @@
       <file leaf-file-name="PAFA.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cachat/PAFA.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="999">
+            <state relative-caret-position="1728">
               <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding />
             </state>
@@ -345,7 +322,7 @@
       <file leaf-file-name="GrammarDFAtoPDSAFA.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1195">
+            <state relative-caret-position="1416">
               <caret line="59" column="53" selection-start-line="59" selection-start-column="53" selection-end-line="59" selection-end-column="53" />
               <folding />
             </state>
@@ -365,7 +342,7 @@
       <file leaf-file-name="NFA.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/NFA.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1213">
+            <state relative-caret-position="2208">
               <caret line="92" column="23" selection-start-line="92" selection-start-column="23" selection-end-line="92" selection-end-column="23" />
               <folding />
             </state>
@@ -375,7 +352,7 @@
       <file leaf-file-name="Letter.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/Letter.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="687">
+            <state relative-caret-position="720">
               <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
               <folding />
             </state>
@@ -385,7 +362,7 @@
       <file leaf-file-name="GameGrammar.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/GameGrammar.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1143">
+            <state relative-caret-position="1608">
               <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
               <folding />
             </state>
@@ -395,7 +372,7 @@
       <file leaf-file-name="Alphabet.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/Alphabet.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
+            <state relative-caret-position="504">
               <caret line="21" column="15" selection-start-line="21" selection-start-column="15" selection-end-line="21" selection-end-column="15" />
               <folding />
             </state>
@@ -459,9 +436,9 @@
         <option value="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
         <option value="$PROJECT_DIR$/randomgen/TVGrammarGen.h" />
         <option value="$PROJECT_DIR$/cachat/Cachat.cpp" />
-        <option value="$PROJECT_DIR$/cachat/Minimizer.cpp" />
         <option value="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
         <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/cachat/Minimizer.cpp" />
       </list>
     </option>
   </component>
@@ -645,13 +622,13 @@
     <frame x="-11" y="-11" width="3862" height="2120" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21436115" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21568109" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3218509" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32133675" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3288889" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23650385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23650385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18400212" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -761,7 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
           <caret line="12" column="15" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -769,7 +745,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4104">
           <caret line="171" column="0" selection-start-line="171" selection-start-column="0" selection-end-line="171" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -784,7 +759,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="336">
           <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -792,7 +766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="20" selection-start-line="0" selection-start-column="20" selection-end-line="0" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -836,7 +809,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1008">
           <caret line="42" column="29" selection-start-line="42" selection-start-column="29" selection-end-line="42" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -850,7 +822,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cachat/Cachat.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="888">
+        <state relative-caret-position="864">
           <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
           <folding />
         </state>
@@ -874,16 +846,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1195">
+        <state relative-caret-position="1416">
           <caret line="59" column="53" selection-start-line="59" selection-start-column="53" selection-end-line="59" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1285">
-          <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
           <folding />
         </state>
       </provider>
@@ -898,7 +862,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/NFA.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1213">
+        <state relative-caret-position="2208">
           <caret line="92" column="23" selection-start-line="92" selection-start-column="23" selection-end-line="92" selection-end-column="23" />
           <folding />
         </state>
@@ -938,7 +902,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
+        <state relative-caret-position="1152">
           <caret line="48" column="34" selection-start-line="48" selection-start-column="34" selection-end-line="48" selection-end-column="34" />
           <folding />
         </state>
@@ -946,7 +910,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1213">
+        <state relative-caret-position="2040">
           <caret line="85" column="45" selection-start-line="85" selection-start-column="45" selection-end-line="85" selection-end-column="45" />
           <folding />
         </state>
@@ -978,7 +942,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/GameGrammar.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1143">
+        <state relative-caret-position="1608">
           <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding />
         </state>
@@ -986,7 +950,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Box.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="927">
+        <state relative-caret-position="2016">
           <caret line="84" column="22" selection-start-line="84" selection-start-column="19" selection-end-line="84" selection-end-column="22" />
           <folding />
         </state>
@@ -994,7 +958,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/NFA.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1224">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1002,7 +966,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/common/Alphabet.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
+        <state relative-caret-position="504">
           <caret line="21" column="15" selection-start-line="21" selection-start-column="15" selection-end-line="21" selection-end-column="15" />
           <folding />
         </state>
@@ -1018,7 +982,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Clause.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
+        <state relative-caret-position="648">
           <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
@@ -1034,7 +998,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Formula.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
+        <state relative-caret-position="408">
           <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
           <folding />
         </state>
@@ -1042,7 +1006,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
+        <state relative-caret-position="5448">
           <caret line="227" column="36" selection-start-line="227" selection-start-column="36" selection-end-line="227" selection-end-column="36" />
           <folding />
         </state>
@@ -1058,7 +1022,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/randomgen/TVGrammarGen.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
+        <state relative-caret-position="792">
           <caret line="33" column="7" selection-start-line="33" selection-start-column="7" selection-end-line="33" selection-end-column="7" />
           <folding />
         </state>
@@ -1066,7 +1030,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cachat/PAFA.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="999">
+        <state relative-caret-position="1728">
           <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding />
         </state>
@@ -1074,23 +1038,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cachat/Cachat.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="975">
+        <state relative-caret-position="4224">
           <caret line="176" column="20" selection-start-line="176" selection-start-column="20" selection-end-line="176" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="161" column="20" selection-start-line="161" selection-start-column="20" selection-end-line="161" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/common/Letter.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="687">
+        <state relative-caret-position="720">
           <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
           <folding />
         </state>
@@ -1098,7 +1054,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
+        <state relative-caret-position="1728">
           <caret line="72" column="49" selection-start-line="72" selection-start-column="49" selection-end-line="72" selection-end-column="49" />
           <folding />
         </state>
@@ -1106,8 +1062,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="885">
-          <caret line="167" column="0" selection-start-line="167" selection-start-column="0" selection-end-line="167" selection-end-column="0" />
+        <state relative-caret-position="18312">
+          <caret line="763" column="20" selection-start-line="763" selection-start-column="20" selection-end-line="763" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1285">
+          <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Minimizer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1169">
+          <caret line="175" column="9" selection-start-line="175" selection-start-column="9" selection-end-line="175" selection-end-column="9" />
           <folding />
         </state>
       </provider>
