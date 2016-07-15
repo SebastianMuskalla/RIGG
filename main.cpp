@@ -750,7 +750,7 @@ void compareSubsumption ()
 {
     while (true)
     {
-        NFA* A = TVAutomataGen(10, 10, 0.8, 0.8).generate();
+        NFA* A = TVAutomataGen(10, 3, 0.8, 0.8).generate();
         GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
 
         auto start = chrono::steady_clock::now();
