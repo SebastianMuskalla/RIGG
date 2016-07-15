@@ -54,16 +54,16 @@
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file://J:/MinGW/include" />
-          <root url="file://J:/MinGW/x86_64-w64-mingw32/include" />
-          <root url="file://J:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include-fixed" />
-          <root url="file://J:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include" />
+          <root url="file://D:/MinGW/include" />
+          <root url="file://D:/MinGW/x86_64-w64-mingw32/include" />
+          <root url="file://D:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include-fixed" />
+          <root url="file://D:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include" />
         </CLASSES>
         <SOURCES>
-          <root url="file://J:/MinGW/include" />
-          <root url="file://J:/MinGW/x86_64-w64-mingw32/include" />
-          <root url="file://J:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include-fixed" />
-          <root url="file://J:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include" />
+          <root url="file://D:/MinGW/include" />
+          <root url="file://D:/MinGW/x86_64-w64-mingw32/include" />
+          <root url="file://D:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include-fixed" />
+          <root url="file://D:/MinGW/lib64/gcc/x86_64-w64-mingw32/4.8.3/include" />
         </SOURCES>
       </library>
     </orderEntry>
