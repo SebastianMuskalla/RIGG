@@ -744,7 +744,7 @@ void compareSubsumption ()
 
 int main ()
 {
-    print_everything();
+//    print_everything();
 
 //    measureAndPrint();
 
