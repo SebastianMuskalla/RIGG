@@ -51,16 +51,16 @@ void testFormulaComposition ()
     G->clauses.push_back(c3);
     G->clauses.push_back(c4);
 
-    cout << *c1 << endl;
-    cout << *c2 << endl;
-    cout << *c3 << endl;
-    cout << *c4 << endl;
+    cout << c1->toString() << endl;
+    cout << c2->toString() << endl;
+    cout << c3->toString() << endl;
+    cout << c4->toString() << endl;
 
-    cout << *F << endl;
-    cout << *G << endl;
+    cout << F->toString() << endl;
+    cout << G->toString() << endl;
 
     Formula* FG = (F->composeWith(G));
-    cout << *FG << endl;
+    cout << FG->toString() << endl;
 
     cout << F->implies(G) << endl;
     cout << FG->implies(F) << endl;
@@ -74,6 +74,199 @@ void testFormulaComposition ()
     cout << (F->implies(TRUEFORM)) << endl;
     cout << (FALSEFORM->implies(F)) << endl;
     cout << (F->implies(FALSEFORM)) << endl;
+};
+
+/**
+ * Tests the reachability algorithm for AFAs
+ *
+ * Does not work anymore
+ */
+void testAFAReachability ()
+{
+    Alphabet* Gamma = new Alphabet();
+    Letter* a = Gamma->addLetter("a");
+    Letter* b = Gamma->addLetter("a");
+    PAFA* TEST = new PAFA(nullptr);
+    TEST->control_states = new Alphabet();
+    Letter* q0 = TEST->control_states->addLetter("q0");
+    Letter* q1 = TEST->control_states->addLetter("q1");
+    Letter* q2 = TEST->control_states->addLetter("q2");
+    Letter* q11 = TEST->control_states->addLetter("q11");
+    Letter* q12 = TEST->control_states->addLetter("q12");
+    Letter* q21 = TEST->control_states->addLetter("q21");
+    Letter* q22_a = TEST->control_states->addLetter("q22_a");
+    Letter* q22_b = TEST->control_states->addLetter("q22_b");
+    TEST->addTransition(q0, a, {q1});
+    TEST->addTransition(q0, a, {q2});
+    TEST->addTransition(q1, b, {q11});
+    TEST->addTransition(q1, b, {q12});
+    TEST->addTransition(q2, b, {q21});
+    TEST->addTransition(q2, b, {q22_a, q22_b});
+
+    cout << TEST->toString() << endl;
+
+    cout << endl << endl;
+
+    for (set<Letter*> S : TEST->reachableFromControlState(q0, {a, b}))
+    {
+        cout << "one S: ";
+        for (Letter* s : S)
+        {
+            cout << s->toString() << ",";
+        }
+        cout << endl;
+    }
+}
+
+void testMinimization ()
+{
+    Alphabet* Q = new Alphabet();
+    Letter* a = Q->addLetter("a");
+    Letter* b = Q->addLetter("b");
+    Letter* c = Q->addLetter("c");
+    Letter* d = Q->addLetter("d");
+    Letter* e = Q->addLetter("e");
+    Letter* f = Q->addLetter("f");
+
+    Alphabet* Sigma = new Alphabet();
+    Letter* n = Sigma->addLetter("0");
+    Letter* o = Sigma->addLetter("1");
+
+    NFA* DFA = new NFA(Sigma, Q, a, {c, e, d});
+    DFA->addTransition(a, n, b);
+    DFA->addTransition(a, o, c);
+    DFA->addTransition(b, n, a);
+    DFA->addTransition(b, o, d);
+    DFA->addTransition(c, n, e);
+    DFA->addTransition(c, o, f);
+    DFA->addTransition(d, n, e);
+    DFA->addTransition(d, o, f);
+    DFA->addTransition(e, n, e);
+    DFA->addTransition(e, o, f);
+    DFA->addTransition(f, n, f);
+    DFA->addTransition(f, o, f);
+
+    cout << DFA->toString() << endl;
+    cout << endl << endl;
+
+    Minimizer* min = new Minimizer(DFA);
+    NFA* M = min->minimize();
+
+    cout << M->toString() << endl;
+}
+
+/**
+ * Grammar generating (ab)^*, Automaton accepting (ab)^*
+ *
+ * (Example from the Paper)
+ */
+tuple<NFA*, GameGrammar*, vector<Letter*>> example1 ()
+{
+    Alphabet* Sigma = new Alphabet();
+    Letter* a = Sigma->addLetter("a");
+    Letter* b = Sigma->addLetter("b");
+
+    Alphabet* Nprover = new Alphabet();
+    Letter* Y = Nprover->addLetter("Y");
+
+    Alphabet* Nrefuter = new Alphabet();
+    Letter* X = Nrefuter->addLetter("X");
+
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
+    G->addRule(X, {a, Y});
+    G->addRule(X, {});
+    G->addRule(Y, {b, X});
+
+    Alphabet* Q = new Alphabet();
+    Letter* q0 = Q->addLetter("q0");
+    Letter* q1 = Q->addLetter("q1");
+    set<Letter*> finals = {q0};
+
+    NFA* A = new NFA(Sigma, Q, q0, finals);
+    A->addTransition(q0, a, q1);
+    A->addTransition(q1, b, q0);
+
+    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
+};
+
+/**
+ * Grammar generating (ab)^*, automaton accepting words where three consecutive a's or b's appear
+ */
+tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
+{
+    Alphabet* Sigma = new Alphabet();
+    Letter* a = Sigma->addLetter("a");
+    Letter* b = Sigma->addLetter("b");
+
+    Alphabet* Nprover = new Alphabet();
+    Letter* Y = Nprover->addLetter("Y");
+
+    Alphabet* Nrefuter = new Alphabet();
+    Letter* X = Nrefuter->addLetter("X");
+
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
+    G->addRule(X, {a, Y});
+    G->addRule(X, {b, Y});
+    G->addRule(Y, {a, X});
+    G->addRule(Y, {b, X});
+    // termination rule is missing
+
+    Alphabet* Q = new Alphabet();
+    Letter* q0 = Q->addLetter("q0");
+    Letter* qf = Q->addLetter("qf");
+    Letter* qa1 = Q->addLetter("qa1");
+    Letter* qa2 = Q->addLetter("qa2");
+    Letter* qb1 = Q->addLetter("qb1");
+    Letter* qb2 = Q->addLetter("qb2");
+    set<Letter*> finals = {qf};
+
+    NFA* A = new NFA(Sigma, Q, q0, finals);
+    A->addTransition(q0, a, qa1);
+    A->addTransition(qa1, a, qa2);
+    A->addTransition(qa2, a, qf);
+    A->addTransition(q0, b, qb1);
+    A->addTransition(qb1, b, qb2);
+    A->addTransition(qb2, b, qf);
+    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
+};
+
+/**
+ * Random example
+ */
+tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
+{
+    Alphabet* Sigma = new Alphabet();
+    Letter* a = Sigma->addLetter("a");
+    Letter* b = Sigma->addLetter("b");
+
+    Alphabet* Nprover = new Alphabet();
+    Letter* Y = Nprover->addLetter("Y");
+    Letter* Z = Nprover->addLetter("Z");
+
+    Alphabet* Nrefuter = new Alphabet();
+    Letter* X = Nrefuter->addLetter("X");
+    Letter* W = Nrefuter->addLetter("W");
+
+    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
+    G->addRule(Y, {a, a});
+    G->addRule(Y, {b, a});
+    G->addRule(Z, {a});
+    G->addRule(Z, {a, Z});
+    G->addRule(X, {a, Y, b});
+    G->addRule(X, {b});
+    G->addRule(W, {b, a});
+    G->addRule(W, {b});
+
+    Alphabet* Q = new Alphabet();
+    Letter* q0 = Q->addLetter("q0");
+    Letter* q1 = Q->addLetter("q1");
+    Letter* q2 = Q->addLetter("q2");
+    set<Letter*> finals = {q1, q2};
+
+    NFA* A = new NFA(Sigma, Q, q0, finals);
+    A->addTransition(q2, a, q1);
+    A->addTransition(q1, b, q2);
+    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
 };
 
 /**
@@ -218,14 +411,6 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     Minimizer* min = new Minimizer(D);
     NFA* M = min->minimize();
 
-    cout << *D << endl;
-
-    cout << endl << endl;
-
-    cout << *M << endl;
-
-    cout << endl;
-
     auto post_min = chrono::steady_clock::now();
 
     // generate pushdown system and alternating automaton that define the equivalent game
@@ -263,119 +448,6 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
 }
 
-/**
- * Grammar generating (ab)^*, Automaton accepting (ab)^*
- *
- * (Example from the Paper)
- */
-tuple<NFA*, GameGrammar*, vector<Letter*>> example11 ()
-{
-    Alphabet* Sigma = new Alphabet();
-    Letter* a = Sigma->addLetter("a");
-    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-
-    Alphabet* Nrefuter = new Alphabet();
-    Letter* X = Nrefuter->addLetter("X");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
-    G->addRule(X, {a, Y});
-    G->addRule(X, {});
-    G->addRule(Y, {b, X});
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    Letter* q1 = Q->addLetter("q1");
-    set<Letter*> finals = {q0};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-    A->addTransition(q0, a, q1);
-    A->addTransition(q1, b, q0);
-
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
-};
-
-/**
- * Grammar generating (ab)^*, automaton accepting words where three consecutive a's or b's appear
- */
-tuple<NFA*, GameGrammar*, vector<Letter*>> example2 ()
-{
-    Alphabet* Sigma = new Alphabet();
-    Letter* a = Sigma->addLetter("a");
-    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-
-    Alphabet* Nrefuter = new Alphabet();
-    Letter* X = Nrefuter->addLetter("X");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
-    G->addRule(X, {a, Y});
-    G->addRule(X, {b, Y});
-    G->addRule(Y, {a, X});
-    G->addRule(Y, {b, X});
-    // termination rule is missing
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    Letter* qf = Q->addLetter("qf");
-    Letter* qa1 = Q->addLetter("qa1");
-    Letter* qa2 = Q->addLetter("qa2");
-    Letter* qb1 = Q->addLetter("qb1");
-    Letter* qb2 = Q->addLetter("qb2");
-    set<Letter*> finals = {qf};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-    A->addTransition(q0, a, qa1);
-    A->addTransition(qa1, a, qa2);
-    A->addTransition(qa2, a, qf);
-    A->addTransition(q0, b, qb1);
-    A->addTransition(qb1, b, qb2);
-    A->addTransition(qb2, b, qf);
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {X});
-};
-
-/**
- * Random example
- */
-tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
-{
-    Alphabet* Sigma = new Alphabet();
-    Letter* a = Sigma->addLetter("a");
-    Letter* b = Sigma->addLetter("b");
-
-    Alphabet* Nprover = new Alphabet();
-    Letter* Y = Nprover->addLetter("Y");
-    Letter* Z = Nprover->addLetter("Z");
-
-    Alphabet* Nrefuter = new Alphabet();
-    Letter* X = Nrefuter->addLetter("X");
-    Letter* W = Nrefuter->addLetter("W");
-
-    GameGrammar* G = new GameGrammar(Sigma, Nrefuter, Nprover);
-    G->addRule(Y, {a, a});
-    G->addRule(Y, {b, a});
-    G->addRule(Z, {a});
-    G->addRule(Z, {a, Z});
-    G->addRule(X, {a, Y, b});
-    G->addRule(X, {b});
-    G->addRule(W, {b, a});
-    G->addRule(W, {b});
-
-    Alphabet* Q = new Alphabet();
-    Letter* q0 = Q->addLetter("q0");
-    Letter* q1 = Q->addLetter("q1");
-    Letter* q2 = Q->addLetter("q2");
-    set<Letter*> finals = {q1, q2};
-
-    NFA* A = new NFA(Sigma, Q, q0, finals);
-    A->addTransition(q2, a, q1);
-    A->addTransition(q1, b, q2);
-    return tuple<NFA*, GameGrammar*, vector<Letter*>>(A, G, {Y});
-};
 
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
@@ -476,7 +548,7 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 /**
  * Prints the (ab)^* example from the paper in detail
  */
-void print_everything ()
+void printEverything ()
 {
 
     Alphabet* Sigma = new Alphabet();
@@ -513,12 +585,12 @@ void print_everything ()
     s->solve();
 
     cout << "GRAMMAR:" << endl;
-    cout << *G << endl;
+    cout << G->toString() << endl;
 
     cout << endl;
 
     cout << "AUTOMATON:" << endl;
-    cout << *A << endl;
+    cout << A->toString() << endl;
 
     cout << endl << endl;
 
@@ -526,12 +598,12 @@ void print_everything ()
 
     cout << "For X: (expected result: prover wins ~ not rejecting)" << endl;
     Formula* solX = s->formulaFor({X});
-    cout << "Formula: " << *solX << endl;
+    cout << "Formula: " << solX->toString() << endl;
     cout << "Rejecting: " << solX->isRejecting() << endl;
 
     cout << "For Y: (expected result: refuter wins ~ is rejecting)" << endl;
     Formula* solY = s->formulaFor({Y});
-    cout << "Formula: " << *solY << endl;
+    cout << "Formula: " << solY->toString() << endl;
     cout << "Rejecting: " << solY->isRejecting() << endl;
 
     cout << endl << endl;
@@ -552,11 +624,11 @@ void print_everything ()
 
     cout << "DFA:" << endl;
 
-    cout << *D << endl;
+    cout << D->toString() << endl;
 
     cout << "minDFA:" << endl;
 
-    cout << *M << endl;
+    cout << M->toString() << endl;
 
     cout << endl;
 
@@ -569,13 +641,13 @@ void print_everything ()
 
     cout << "PUSHDOWN SYSTEM:" << endl;
 
-    cout << *P << endl;
+    cout << P->toString() << endl;
 
     cout << endl;
 
     cout << "INITIAL AFA:" << endl;
 
-    cout << *AFA << endl;
+    cout << AFA->toString() << endl;
 
     cout << endl;
 
@@ -584,7 +656,7 @@ void print_everything ()
 
     cout << "SATURATED AFA:" << endl;
 
-    cout << *AFA << endl;
+    cout << AFA->toString() << endl;
 
     cout << endl;
 
@@ -601,47 +673,6 @@ void print_everything ()
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
 }
 
-/**
- * Tests the reachability algorithm for AFAs
- *
- * Does not work anymore
- */
-void testAFAReachability ()
-{
-    Alphabet* Gamma = new Alphabet();
-    Letter* a = Gamma->addLetter("a");
-    Letter* b = Gamma->addLetter("a");
-    PAFA* TEST = new PAFA(nullptr);
-    TEST->control_states = new Alphabet();
-    Letter* q0 = TEST->control_states->addLetter("q0");
-    Letter* q1 = TEST->control_states->addLetter("q1");
-    Letter* q2 = TEST->control_states->addLetter("q2");
-    Letter* q11 = TEST->control_states->addLetter("q11");
-    Letter* q12 = TEST->control_states->addLetter("q12");
-    Letter* q21 = TEST->control_states->addLetter("q21");
-    Letter* q22_a = TEST->control_states->addLetter("q22_a");
-    Letter* q22_b = TEST->control_states->addLetter("q22_b");
-    TEST->addTransition(q0, a, {q1});
-    TEST->addTransition(q0, a, {q2});
-    TEST->addTransition(q1, b, {q11});
-    TEST->addTransition(q1, b, {q12});
-    TEST->addTransition(q2, b, {q21});
-    TEST->addTransition(q2, b, {q22_a, q22_b});
-
-    cout << *TEST << endl;
-
-    cout << endl << endl;
-
-    for (set<Letter*> S : TEST->reachableFromControlState(q0, {a, b}))
-    {
-        cout << "one S: ";
-        for (Letter* s : S)
-        {
-            cout << *s << ",";
-        }
-        cout << endl;
-    }
-}
 
 /**
  * Computes the every time Cachat's saturation algorithm needs for 10 random generated examples
@@ -744,7 +775,9 @@ void compareSubsumption ()
 
 int main ()
 {
-//    print_everything();
+    testMinimization();
+
+//    printEverything();
 
 //    measureAndPrint();
 

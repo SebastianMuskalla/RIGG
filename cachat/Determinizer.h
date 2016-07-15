@@ -44,6 +44,10 @@ public:
      * determinize and return the result
      */
     NFA* determinize ();
+
+    Determinizer (Determinizer const &) = delete;
+
+    Determinizer &operator= (Determinizer const &) = delete;
 };
 
 #endif //RIGG_DETERMINIZER_H

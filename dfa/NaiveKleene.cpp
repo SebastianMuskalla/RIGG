@@ -27,7 +27,7 @@ NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :
         cout << "initial values" << endl;
         for (auto pair : solution)
         {
-            cout << "key: " << *pair.first << ", value: " << *pair.second << endl;
+            cout << "key: " << pair.first->toString() << ", value: " << pair.second->toString() << endl;
         }
     }
 }
@@ -39,7 +39,7 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
         cout << "        computing forumula for ";
         for (Letter* l : word)
         {
-            cout << *l;
+            cout << l->toString();
         }
         cout << endl;
     }
@@ -48,7 +48,7 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
     {
         if (cout_debug)
         {
-            cout << "        epsilon: " << *identity_formula << endl;
+            cout << "        epsilon: " << identity_formula->toString() << endl;
         }
         return identity_formula;
     }
@@ -58,7 +58,7 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
 
     if (cout_debug)
     {
-        cout << "        formula for first letter " << **itr << " is: " << *res << endl;
+        cout << "        formula for first letter " << (*itr)->toString() << " is: " << res->toString() << endl;
     }
 
     ++itr;
@@ -68,8 +68,9 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
 
         if (cout_debug)
         {
-            cout << "        formula for letter " << **itr << " is: " << *formulaFor(*itr) << endl;
-            cout << "        composition is " << *res << endl;
+            cout << "        formula for letter " << (*itr)->toString() << " is: " << formulaFor(*itr)->toString() <<
+            endl;
+            cout << "        composition is " << res->toString() << endl;
         }
     }
     return res;
@@ -143,7 +144,7 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
 
     if (cout_debug)
     {
-        cout << "    recomputing formula for " << *l << endl;
+        cout << "    recomputing formula for " << l->toString() << endl;
         cout << "    owned by prover: " << and_mode << endl;
     }
 
@@ -161,7 +162,7 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
 
     if (cout_debug)
     {
-        cout << "    formula for first rule is: " << *res << endl;
+        cout << "    formula for first rule is: " << res->toString() << endl;
     }
 
     ++itr;
@@ -172,7 +173,7 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
 
         if (cout_debug)
         {
-            cout << "    formula for next rule is: " << *tmp << endl;
+            cout << "    formula for next rule is: " << tmp->toString() << endl;
         }
 
         if (and_mode)
@@ -186,7 +187,7 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
 
         if (cout_debug)
         {
-            cout << "    result of and/or is " << *res << endl;
+            cout << "    result of and/or is " << res->toString() << endl;
         }
     }
 

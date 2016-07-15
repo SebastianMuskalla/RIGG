@@ -28,6 +28,10 @@ public:
      */
     virtual string toString () const;
 
+    Letter (Letter const &) = delete;
+
+    Letter &operator= (Letter const &) = delete;
+
 private:
 
     /**
@@ -38,6 +42,7 @@ private:
             index(index),
             name(name)
     { }
+
 
 };
 

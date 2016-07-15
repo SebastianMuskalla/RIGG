@@ -87,6 +87,10 @@ public:
      * string representation
      */
     virtual string toString () const;
+
+    NFA (NFA const &) = delete;
+
+    NFA &operator= (NFA const &) = delete;
 };
 
 #endif //RIGG_NFA_H

@@ -36,6 +36,10 @@ public:
     {
         return AFA->pds_state_to_afa_state[p];
     }
+
+    Cachat (Cachat const &) = delete;
+
+    Cachat &operator= (Cachat const &) = delete;
 };
 
 #endif //RIGG_CACHAT_H

@@ -58,6 +58,10 @@ public:
     }
 
     virtual string toString () const;
+
+    GameGrammar (GameGrammar const &) = delete;
+
+    GameGrammar &operator= (GameGrammar const &) = delete;
 };
 
 #endif //RIGG_GAMEGRAMMAR_H

@@ -69,6 +69,10 @@ public:
      * Gamma is not destroyed because it is owned by the pushdown system
      */
     virtual ~PAFA ();
+
+    PAFA (PAFA const &) = delete;
+
+    PAFA &operator= (PAFA const &) = delete;
 };
 
 #endif //RIGG_PAFA_H

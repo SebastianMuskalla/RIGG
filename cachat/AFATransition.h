@@ -32,6 +32,10 @@ public:
     {
         return label == other.label && source == other.source && targets == other.targets;
     }
+
+    AFATransition (AFATransition const &) = delete;
+
+    AFATransition &operator= (AFATransition const &) = delete;
 };
 
 #endif //RIGG_AFATRANSITION_H

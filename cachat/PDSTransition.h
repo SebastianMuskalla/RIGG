@@ -32,6 +32,10 @@ public:
     { }
 
     virtual string toString () const;
+
+    PDSTransition (PDSTransition const &) = delete;
+
+    PDSTransition &operator= (PDSTransition const &) = delete;
 };
 
 #endif //RIGG_PDSTRANSITION_H

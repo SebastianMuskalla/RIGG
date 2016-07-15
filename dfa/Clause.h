@@ -23,6 +23,9 @@ private:
     Ternary rejecting = UNDEFINED;
 public:
 
+    Clause ()
+    { }
+
     /**
      * We do not delete the boxes in the clause, because the same object might be used in other clauses
      */
@@ -62,6 +65,10 @@ public:
      * given a box b, returns the singleton clause {b}
      */
     static Clause* wrap (Box* b);
+
+    Clause (Clause const &) = default;
+
+    Clause &operator= (Clause const &) = default;
 
 private:
     /**
