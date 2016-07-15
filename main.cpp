@@ -472,11 +472,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto end2 = chrono::steady_clock::now();
 
-//    auto cachat_1 = cachatWithMeasuring(A, G, word1);
-//    auto cachat_2 = cachatWithMeasuring(A, G, word2);
-//
-//    bool res_cachat_1 = get<0>(cachat_1);
-//    bool res_cachat_2 = get<0>(cachat_2);
+    auto cachat_1 = cachatWithMeasuring(A, G, word1);
+    auto cachat_2 = cachatWithMeasuring(A, G, word2);
+
+    bool res_cachat_1 = get<0>(cachat_1);
+    bool res_cachat_2 = get<0>(cachat_2);
 
     auto cachat_min_1 = cachatMinWithMeasuring(A, G, word1);
     auto cachat_min_2 = cachatMinWithMeasuring(A, G, word2);
@@ -487,8 +487,8 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     if (
             res_naive_dfa_1 != res_worklist_dfa_1
             || res_naive_dfa_2 != res_worklist_dfa_2
-            //            || res_cachat_1 != res_worklist_dfa_1
-            //            || res_cachat_2 != res_worklist_dfa_2
+            || res_cachat_1 != res_worklist_dfa_1
+            || res_cachat_2 != res_worklist_dfa_2
             || res_cachat_min_1 != res_worklist_dfa_1
             || res_cachat_min_2 != res_worklist_dfa_2
             )
@@ -502,10 +502,10 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
         error.append(to_string(res_naive_dfa_1));
         error.append(", ");
         error.append(to_string(res_naive_dfa_2));
-//        error.append("\ncachat: ");
-//        error.append(to_string(res_cachat_1));
-//        error.append(", ");
-//        error.append(to_string(res_cachat_2));
+        error.append("\ncachat: ");
+        error.append(to_string(res_cachat_1));
+        error.append(", ");
+        error.append(to_string(res_cachat_2));
         error.append("\nmin cachat: ");
         error.append(to_string(res_cachat_min_1));
         error.append(", ");
@@ -517,10 +517,10 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-//    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
-//    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
-//    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
-//    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
+    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
+    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
+    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
+    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
 
     uint cachat_min_determinize = (get<1>(cachat_min_1) + get<1>(cachat_min_2)) / 2;
     uint cachat_min_minimize = (get<2>(cachat_min_1) + get<2>(cachat_min_2)) / 2;
@@ -531,11 +531,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     return tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1,
                                                                                                res_worklist_dfa_2,
                                                                                                worklist_time,
-                                                                                               0, 0, 0, 0,
-//                                                                                               cachat_total,
-//                                                                                               cachat_determinize,
-//                                                                                               cachat_generate,
-//                                                                                               cachat_saturate,
+//                                                                                               0, 0, 0, 0,
+                                                                                               cachat_total,
+                                                                                               cachat_determinize,
+                                                                                               cachat_generate,
+                                                                                               cachat_saturate,
                                                                                                naive_time,
                                                                                                cachat_min_total,
                                                                                                cachat_min_determinize,
@@ -723,15 +723,15 @@ void measureAndPrint ()
             {
                 cout << "worklist dfa: " << get<2>(t) << endl;
                 cout << "naive dfa:    " << get<7>(t) << endl;
-//                cout << "cachat:       " << get<3>(t) << endl;
-//                cout << "    determinize: " << get<4>(t) << endl;
-//                cout << "    generate:    " << get<5>(t) << endl;
-//                cout << "    saturate:    " << get<6>(t) << endl;
+                cout << "cachat:       " << get<3>(t) << endl;
+                cout << "    determinize: " << get<4>(t) << endl;
+                cout << "    generate:    " << get<5>(t) << endl;
+                cout << "    saturate:    " << get<6>(t) << endl;
                 cout << "min cachat:   " << get<8>(t) << endl;
-//                cout << "    determinize: " << get<9>(t) << endl;
-//                cout << "    minimize:    " << get<10>(t) << endl;
-//                cout << "    generate:    " << get<11>(t) << endl;
-//                cout << "    saturate:    " << get<12>(t) << endl;
+                cout << "    determinize: " << get<9>(t) << endl;
+                cout << "    minimize:    " << get<10>(t) << endl;
+                cout << "    generate:    " << get<11>(t) << endl;
+                cout << "    saturate:    " << get<12>(t) << endl;
             }
 
             delete A->Sigma;
