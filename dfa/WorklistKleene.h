@@ -9,6 +9,8 @@ using namespace std;
 
 /**
  * Solver for grammar games based on Kleene-iteration over the domain of box-formulas
+ *
+ * Uses a worklist to only updates single values that could have been become unstable due to other updates
  */
 class WorklistKleene
 {
@@ -41,8 +43,8 @@ public:
     void solve ();
 
 private:
-    Box* id_box;
-    Formula* id_formula;
+    Box* identity_box;
+    Formula* identity_formula;
 
     multimap<Letter*, Letter*> dependencies;
     map<Letter*, Formula*> solution;

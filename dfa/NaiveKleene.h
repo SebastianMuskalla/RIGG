@@ -9,6 +9,11 @@
 #include "../common/GameGrammar.h"
 #include "Formula.h"
 
+/**
+ * Solver for grammar games based on Kleene-iteration over the domain of box-formulas
+ *
+ * Kleene iteration is implemented in a naive way, i.e. all components of the solution vector are updated in each step
+ */
 class NaiveKleene
 {
 public:
@@ -20,7 +25,9 @@ public:
     Alphabet* Nrefuter;
     Alphabet* Sigma;
 
-    /**
+    virtual ~NaiveKleene ();
+
+/**
      * Generate solver for given game instance
      */
     NaiveKleene (NFA* A, GameGrammar* G);
@@ -41,8 +48,8 @@ public:
     void solve ();
 
 private:
-    Box* id_box;
-    Formula* id_formula;
+    Box* identity_box;
+    Formula* identity_formula;
 
     map<Letter*, Formula*> solution;
     map<Letter*, Formula*> new_solution;

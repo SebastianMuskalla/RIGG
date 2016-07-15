@@ -27,6 +27,13 @@ public:
     vector<Clause*> clauses;
 
     /**
+     * We should not delete the FALSE_FORMULA, since it is shared
+     *
+     * Clauses should not be shared between formulas, so we can delete them
+     */
+    virtual ~Formula ();
+
+/**
      * returns true iff the formulas is rejecting, i.e. every clause in it is rejecting
      *
      * Memoization is used: upon the first call, rejecting will be initialized, afterwards, it will just be returned.

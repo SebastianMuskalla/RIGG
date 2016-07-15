@@ -6,7 +6,7 @@ string GamePDS::toString () const
 {
     string res;
     res.append("Stack alphabet: ");
-    res.append(stack_alphabet->toString());
+    res.append(Gamma->toString());
     res.append("\nStates of Player I: ");
     res.append(player1_states->toString());
     res.append("\nStates of Player II: ");

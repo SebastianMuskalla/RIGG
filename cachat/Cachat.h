@@ -8,24 +8,33 @@ typedef unsigned long long int uint;
 
 using namespace std;
 
+/**
+ * implements Cachat's saturation algorithm
+ *
+ * given a pushdown system with an ownership partitioning of the control states and an alternating finite automaton accepting the goal configurations, it satures the AFA to accepts the whole winning region, i.e. the set of configurations from which player0 can enforce reaching a goal configuration after finitely many steps
+ *
+ * the provided AFA is modified!
+ *
+ * has exponential worst-case time complexity (in the number of states of the AFA)
+ */
 class Cachat
 {
     GamePDS* P;
-    PAFA* A;
+    PAFA* AFA;
 
     bool cout_debug = false;
 
 public:
-    Cachat (GamePDS* P, PAFA* A) :
+    Cachat (GamePDS* P, PAFA* AFA) :
             P(P),
-            A(A)
+            AFA(AFA)
     { }
 
     void saturate ();
 
     Letter* convertToAFAState (Letter* p)
     {
-        return A->pds_state_to_afa_state[p];
+        return AFA->pds_state_to_afa_state[p];
     }
 };
 

@@ -31,7 +31,7 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
                 }
 
                 // ... if yes, insert the source state into the new S
-                new_S.insert(t->origin);
+                new_S.insert(t->source);
             }
 
             _continue_label:;
@@ -70,7 +70,7 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
                 // iterate over all successors
                 for (AFATransition* t : transitions)
                 {
-                    if (t->label == a && t->origin == state)
+                    if (t->label == a && t->source == state)
                     {
                         for (set<Letter*> inner_set : inner_current)
                         {
@@ -161,11 +161,20 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
 
 }
 
-PAFA::PAFA (Alphabet* Gamma, GamePDS* P) :
-        Gamma(Gamma),
+PAFA::PAFA (GamePDS* P) :
+        Gamma(P->Gamma),
         P(P),
         control_states(),
         pds_state_to_afa_state(),
         final_states(),
         transitions()
 { }
+
+PAFA::~PAFA ()
+{
+    delete control_states;
+    for (AFATransition* t : transitions)
+    {
+        delete t;
+    }
+}

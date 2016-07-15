@@ -1,13 +1,15 @@
 #ifndef RIGG_GAMEPDS_H
 #define RIGG_GAMEPDS_H
 
-
 #include <c++/4.8.3/set>
 #include "../common/Alphabet.h"
 #include "PDSTransition.h"
 
 using namespace std;
 
+/**
+ * game pushdown system, i.e. pushdown system with ownership partitioning of the control states
+ */
 class GamePDS : public Printable<GamePDS>
 {
 public:
@@ -16,16 +18,31 @@ public:
 
     Alphabet* player0_states;
     Alphabet* player1_states;
-    Alphabet* stack_alphabet;
+
+    /**
+     * stack alphabet
+     */
+    Alphabet* Gamma;
     set<PDSTransition*> transitions;
 
     GamePDS () :
             player0_states(),
             player1_states(),
-            stack_alphabet(),
+            Gamma(),
             transitions()
     { }
-};
 
+    virtual ~GamePDS ()
+    {
+        delete player0_states;
+        delete player1_states;
+        delete Gamma;
+        for (PDSTransition* t :transitions)
+        {
+            delete t;
+        }
+
+    }
+};
 
 #endif //RIGG_GAMEPDS_H

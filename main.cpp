@@ -87,7 +87,10 @@ bool solveWithWorklistDFA (NFA* A, GameGrammar* G, vector<Letter*> word, bool us
     WorklistKleene* s = new WorklistKleene(A, G, use_subsumption);
     s->solve();
     Formula* sol = s->formulaFor(word);
-    return sol->isRejecting();
+
+    bool res = sol->isRejecting();//    delete sol;
+    delete s;
+    return res;
 }
 
 /**
@@ -101,7 +104,9 @@ bool solveWithNaiveDFA (NFA* A, GameGrammar* G, vector<Letter*> word)
     NaiveKleene* s = new NaiveKleene(A, G);
     s->solve();
     Formula* sol = s->formulaFor(word);
-    return sol->isRejecting();
+    bool res = sol->isRejecting();
+    delete s;
+    return res;
 }
 
 /**
@@ -128,7 +133,17 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
     Cachat* cachat = new Cachat(P, AFA);
     cachat->saturate();
     vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
-    return AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
+
+    bool res = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
+
+    delete det;
+    delete cachatifier;
+    delete cachat;
+    delete D;
+    delete AFA;
+    delete P;
+
+    return res;
 }
 
 /**
@@ -137,7 +152,7 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
  *
  * Internally, the game is converted to a pushdown game a la Cachat and solved using his saturation procedure
  *
- * Provides time measuring for the 3 phases of the procedure
+ * Provides time measuring for the 4 phases of the procedure
  */
 tuple<bool, uint, uint, uint> cachatWithMeasuring (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
@@ -170,6 +185,13 @@ tuple<bool, uint, uint, uint> cachatWithMeasuring (NFA* A, GameGrammar* G, vecto
     uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
     uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_det).count();
     uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+
+    delete det;
+    delete cachatifier;
+    delete cachat;
+    delete D;
+    delete AFA;
+    delete P;
 
     return tuple<bool, uint, uint, uint>(res, determinize_time, generate_time, saturate_time);
 }
@@ -221,9 +243,15 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
     uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
 
-    cout << "A states: " << A->states->size() << endl;
-    cout << "D states: " << D->states->size() << endl;
-    cout << "M states: " << M->states->size() << endl;
+    delete det;
+    delete min;
+    delete cachatifier;
+    delete cachat;
+    delete D;
+    delete M;
+    delete AFA;
+    delete P;
+
     return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
 }
 
@@ -373,15 +401,16 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     auto cachat_min_1 = cachatMinWithMeasuring(A, G, word1);
     auto cachat_min_2 = cachatMinWithMeasuring(A, G, word2);
 
-    bool res_cachat_min_1 = get<0>(cachat_1);
-    bool res_cachat_min_2 = get<0>(cachat_2);
+    bool res_cachat_min_1 = get<0>(cachat_min_1);
+    bool res_cachat_min_2 = get<0>(cachat_min_2);
 
-    if (res_cachat_1 != res_worklist_dfa_1
-        || res_cachat_2 != res_worklist_dfa_2
-        || res_naive_dfa_1 != res_worklist_dfa_1
-        || res_naive_dfa_2 != res_worklist_dfa_2
-        || res_cachat_min_1 != res_worklist_dfa_1
-        || res_cachat_min_2 != res_worklist_dfa_2
+    if (
+            res_naive_dfa_1 != res_worklist_dfa_1
+            || res_naive_dfa_2 != res_worklist_dfa_2
+            || res_cachat_1 != res_worklist_dfa_1
+            || res_cachat_2 != res_worklist_dfa_2
+            || res_cachat_min_1 != res_worklist_dfa_1
+            || res_cachat_min_2 != res_worklist_dfa_2
             )
     {
         string error = "results differ: ours: ";
@@ -399,10 +428,10 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
-    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
-    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
-    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
+//    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
+//    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
+//    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
+//    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
 
     uint cachat_min_determinize = (get<1>(cachat_min_1) + get<1>(cachat_min_2)) / 2;
     uint cachat_min_minimize = (get<2>(cachat_min_1) + get<2>(cachat_min_2)) / 2;
@@ -413,10 +442,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     return tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1,
                                                                                                res_worklist_dfa_2,
                                                                                                worklist_time,
-                                                                                               cachat_total,
-                                                                                               cachat_determinize,
-                                                                                               cachat_generate,
-                                                                                               cachat_saturate,
+                                                                                               0, 0, 0, 0,
+//                                                                                               cachat_total,
+//                                                                                               cachat_determinize,
+//                                                                                               cachat_generate,
+//                                                                                               cachat_saturate,
                                                                                                naive_time,
                                                                                                cachat_min_total,
                                                                                                cachat_min_determinize,
@@ -549,13 +579,15 @@ void print_everything ()
 
 /**
  * Tests the reachability algorithm for AFAs
+ *
+ * Does not work anymore
  */
 void testAFAReachability ()
 {
     Alphabet* Gamma = new Alphabet();
     Letter* a = Gamma->addLetter("a");
     Letter* b = Gamma->addLetter("a");
-    PAFA* TEST = new PAFA(Gamma, nullptr);
+    PAFA* TEST = new PAFA(nullptr);
     TEST->control_states = new Alphabet();
     Letter* q0 = TEST->control_states->addLetter("q0");
     Letter* q1 = TEST->control_states->addLetter("q1");
@@ -602,6 +634,10 @@ void averagify ()
         auto res2 = cachatMinWithMeasuring(A, G, {G->Nprover->get(0)});
         total += get<4>(res1);
         total += get<4>(res2);
+
+        delete A->Sigma;
+        delete A;
+        delete G;
     }
 
     uint avg = total / (2 * nr_tries);
@@ -632,16 +668,20 @@ void measureAndPrint ()
             {
                 cout << "worklist dfa: " << get<2>(t) << endl;
                 cout << "naive dfa:    " << get<7>(t) << endl;
-                cout << "cachat:       " << get<3>(t) << endl;
-                cout << "    determinize: " << get<4>(t) << endl;
-                cout << "    generate:    " << get<5>(t) << endl;
-                cout << "    saturate:    " << get<6>(t) << endl;
+//                cout << "cachat:       " << get<3>(t) << endl;
+//                cout << "    determinize: " << get<4>(t) << endl;
+//                cout << "    generate:    " << get<5>(t) << endl;
+//                cout << "    saturate:    " << get<6>(t) << endl;
                 cout << "min cachat:   " << get<8>(t) << endl;
-                cout << "    determinize: " << get<9>(t) << endl;
-                cout << "    minimize:    " << get<10>(t) << endl;
-                cout << "    generate:    " << get<11>(t) << endl;
-                cout << "    saturate:    " << get<12>(t) << endl;
+//                cout << "    determinize: " << get<9>(t) << endl;
+//                cout << "    minimize:    " << get<10>(t) << endl;
+//                cout << "    generate:    " << get<11>(t) << endl;
+//                cout << "    saturate:    " << get<12>(t) << endl;
             }
+
+            delete A->Sigma;
+            delete A;
+            delete G;
         }
         catch (string s)
         {

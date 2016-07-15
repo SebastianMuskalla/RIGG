@@ -21,7 +21,7 @@ using namespace std;
 class Box : public Printable<Box>
 {
 private:
-    /**
+/**
  * memoization: values will be computed on first usage
  */
     Ternary rejecting = UNDEFINED;

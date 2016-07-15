@@ -37,6 +37,11 @@ public:
     { }
 
     /**
+     * We do not delete the terminal alphabet
+     */
+    virtual ~GameGrammar ();
+
+/**
      * add rule with specified non-terminals als left-hand side and specified sentential form as right-hand-side to the grammar
      */
     void addRule (Letter* lhs, vector<Letter*> rhs)

@@ -18,7 +18,9 @@ public:
      */
     vector<Letter*> letters;
 
-    /**
+    virtual ~Alphabet ();
+
+/**
      * number of letters currently in the alphabet
      */
     unsigned long long int size () const

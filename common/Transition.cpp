@@ -4,6 +4,6 @@ using namespace std;
 
 string Transition::toString () const
 {
-    return origin->toString().append(" - ").append(label->toString()).append(" -> ").append(target->toString());
+    return source->toString().append(" - ").append(label->toString()).append(" -> ").append(target->toString());
 }
 

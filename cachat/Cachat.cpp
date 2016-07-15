@@ -8,7 +8,7 @@ void Cachat::saturate ()
     if (cout_debug)
     {
         cout << "initial AFA" << endl;
-        cout << *A << endl;
+        cout << *AFA << endl;
         cout << endl;
         cout << "PDS" << endl;
         cout << *P << endl;
@@ -29,22 +29,22 @@ void Cachat::saturate ()
         // player 0 states (refuter)
         for (Letter* p : P->player0_states->letters)
         {
-            for (Letter* a : P->stack_alphabet->letters)
+            for (Letter* a : P->Gamma->letters)
             {
                 for (PDSTransition* t : P->transitions)
                 {
-                    if (t->read == a && t->source_state == p)
+                    if (t->read == a && t->source == p)
                     {
-                        Letter* q = t->target_state;
-                        Letter* q_afa = A->pds_state_to_afa_state[q];
+                        Letter* q = t->target;
+                        Letter* q_afa = AFA->pds_state_to_afa_state[q];
 
                         vector<Letter*> v = t->write;
-                        set<set<Letter*>> sets_S = A->reachableFromControlState(q_afa, v);
+                        set<set<Letter*>> sets_S = AFA->reachableFromControlState(q_afa, v);
 
                         for (set<Letter*> S : sets_S)
                         {
                             // try to add transition (do not add it if already present)
-                            if (A->addTransition(convertToAFAState(p), a, S))
+                            if (AFA->addTransition(convertToAFAState(p), a, S))
                             {
                                 done = false;
                             }
@@ -57,14 +57,14 @@ void Cachat::saturate ()
         if (cout_debug)
         {
             cout << "AFA after iteration " << to_string(iteration) << ", player 0" << endl;
-            cout << *A << endl;
+            cout << *AFA << endl;
             cout << endl;
         }
 
         // player 1 states (prover)
         for (Letter* p : P->player1_states->letters)
         {
-            for (Letter* a : P->stack_alphabet->letters)
+            for (Letter* a : P->Gamma->letters)
             {
                 if (cout_debug)
                 {
@@ -76,10 +76,10 @@ void Cachat::saturate ()
 
                 for (PDSTransition* t : P->transitions)
                 {
-                    if (t->read == a && t->source_state == p)
+                    if (t->read == a && t->source == p)
                     {
-                        Letter* q = t->target_state;
-                        Letter* q_afa = A->pds_state_to_afa_state[q];
+                        Letter* q = t->target;
+                        Letter* q_afa = AFA->pds_state_to_afa_state[q];
 
                         vector<Letter*> v = t->write;
                         all_qvi.insert(make_pair(q_afa, v));
@@ -116,7 +116,7 @@ void Cachat::saturate ()
                 {
                     unions_new.clear();
                     // compute for each i all possible S such that q_i - v_i -> S in the AFA
-                    set<set<Letter*>> possible_S_i = A->reachableFromControlState(qvi.first, qvi.second);
+                    set<set<Letter*>> possible_S_i = AFA->reachableFromControlState(qvi.first, qvi.second);
 
                     if (cout_debug)
                     {
@@ -163,7 +163,7 @@ void Cachat::saturate ()
                 for (set<Letter*> S : unions)
                 {
                     // try to add transition (do not add it if already present)
-                    if (A->addTransition(convertToAFAState(p), a, S))
+                    if (AFA->addTransition(convertToAFAState(p), a, S))
                     {
                         done = false;
                     }
@@ -174,7 +174,7 @@ void Cachat::saturate ()
         if (cout_debug)
         {
             cout << "AFA after iteration " << to_string(iteration) << ", player 1" << endl;
-            cout << *A << endl;
+            cout << *AFA << endl;
             cout << endl;
         }
     } // while !done
