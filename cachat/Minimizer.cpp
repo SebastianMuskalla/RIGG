@@ -33,7 +33,7 @@ Minimizer::Minimizer (NFA* DFA) :
 
     partition.insert(F);
 
-    if (nonF.empty())
+    if (!nonF.empty())
     {
         partition.insert(nonF);
     }
@@ -150,20 +150,15 @@ NFA* Minimizer::minimize ()
     set<Letter*> new_final_states;
     map<Letter*, Letter*> old_state_to_new_state;
 
-    cout << "final partition: " << endl;
 
     for (set<Letter*> Y : partition)
     {
-        cout << "[]: ";
 
         string name = "[";
         for (Letter* l : Y)
         {
-            cout << l->toString();
             name.append(l->toString());
         }
-
-        cout << endl;
 
         name.append("]");
 
