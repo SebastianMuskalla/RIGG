@@ -35,6 +35,7 @@ vector<Clause*> Clause::composeWith (Formula* G)
 
     }
     _postloop:
+    delete[] mapping;
     return res;
 }
 

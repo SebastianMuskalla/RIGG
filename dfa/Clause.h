@@ -22,7 +22,14 @@ private:
      */
     Ternary rejecting = UNDEFINED;
 public:
+
     /**
+     * We do not delete the boxes in the clause, because the same object might be used in other clauses
+     */
+    virtual ~Clause ()
+    { }
+
+/**
      * list of boxes of which the clause consits
      */
     vector<Box*> boxes;

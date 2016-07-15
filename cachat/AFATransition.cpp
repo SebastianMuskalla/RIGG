@@ -4,7 +4,7 @@ using namespace std;
 
 string AFATransition::toString () const
 {
-    string res = origin->toString().append(" - ").append(label->toString()).append(" -> ");
+    string res = source->toString().append(" - ").append(label->toString()).append(" -> ");
 
     bool first = true;
     for (Letter* t : targets)

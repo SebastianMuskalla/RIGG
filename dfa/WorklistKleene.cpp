@@ -132,7 +132,7 @@ Formula* WorklistKleene::formulaFor (Letter* l)
 WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption) :
         A(A),
         G(G),
-        Q(A->states),
+        Q(A->Q),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
         Sigma(G->Sigma),
@@ -140,13 +140,13 @@ WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption) :
 {
     populate();
 
-    id_box = new Box(A, Q, "ID");
+    identity_box = new Box(A, Q, "ID");
     for (Letter* q : Q->letters)
     {
-        id_box->content.emplace(q, q);
+        identity_box->content.emplace(q, q);
     }
 
-    id_formula = Formula::wrap(id_box);
+    identity_formula = Formula::wrap(identity_box);
 
     if (cout_debug)
     {
@@ -211,9 +211,9 @@ Formula* WorklistKleene::formulaFor (vector<Letter*> word)
     {
         if (cout_debug)
         {
-            cout << "        epsilon: " << *id_formula << endl;
+            cout << "        epsilon: " << *identity_formula << endl;
         }
-        return id_formula;
+        return identity_formula;
     }
 
     auto itr = word.begin();

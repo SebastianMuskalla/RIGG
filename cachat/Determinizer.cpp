@@ -24,7 +24,7 @@ string Determinizer::setToString (set<Letter*> set)
 
 Determinizer::Determinizer (NFA* A) :
         A(A),
-        Q(A->states),
+        Q(A->Q),
         Sigma(A->Sigma),
         nfa_trans(A->transitions),
         set_to_state(),
@@ -68,7 +68,7 @@ NFA* Determinizer::determinize ()
             // construct target set for given source set and letter
             for (Transition* t : nfa_trans)
             {
-                if (t->label == a && source_set.find(t->origin) != source_set.end())
+                if (t->label == a && source_set.find(t->source) != source_set.end())
                 {
                     target_set.insert(t->target);
 

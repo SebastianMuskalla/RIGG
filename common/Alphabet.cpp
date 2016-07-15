@@ -27,3 +27,11 @@ Letter* Alphabet::addLetter (string name)
     letters.push_back(l);
     return l;
 }
+
+Alphabet::~Alphabet ()
+{
+    for (Letter* q : letters)
+    {
+        delete q;
+    }
+}

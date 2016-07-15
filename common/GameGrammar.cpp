@@ -26,3 +26,8 @@ string GameGrammar::toString () const
 
 }
 
+GameGrammar::~GameGrammar ()
+{
+    delete Nrefuter;
+    delete Nprover;
+}

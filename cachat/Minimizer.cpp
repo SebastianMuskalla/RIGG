@@ -7,7 +7,7 @@
 Minimizer::Minimizer (NFA* DFA) :
         DFA(DFA),
         Sigma(DFA->Sigma),
-        Q(DFA->states)
+        Q(DFA->Q)
 {
     set<Letter*> F;
     set<Letter*> nonF;
@@ -70,7 +70,7 @@ NFA* Minimizer::minimize ()
             {
                 if (t->label == a && A.find(t->target) != A.end())
                 {
-                    X.insert(t->origin);
+                    X.insert(t->source);
                 }
             }
 
@@ -81,7 +81,7 @@ NFA* Minimizer::minimize ()
                 // for each set Y in partition ...
                 for (auto itr = partition.begin(); itr != partition.end();)
                 {
-                    // ... for which XcapY is nonempty and Y \ X is nonempty
+
                     set<Letter*> Y = *itr;
                     set<Letter*> YcapX;
                     set<Letter*> YwithoutX;
@@ -98,24 +98,33 @@ NFA* Minimizer::minimize ()
                         }
                     }
 
+                    // ... for which XcapY is nonempty and Y \ X is nonempty
                     if (!YcapX.empty() && !YwithoutX.empty())
                     {
+                        // replace Y in P by the two sets X ∩ Y and Y \ X
+
+                        // we need to be careful to not invalidate itr
                         auto new_itr = itr;
                         ++new_itr;
                         partition.erase(itr);
                         itr = new_itr;
+
                         partition.insert(YcapX);
                         partition.insert(YwithoutX);
 
                         auto w_itr = find(worklist.begin(), worklist.end(), Y);
                         if (w_itr != worklist.end())
                         {
+                            // if Y is in W
+                            // replace Y in W by the same two sets
                             worklist.erase(w_itr);
                             worklist.push_back(YcapX);
                             worklist.push_back(YwithoutX);
                         }
                         else
                         {
+                            // else add the smaller of the two sets
+
                             if (YcapX.size() <= YwithoutX.size())
                             {
                                 worklist.push_back(YcapX);
@@ -134,6 +143,8 @@ NFA* Minimizer::minimize ()
             }
         } // a in Sigma
     } // while worklist not empty
+
+    // convert the partition to a new set of states
 
     Alphabet* PQ = new Alphabet();
     set<Letter*> new_final_states;
@@ -176,7 +187,7 @@ NFA* Minimizer::minimize ()
 
         for (Transition* t : DFA->transitions)
         {
-            if (t->origin == *Y.begin())
+            if (t->source == *Y.begin())
             {
                 Letter* state_target = old_state_to_new_state[t->target];
                 minDFA->addTransition(state_source, t->label, state_target);

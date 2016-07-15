@@ -211,18 +211,13 @@ Formula* Formula::simplify ()
     return this;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Formula::~Formula ()
+{
+    if (this != FALSE_FORMULA)
+    {
+        for (Clause* c : clauses)
+        {
+            delete c;
+        }
+    }
+}

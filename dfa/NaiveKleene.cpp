@@ -7,20 +7,20 @@
 NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :
         A(A),
         G(G),
-        Q(A->states),
+        Q(A->Q),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
         Sigma(G->Sigma)
 {
     populate();
 
-    id_box = new Box(A, Q, "ID");
+    identity_box = new Box(A, Q, "ID");
     for (Letter* q : Q->letters)
     {
-        id_box->content.emplace(q, q);
+        identity_box->content.emplace(q, q);
     }
 
-    id_formula = Formula::wrap(id_box);
+    identity_formula = Formula::wrap(identity_box);
 
     if (cout_debug)
     {
@@ -48,9 +48,9 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
     {
         if (cout_debug)
         {
-            cout << "        epsilon: " << *id_formula << endl;
+            cout << "        epsilon: " << *identity_formula << endl;
         }
-        return id_formula;
+        return identity_formula;
     }
 
     auto itr = word.begin();
@@ -108,6 +108,15 @@ void NaiveKleene::solve ()
 
         if (!stable)
         {
+
+            // cant fix memory leak at the moment, smart pointers should be used for formulas
+//            for (Letter* l : N)
+//            {
+//                if (solution.find(l) != solution.end())
+//                {
+//                    delete solution[l];
+//                }
+//            }
             solution = new_solution;
             new_solution.clear();
         }
@@ -184,13 +193,16 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
     return res;
 }
 
-
-
-
-
-
-
-
-
-
-
+NaiveKleene::~NaiveKleene ()
+{
+    // cant fix memory leak at the moment
+//    delete identity_box;
+//    delete identity_formula;
+//    for (Letter* l : N)
+//    {
+//        if (solution.find(l) != solution.end())
+//        {
+//            delete solution[l];
+//        }
+//    }
+}

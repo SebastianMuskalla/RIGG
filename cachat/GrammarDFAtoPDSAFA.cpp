@@ -13,7 +13,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
 
     res_pds->player1_states = player1_states;
     res_pds->player0_states = player0_states;
-    res_pds->stack_alphabet = Gamma;
+    res_pds->Gamma = Gamma;
 
     for (Letter* a : Sigma->letters)
     {
@@ -31,7 +31,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
         stack_prover_nonterminals.emplace(Y, x);
     }
 
-    for (Letter* q : DFA->states->letters)
+    for (Letter* q : DFA->Q->letters)
     {
         Letter* q_refuter = player0_states->addLetter(q->toString().append("_r"));
         Letter* q_prover = player1_states->addLetter(q->toString().append("_p"));
@@ -40,7 +40,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
 
     }
 
-    PAFA* res_afa = new PAFA(Gamma, res_pds);
+    PAFA* res_afa = new PAFA(res_pds);
     res_afa->control_states = new Alphabet();
 
     for (Letter* q : player0_states->letters)
@@ -54,8 +54,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
         res_afa->pds_state_to_afa_state.emplace(q, q_AFA);
     }
 
-
-    for (Letter* q : DFA->states->letters)
+    for (Letter* q : DFA->Q->letters)
     {
         if (DFA->final_states.find(q) == DFA->final_states.end())
         {
@@ -70,7 +69,7 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     }
 
     // transitions that change between players
-    for (Letter* q : DFA->states->letters)
+    for (Letter* q : DFA->Q->letters)
     {
         Letter* q_refuter = refuter_states[q];
         Letter* q_prover = prover_states[q];
@@ -93,8 +92,8 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     // transitions that process terminals
     for (Transition* t : DFA->transitions)
     {
-        Letter* source_refuter = refuter_states[t->origin];
-        Letter* source_prover = prover_states[t->origin];
+        Letter* source_refuter = refuter_states[t->source];
+        Letter* source_prover = prover_states[t->source];
         Letter* target_refuter = refuter_states[t->target];
         Letter* target_prover = prover_states[t->target];
         Letter* x = stack_terminals[t->label];
@@ -112,7 +111,6 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
         Letter* stack_X = stack_refuter_nonterminals.find(X)->second;
 
         auto itrpair = G->rules.equal_range(X);
-
 
         for (auto itr = itrpair.first; itr != itrpair.second; ++itr)
         {
@@ -153,7 +151,6 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
 
         auto itrpair = G->rules.equal_range(Y);
 
-
         for (auto itr = itrpair.first; itr != itrpair.second; ++itr)
         {
             vector<Letter*> stack_word;
@@ -188,7 +185,6 @@ tuple<GamePDS*, PAFA*, Letter*, Letter*> GrammarDFAtoPDSAFA::cachatify ()
     Letter* init_prover = prover_states[DFA->initial_state];
 
     return make_tuple(res_pds, res_afa, init_refuter, init_prover);
-
 
 }
 
