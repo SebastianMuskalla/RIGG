@@ -2,12 +2,13 @@
 #include <c++/4.8.3/chrono>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
-#include "dfa/Solver.h"
+#include "dfa/WorklistKleene.h"
 #include "cachat/Determinizer.h"
 #include "cachat/GrammarDFAtoPDSAFA.h"
 #include "cachat/Cachat.h"
 #include "randomgen/TVGrammarGen.h"
 #include "randomgen/TVAutomataGen.h"
+#include "dfa/NaiveKleene.h"
 
 using namespace std;
 
@@ -80,9 +81,23 @@ void testFormulaComposition ()
  *
  * Internally, fixed point iteration over the domain of box formulas is used
  */
-bool dfa (NFA* A, GameGrammar* G, vector<Letter*> word)
+bool solveWithWorklistDFA (NFA* A, GameGrammar* G, vector<Letter*> word, bool use_subsumption = false)
 {
-    Solver* s = new Solver(A, G);
+    WorklistKleene* s = new WorklistKleene(A, G, use_subsumption);
+    s->solve();
+    Formula* sol = s->formulaFor(word);
+    return sol->isRejecting();
+}
+
+/**
+ * Given an NFA representing the regular goal language, a game grammar and an initial sentential form,
+ * return true iff refuter can win the non-inclusion game from the given sentential form
+ *
+ * Internally, fixed point iteration over the domain of box formulas is used
+ */
+bool solveWithNaiveDFA (NFA* A, GameGrammar* G, vector<Letter*> word)
+{
+    NaiveKleene* s = new NaiveKleene(A, G);
     s->solve();
     Formula* sol = s->formulaFor(word);
     return sol->isRejecting();
@@ -94,7 +109,7 @@ bool dfa (NFA* A, GameGrammar* G, vector<Letter*> word)
  *
  * Internally, the game is converted to a pushdown game a la Cachat and solved using his saturation procedure
  */
-bool cachat (NFA* A, GameGrammar* G, vector<Letter*> word)
+bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
     // determinize the given automaton
     Determinizer* det = new Determinizer(A);
@@ -275,7 +290,7 @@ tuple<NFA*, GameGrammar*, vector<Letter*>> example3 ()
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
-tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuring (
+tuple<bool, bool, uint, uint, uint, uint, uint, uint> timeMeasuring (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -285,10 +300,15 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuring (
 
     auto start = chrono::steady_clock::now();
 
-    auto res_dfa_1 = dfa(A, G, word1);
-    auto res_dfa_2 = dfa(A, G, word2);
+    auto res_worklist_dfa_1 = solveWithWorklistDFA(A, G, word1);
+    auto res_worklist_dfa_2 = solveWithWorklistDFA(A, G, word2);
 
     auto end = chrono::steady_clock::now();
+
+    auto res_naive_dfa_1 = solveWithNaiveDFA(A, G, word1);
+    auto res_naive_dfa_2 = solveWithNaiveDFA(A, G, word2);
+
+    auto end2 = chrono::steady_clock::now();
 
     auto cachat_1 = cachatWithMeasuring(A, G, word1);
     auto cachat_2 = cachatWithMeasuring(A, G, word2);
@@ -296,12 +316,13 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuring (
     bool res_cachat_1 = get<0>(cachat_1);
     bool res_cachat_2 = get<0>(cachat_2);
 
-    if (res_dfa_1 != res_cachat_1 || res_dfa_2 != res_cachat_2)
+    if (res_worklist_dfa_1 != res_cachat_1 || res_naive_dfa_1 != res_worklist_dfa_1 ||
+        res_worklist_dfa_2 != res_cachat_2 || res_naive_dfa_2 != res_worklist_dfa_2)
     {
         string error = "results differ: ours: ";
-        error.append(to_string(res_dfa_1));
+        error.append(to_string(res_worklist_dfa_1));
         error.append(", ");
-        error.append(to_string(res_dfa_1));
+        error.append(to_string(res_worklist_dfa_1));
         error.append(" cachat: ");
         error.append(to_string(res_cachat_1));
         error.append(", ");
@@ -309,16 +330,20 @@ tuple<bool, bool, uint, uint, uint, uint, uint> timeMeasuring (
         throw error;
     }
 
-    auto our = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 2;
+    auto worklist_time = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 2;
+
+    auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
     uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
     uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
     uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
     uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
 
-    return tuple<bool, bool, uint, uint, uint, uint, uint>(res_dfa_1, res_dfa_2, our, cachat_total, cachat_determinize,
-                                                           cachat_generate,
-                                                           cachat_saturate);
+    return tuple<bool, bool, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1, res_worklist_dfa_2, worklist_time,
+                                                                 cachat_total,
+                                                                 cachat_determinize,
+                                                                 cachat_generate,
+                                                                 cachat_saturate, naive_time);
 }
 
 /**
@@ -357,7 +382,7 @@ void print_everything ()
 //    3. Compute formula for given word
 //    4. Check whether it is rejecting
 
-    Solver* s = new Solver(A, G);
+    WorklistKleene* s = new WorklistKleene(A, G);
     s->solve();
 
     cout << "GRAMMAR:" << endl;
@@ -525,8 +550,9 @@ void measureAndPrint ()
 
 //            if (get<0>(t))
             {
-                cout << "dfa time:    " << get<2>(t) << endl;
-                cout << "cachat time: " << get<3>(t) << endl;
+                cout << "worklist dfa: " << get<2>(t) << endl;
+                cout << "naive dfa:    " << get<7>(t) << endl;
+                cout << "cachat:       " << get<3>(t) << endl;
                 cout << "    determinize: " << get<4>(t) << endl;
                 cout << "    generate:    " << get<5>(t) << endl;
                 cout << "    saturate:    " << get<6>(t) << endl;
@@ -540,13 +566,42 @@ void measureAndPrint ()
     }
 }
 
+void compareSubsumption ()
+{
+    while (true)
+    {
+        NFA* A = TVAutomataGen(10, 10, 0.8, 0.8).generate();
+        GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
+
+        auto start = chrono::steady_clock::now();
+
+        auto res_dfa_11 = solveWithWorklistDFA(A, G, {G->Nrefuter->get(0)}, false);
+        auto res_dfa_12 = solveWithWorklistDFA(A, G, {G->Nprover->get(0)}, false);
+
+        auto middle = chrono::steady_clock::now();
+
+        auto res_dfa_21 = solveWithWorklistDFA(A, G, {G->Nrefuter->get(0)}, true);
+        auto res_dfa_22 = solveWithWorklistDFA(A, G, {G->Nprover->get(0)}, true);
+
+        auto end = chrono::steady_clock::now();
+
+        cout << "without subsum: " << chrono::duration_cast<chrono::milliseconds>(middle - start).count() << endl;
+        cout << "with    subsum: " << chrono::duration_cast<chrono::milliseconds>(end - middle).count() << endl;
+        cout << endl;
+    }
+}
+
 #pragma clang diagnostic pop
 
 int main ()
 {
 //    print_everything();
 
-//    measureAndPrint();
+    measureAndPrint();
 
-    averagify();
+//    averagify();
+
+//    compareSubsumption();
+
+    return 0;
 }

@@ -9,15 +9,17 @@
       <sourceFolder url="file://$MODULE_DIR$/randomgen/TVGrammarGen.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/randomgen/AlphabetGen.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Ternary.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Clause.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Box.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Solver.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Clause.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Box.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dfa/Formula.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dfa/Solver.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/WorklistKleene.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/Ternary.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/Box.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/NaiveKleene.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/Box.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/Clause.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dfa/Formula.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/Clause.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/NaiveKleene.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/WorklistKleene.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/GamePDS.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.cpp" isTestSource="false" />

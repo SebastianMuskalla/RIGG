@@ -32,6 +32,8 @@ public:
      * Memoization is used: upon the first call, rejecting will be initialized, afterwards, it will just be returned.
      *
      * The internal structure of the formula should not be modified after this function has been called, otherwise strange things will happen
+     *
+     * after modifying the structure, resetMemoization has to be called
      */
     bool isRejecting ();
 
@@ -76,6 +78,8 @@ public:
      * Memoization is used: upon the first call, rejecting will be initialized, afterwards, it will just be returned.
      *
      * The internal structure of the formula should not be modified after this function has been called, otherwise strange things will happen
+     *
+     * after modifying the structure, resetMemoization has to be called
      */
     bool isFalse () const;
 
@@ -84,6 +88,16 @@ public:
      */
     static Formula* falseFormula ();
 
+    /**
+     * resets the values for rejecting and false to unfedin
+     */
+    void resetMemoization ()
+    {
+        rejecting = UNDEFINED;
+        is_false = UNDEFINED;
+    }
+
+    Formula* simplify ();
 };
 
 #endif //RIGG_FORMULA_H

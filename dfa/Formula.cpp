@@ -45,9 +45,13 @@ string Formula::toString () const
 bool Formula::isRejecting ()
 {
     if (rejecting == YES)
+    {
         return true;
+    }
     if (rejecting == NO)
+    {
         return false;
+    }
 
     for (Clause* c : clauses)
     {
@@ -66,7 +70,7 @@ bool Formula::implies (Formula* G)
     for (Clause* c : G->clauses)
     {
         bool find_contained = false;
-        for (auto itr = clauses.begin(); itr != clauses.end() && !find_contained; ++itr)
+        for (auto itr = clauses.begin(); !find_contained && itr != clauses.end(); ++itr)
         {
             if (c->contains(*itr))
             {
@@ -153,9 +157,13 @@ Formula* Formula::falseFormula ()
 bool Formula::isFalse () const
 {
     if (is_false == YES)
+    {
         return true;
+    }
     if (is_false == NO)
+    {
         return false;
+    }
 
     if (clauses.empty())
     {
@@ -173,6 +181,37 @@ bool Formula::isFalse () const
     is_false = NO;
     return false;
 }
+
+Formula* Formula::simplify ()
+{
+
+    vector<Clause*> minimal_clauses;
+
+    for (Clause* c : clauses)
+    {
+        bool minimal = true;
+        for (auto itr = clauses.begin(); minimal && itr != clauses.end(); ++itr)
+        {
+            if (c != *itr && c->contains(*itr))
+            {
+                minimal = false;
+            }
+        }
+        if (minimal)
+        {
+            minimal_clauses.push_back(c);
+        }
+    }
+
+    clauses = minimal_clauses;
+
+    // we don't need to do this, because subsumption retains the properties
+    // resetMemoization();
+
+    return this;
+}
+
+
 
 
 

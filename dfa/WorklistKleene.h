@@ -10,7 +10,7 @@ using namespace std;
 /**
  * Solver for grammar games based on Kleene-iteration over the domain of box-formulas
  */
-class Solver
+class WorklistKleene
 {
 public:
     NFA* A;
@@ -23,7 +23,7 @@ public:
     /**
      * Generate solver for given game instance
      */
-    Solver (NFA* A, GameGrammar* G);
+    WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption = false);
 
     /**
      * Computes the formula for a given sentential form (by composing the formulas for the single letters) according to the current solution
@@ -48,6 +48,11 @@ private:
     map<Letter*, Formula*> solution;
 
     set<Letter*> todo;
+
+    /**
+     * simplify formulas
+     */
+    const bool use_subsumption;
 
     /**
      * Print debug information on the console during solution process
