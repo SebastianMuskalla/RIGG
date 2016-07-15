@@ -193,16 +193,4 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
     return res;
 }
 
-NaiveKleene::~NaiveKleene ()
-{
-    // cant fix memory leak at the moment
-//    delete identity_box;
-//    delete identity_formula;
-//    for (Letter* l : N)
-//    {
-//        if (solution.find(l) != solution.end())
-//        {
-//            delete solution[l];
-//        }
-//    }
-}
+

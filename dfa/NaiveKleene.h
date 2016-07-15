@@ -25,8 +25,6 @@ public:
     Alphabet* Nrefuter;
     Alphabet* Sigma;
 
-    virtual ~NaiveKleene ();
-
 /**
      * Generate solver for given game instance
      */

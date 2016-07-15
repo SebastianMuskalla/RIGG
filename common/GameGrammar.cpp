@@ -12,18 +12,17 @@ string GameGrammar::toString () const
     res.append("\nNonterminals of Refuter ");
     res.append(Nrefuter->toString());
     res.append("\nProduction rules:");
-    for (auto pair : rules)
+    for (pair<Letter*, vector<Letter*>> rule : rules)
     {
         res.append("\n");
-        res.append(pair.first->toString());
+        res.append(rule.first->toString());
         res.append(" -> ");
-        for (Letter* l : pair.second)
+        for (Letter* l : rule.second)
         {
             res.append(l->toString());
         }
     }
     return res;
-
 }
 
 GameGrammar::~GameGrammar ()
