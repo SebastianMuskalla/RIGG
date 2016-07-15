@@ -17,6 +17,11 @@ using namespace std;
  */
 class NFA : public Printable<NFA>
 {
+    friend class Box;
+
+private:
+    set<Box*> all_boxes;
+
 public:
     /**
      * We do not delete the input alphabet!

@@ -103,4 +103,8 @@ NFA::~NFA ()
     {
         delete t;
     }
+    for (Box* b : all_boxes)
+    {
+        delete b;
+    }
 }

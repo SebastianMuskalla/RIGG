@@ -79,4 +79,6 @@ Box::Box (NFA* A, Alphabet* Q, string name) :
         A(A),
         Q(Q),
         name(name)
-{ }
+{
+    A->all_boxes.insert(this);
+}
