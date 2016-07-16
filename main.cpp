@@ -798,7 +798,7 @@ void benchmark ()
                                                                                         {G->Nprover->get(0)}));
 
                     naive_dfa_total += get<7>(t);
-                    min_cachat_total += get<8>(t);
+                    min_cachat_total += get<12>(t);
                     worklist_dfa_total += get<2>(t);
 
                     delete A->Sigma;

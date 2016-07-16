@@ -14,7 +14,10 @@
     </ADDITIONAL_GENERATION_ENVIRONMENT>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="" />
+    <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
+    </list>
     <ignored path="RIGG.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -107,8 +110,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="665">
-              <caret line="778" column="22" selection-start-line="778" selection-start-column="20" selection-end-line="778" selection-end-column="22" />
+            <state relative-caret-position="977">
+              <caret line="800" column="46" selection-start-line="800" selection-start-column="46" selection-end-line="800" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -674,7 +677,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="-11" width="3862" height="2120" extended-state="7" />
+    <frame x="-11" y="-11" width="3862" height="2120" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1969377" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1147,8 +1150,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="778" column="22" selection-start-line="778" selection-start-column="20" selection-end-line="778" selection-end-column="22" />
+        <state relative-caret-position="977">
+          <caret line="800" column="46" selection-start-line="800" selection-start-column="46" selection-end-line="800" selection-end-column="46" />
           <folding />
         </state>
       </provider>
