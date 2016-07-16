@@ -3,6 +3,7 @@
 
 #include "Clause.h"
 #include "Ternary.h"
+#include "FormulaStorage.h"
 
 using namespace std;
 
@@ -18,14 +19,18 @@ private:
     mutable Ternary rejecting;
     mutable Ternary is_false;
 
-    static Formula* FALSE_FORMULA;
+    FormulaStorage* storage;
+
+    static unordered_map<FormulaStorage*, Formula*> FALSE_FORMULA;
+
 
 public:
 
 
-    Formula () :
+    Formula (FormulaStorage* storage) :
             rejecting(UNDEFINED),
-            is_false(UNDEFINED)
+            is_false(UNDEFINED),
+            storage(storage)
     { }
 
 /**
@@ -69,12 +74,12 @@ public:
     /**
      * given a box b, returns the singleton formula {{b}}
      */
-    static Formula* wrap (Box* b);
+    static Formula* wrap (Box* b, FormulaStorage* storage);
 
     /**
      * given a clause c, returns the singleton formula {c}
      */
-    static Formula* wrap (Clause* c);
+    static Formula* wrap (Clause* c, FormulaStorage* storage);
 
     /**
      * F.formulaAnd(G) computes F and G, which is just the union of the clauses
@@ -100,7 +105,7 @@ public:
     /**
      * returns the formula {{}} representing the constant false
      */
-    static Formula* falseFormula ();
+    static Formula* falseFormula (FormulaStorage* storage);
 
     /**
      * resets the values for rejecting and false to unfedin

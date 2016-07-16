@@ -15,6 +15,8 @@ using namespace std;
 
 /**
  * Test for the formula composition
+ *
+ * Doesnt work currently
  */
 void testFormulaComposition ()
 {
@@ -43,11 +45,11 @@ void testFormulaComposition ()
     c4->boxes.push_back(bg);
     c4->boxes.push_back(bh);
 
-    Formula* F = new Formula();
+    Formula* F = new Formula(nullptr); // fix this
     F->clauses.push_back(c1);
     F->clauses.push_back(c2);
 
-    Formula* G = new Formula();
+    Formula* G = new Formula(nullptr); // fix this
     G->clauses.push_back(c3);
     G->clauses.push_back(c4);
 
@@ -66,8 +68,8 @@ void testFormulaComposition ()
     cout << FG->implies(F) << endl;
     cout << F->implies(FG) << endl;
 
-    Formula* TRUEFORM = new Formula();
-    Formula* FALSEFORM = new Formula();
+    Formula* TRUEFORM = new Formula(nullptr); // fix this
+    Formula* FALSEFORM = new Formula(nullptr); // fix this
     FALSEFORM->clauses.push_back(new Clause());
 
     cout << (TRUEFORM->implies(F)) << endl;

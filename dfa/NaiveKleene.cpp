@@ -20,7 +20,7 @@ NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :
         identity_box->content.emplace(q, q);
     }
 
-    identity_formula = Formula::wrap(identity_box);
+    identity_formula = Formula::wrap(identity_box, this);
 
     if (cout_debug)
     {
@@ -84,7 +84,7 @@ Formula* NaiveKleene::formulaFor (Letter* l)
     }
     else
     {
-        return Formula::wrap(A->boxFor(l));
+        return Formula::wrap(A->boxFor(l), this);
     }
 }
 
@@ -128,12 +128,12 @@ void NaiveKleene::populate ()
 {
     for (Letter* l : Nprover->letters)
     {
-        solution[l] = Formula::falseFormula();
+        solution[l] = Formula::falseFormula(this);
         N.insert(l);
     }
     for (Letter* l : Nrefuter->letters)
     {
-        solution[l] = Formula::falseFormula();
+        solution[l] = Formula::falseFormula(this);
         N.insert(l);
     }
 }
@@ -147,8 +147,6 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
         cout << "    recomputing formula for " << l->toString() << endl;
         cout << "    owned by prover: " << and_mode << endl;
     }
-
-    Formula* f = new Formula();
 
     auto itrpair = G->rules.equal_range(l);
 

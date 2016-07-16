@@ -6,10 +6,10 @@ Formula* Formula::composeWith (Formula* G)
 {
     if (this->isFalse() || G->isFalse())
     {
-        return falseFormula();
+        return falseFormula(storage);
     }
 
-    Formula* res = new Formula();
+    Formula* res = new Formula(storage);
     for (Clause* c : clauses)
     {
         vector<Clause*> tmp = c->composeWith(G);
@@ -85,15 +85,15 @@ bool Formula::implies (Formula* G)
     return true;
 }
 
-Formula* Formula::wrap (Box* box)
+Formula* Formula::wrap (Box* box, FormulaStorage* storage)
 {
     Clause* cl = Clause::wrap(box);
-    return wrap(cl);
+    return wrap(cl, storage);
 }
 
-Formula* Formula::wrap (Clause* c)
+Formula* Formula::wrap (Clause* c, FormulaStorage* storage)
 {
-    Formula* res = new Formula();
+    Formula* res = new Formula(storage);
     res->clauses.push_back(c);
     return res;
 }
@@ -102,12 +102,19 @@ Formula* Formula::formulaAnd (Formula* other)
 {
     if (isFalse() || other->isFalse())
     {
-        return Formula::falseFormula();
+        return Formula::falseFormula(storage);
     }
 
-    Formula* res = new Formula();
-    res->clauses.insert(res->clauses.end(), clauses.begin(), clauses.end());
-    res->clauses.insert(res->clauses.end(), other->clauses.begin(), other->clauses.end());
+    Formula* res = new Formula(storage);
+
+    for (Clause* c : clauses)
+    {
+        res->clauses.emplace_back(new Clause(*c));
+    }
+    for (Clause* c : other->clauses)
+    {
+        res->clauses.emplace_back(new Clause(*c));
+    }
     return res;
 }
 
@@ -122,7 +129,7 @@ Formula* Formula::formulaOr (Formula* other)
         return this;
     }
 
-    Formula* res = new Formula();
+    Formula* res = new Formula(storage);
     for (Clause* c1 : clauses)
     {
         for (Clause* c2 : other->clauses)
@@ -136,21 +143,21 @@ Formula* Formula::formulaOr (Formula* other)
     return res;
 }
 
-Formula* Formula::FALSE_FORMULA = nullptr;
+unordered_map<FormulaStorage*, Formula*> Formula::FALSE_FORMULA;
 
-Formula* Formula::falseFormula ()
+Formula* Formula::falseFormula (FormulaStorage* storage)
 {
-    if (FALSE_FORMULA == nullptr)
+    if (FALSE_FORMULA.find(storage) == FALSE_FORMULA.end())
     {
-        Formula* res = new Formula();
+        Formula* res = new Formula(storage);
         Clause* c = new Clause();
         res->clauses.push_back(c);
-        FALSE_FORMULA = res;
+        FALSE_FORMULA[storage] = res;
         return res;
     }
     else
     {
-        return FALSE_FORMULA;
+        return FALSE_FORMULA[storage];
     }
 }
 
@@ -213,11 +220,8 @@ Formula* Formula::simplify ()
 
 Formula::~Formula ()
 {
-    if (this != FALSE_FORMULA)
+    for (Clause* c : clauses)
     {
-        for (Clause* c : clauses)
-        {
-            delete c;
-        }
+        delete c;
     }
 }
