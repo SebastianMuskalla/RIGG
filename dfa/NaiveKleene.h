@@ -56,6 +56,15 @@ public:
         all_formulas.insert(f);
     }
 
+
+    virtual ~NaiveKleene ()
+    {
+        for (Formula* f : all_formulas)
+        {
+            delete f;
+        }
+    }
+
 private:
     Box* identity_box;
     Formula* identity_formula;

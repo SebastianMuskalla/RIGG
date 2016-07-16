@@ -12,8 +12,6 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
         cout << "    owned by prover: " << and_mode << endl;
     }
 
-    Formula* f = new Formula();
-
     auto itrpair = G->rules.equal_range(l);
 
     if (itrpair.first == itrpair.second)
@@ -125,7 +123,7 @@ Formula* WorklistKleene::formulaFor (Letter* l)
     }
     else
     {
-        return Formula::wrap(A->boxFor(l));
+        return Formula::wrap(A->boxFor(l), this);
     }
 }
 
@@ -146,7 +144,7 @@ WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption) :
         identity_box->content.emplace(q, q);
     }
 
-    identity_formula = Formula::wrap(identity_box);
+    identity_formula = Formula::wrap(identity_box, this);
 
     if (cout_debug)
     {
@@ -169,12 +167,12 @@ void WorklistKleene::populateSolutionAndWorklist ()
 {
     for (Letter* l : Nprover->letters)
     {
-        solution[l] = Formula::falseFormula();
+        solution[l] = Formula::falseFormula(this);
         todo.insert(l);
     }
     for (Letter* l : Nrefuter->letters)
     {
-        solution[l] = Formula::falseFormula();
+        solution[l] = Formula::falseFormula(this);
         todo.insert(l);
     }
 }
