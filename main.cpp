@@ -699,7 +699,6 @@ void averagify ()
 
     uint avg = total / (2 * nr_tries);
     cout << avg << endl;
-
 }
 
 #pragma clang diagnostic push
@@ -783,9 +782,9 @@ int main ()
 
 //    printEverything();
 
-    measureAndPrint();
+//    measureAndPrint();
 
-//    averagify();
+    averagify();
 
 //    compareSubsumption();
 
