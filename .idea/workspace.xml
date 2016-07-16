@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="662" />
-  </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" assignedExecutableTargets="true" buildAllGenerated="true">
     <generated>
       <config projectName="RIGG" targetName="RIGG" />
@@ -15,8 +12,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/main_old.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Cachat.cpp" afterPath="$PROJECT_DIR$/cachat/Cachat.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cachat/Cachat.h" afterPath="$PROJECT_DIR$/cachat/Cachat.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.h" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.h" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
     </list>
     <ignored path="RIGG.iws" />
@@ -41,8 +44,8 @@
       <file leaf-file-name="WorklistKleene.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="734">
-              <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="192" selection-end-column="5" />
+            <state relative-caret-position="532">
+              <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="68" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -51,8 +54,28 @@
       <file leaf-file-name="Cachat.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cachat/Cachat.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="864">
-              <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
+            <state relative-caret-position="912">
+              <caret line="38" column="21" selection-start-line="38" selection-start-column="9" selection-end-line="38" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cachat.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cachat/Cachat.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="624">
+              <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NaiveKleene.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -61,8 +84,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1529">
-              <caret line="831" column="0" selection-start-line="831" selection-start-column="0" selection-end-line="831" selection-end-column="0" />
+            <state relative-caret-position="686">
+              <caret line="254" column="0" selection-start-line="254" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -71,8 +94,28 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
+            <state relative-caret-position="144">
               <caret line="6" column="1012" selection-start-line="6" selection-start-column="1012" selection-end-line="6" selection-end-column="1012" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WorklistKleene.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="30" column="72" selection-start-line="30" selection-start-column="67" selection-end-line="30" selection-end-column="72" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NaiveKleene.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1104">
+              <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -106,7 +149,6 @@
         <option value="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.cpp" />
         <option value="$PROJECT_DIR$/common/GameGrammar.cpp" />
         <option value="$PROJECT_DIR$/cachat/AFATransition.h" />
-        <option value="$PROJECT_DIR$/cachat/Cachat.h" />
         <option value="$PROJECT_DIR$/cachat/Determinizer.h" />
         <option value="$PROJECT_DIR$/cachat/GamePDS.h" />
         <option value="$PROJECT_DIR$/cachat/GrammarDFAtoPDSAFA.h" />
@@ -127,16 +169,17 @@
         <option value="$PROJECT_DIR$/common/NFA.h" />
         <option value="$PROJECT_DIR$/dfa/Box.cpp" />
         <option value="$PROJECT_DIR$/dfa/FormulaStorage.h" />
-        <option value="$PROJECT_DIR$/dfa/NaiveKleene.h" />
-        <option value="$PROJECT_DIR$/dfa/WorklistKleene.h" />
         <option value="$PROJECT_DIR$/dfa/Formula.h" />
         <option value="$PROJECT_DIR$/dfa/Formula.cpp" />
-        <option value="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
-        <option value="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
-        <option value="$PROJECT_DIR$/cachat/Cachat.cpp" />
         <option value="$PROJECT_DIR$/cachat/CachatWorklist.h" />
         <option value="$PROJECT_DIR$/cachat/CachatWorklist.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/cachat/Cachat.h" />
+        <option value="$PROJECT_DIR$/cachat/Cachat.cpp" />
+        <option value="$PROJECT_DIR$/dfa/WorklistKleene.h" />
+        <option value="$PROJECT_DIR$/dfa/NaiveKleene.h" />
+        <option value="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
+        <option value="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
         <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
@@ -277,10 +320,10 @@
       <recent name="E:\Code\C++\RIGG\dfa" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Code\C++\RIGG" />
       <recent name="E:\Code\C++\RIGG\cachat" />
       <recent name="K:\Code\C++\RIGG\randomgen" />
       <recent name="K:\Code\C++\RIGG" />
-      <recent name="E:\Code\C++\RIGG" />
     </key>
   </component>
   <component name="RunManager" selected="Application.RIGG">
@@ -328,7 +371,7 @@
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3288889" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23598972" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23598972" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18400212" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -398,13 +441,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://J:/MinGW/include/c++/4.8.3/unordered_map">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Ternary.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -593,14 +629,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3552">
-          <caret line="148" column="5" selection-start-line="148" selection-start-column="5" selection-end-line="148" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Formula.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2040">
@@ -613,14 +641,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2352">
           <caret line="98" column="6" selection-start-line="98" selection-start-column="6" selection-end-line="98" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="517">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="64" selection-end-column="9" />
           <folding />
         </state>
       </provider>
@@ -745,30 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="781">
-          <caret line="63" column="4" selection-start-line="63" selection-start-column="4" selection-end-line="63" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cachat/Cachat.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-384">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="734">
-          <caret line="181" column="0" selection-start-line="181" selection-start-column="0" selection-end-line="192" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cachat/CachatWorklist.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3209">
@@ -777,26 +773,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cachat/Cachat.h">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="864">
-          <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
+        <state relative-caret-position="144">
+          <caret line="6" column="1012" selection-start-line="6" selection-start-column="1012" selection-end-line="6" selection-end-column="1012" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="6" column="1012" selection-start-line="6" selection-start-column="1012" selection-end-line="6" selection-end-column="1012" />
+        <state relative-caret-position="1104">
+          <caret line="61" column="20" selection-start-line="61" selection-start-column="20" selection-end-line="61" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_old.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Cachat.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="912">
+          <caret line="38" column="21" selection-start-line="38" selection-start-column="9" selection-end-line="38" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cachat/Cachat.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="45" column="16" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dfa/NaiveKleene.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="68" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="30" column="72" selection-start-line="30" selection-start-column="67" selection-end-line="30" selection-end-column="72" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1529">
-          <caret line="831" column="0" selection-start-line="831" selection-start-column="0" selection-end-line="831" selection-end-column="0" />
+        <state relative-caret-position="686">
+          <caret line="254" column="0" selection-start-line="254" selection-start-column="0" selection-end-line="254" selection-end-column="0" />
           <folding />
         </state>
       </provider>

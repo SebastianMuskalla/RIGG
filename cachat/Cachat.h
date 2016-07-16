@@ -1,6 +1,7 @@
 #ifndef RIGG_CACHAT_H
 #define RIGG_CACHAT_H
 
+#include <c++/4.8.3/chrono>
 #include "GamePDS.h"
 #include "PAFA.h"
 
@@ -24,11 +25,18 @@ class Cachat
 
     bool cout_debug = false;
 
+    chrono::steady_clock::time_point start;
+    uint timeout;
+
+
 public:
-    Cachat (GamePDS* P, PAFA* AFA) :
+    Cachat (GamePDS* P, PAFA* AFA, uint timeout = 0) :
             P(P),
-            AFA(AFA)
+            AFA(AFA),
+            timeout(timeout)
     { }
+
+    bool timeout_flag = false;
 
     void saturate ();
 
