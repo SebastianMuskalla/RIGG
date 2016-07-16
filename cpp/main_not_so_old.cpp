@@ -1,6 +1,5 @@
 #include <iostream>
 #include <c++/4.8.3/chrono>
-#include <zconf.h>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
@@ -11,9 +10,6 @@
 #include "randomgen/TVAutomataGen.h"
 #include "dfa/NaiveKleene.h"
 #include "cachat/Minimizer.h"
-#include "benchmark/BenchmarkThread.h"
-#include "benchmark/NaiveKleeneRunnable.h"
-#include "benchmark/Event.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -102,30 +98,29 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
 
 int main (int argc, char* argv[]) // or char** argv )
 {
-    Event done;
+    cout << argc << endl;
+    if (argc != 5)
+    {
+        cout << "usage: naivekleene/worklistkleene/cachat NR_OF_STATES NR_OF_TERMINALS NR_OF_NONTERMINALS" << endl;
+        return 0;
+    }
+
+    string algo(argv[1]);
+    string nr_states_string(argv[2]);
+    string nr_terminals_string(argv[3]);
+    string nr_nonterminals_string(argv[4]);
+
+    uint nr_states = atoi(nr_states_string.c_str());
+    uint nr_terminals = atoi(nr_terminals_string.c_str());
+    uint nr_nonterminals = atoi(nr_nonterminals_string.c_str());
+
     NFA* A = TVAutomataGen(3, 3, 0.8, 0.8).generate();
     GameGrammar* G = TVGrammarGen(A->Sigma, 3, 3, 0.75, 0.85, 0.85, 0.85).generate();
-    NaiveKleeneRunnable* r = new NaiveKleeneRunnable(A, G, {G->Nprover->get(0)});
-    BenchmarkThread* test = new BenchmarkThread("naive", 99, nullptr, -1, false, 0, r, &done);
 
-    auto start = chrono::high_resolution_clock::now();
-    test->Resume();
-    auto status = done.wait(5000ll * 1000ll * 1000ll);
-    auto end = chrono::high_resolution_clock::now();
-
-    if (status != 0)
+    if (algo == "naivekleene")
     {
-        test->Terminate();
-        cout << "KILL IT" << endl;
-    }
-    else
-    {
-        cout << "FINISHED" << endl;
-    }
-    delete test;
 
-    auto time = chrono::duration_cast<chrono::microseconds>(end - start).count();
-    cout << time << endl;
+    }
 
     return 0;
 }
