@@ -16,12 +16,6 @@
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Formula.cpp" afterPath="$PROJECT_DIR$/dfa/Formula.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/Formula.h" afterPath="$PROJECT_DIR$/dfa/Formula.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/NaiveKleene.h" afterPath="$PROJECT_DIR$/dfa/NaiveKleene.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dfa/WorklistKleene.h" afterPath="$PROJECT_DIR$/dfa/WorklistKleene.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
     </list>
     <ignored path="RIGG.iws" />
@@ -93,7 +87,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WorklistKleene.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WorklistKleene.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dfa/WorklistKleene.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="357">
@@ -113,11 +107,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="909">
-              <caret line="71" column="58" selection-start-line="71" selection-start-column="58" selection-end-line="71" selection-end-column="58" />
+            <state relative-caret-position="209">
+              <caret line="710" column="23" selection-start-line="710" selection-start-column="23" selection-end-line="710" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -470,11 +464,11 @@
         <option value="$PROJECT_DIR$/dfa/FormulaStorage.h" />
         <option value="$PROJECT_DIR$/dfa/NaiveKleene.h" />
         <option value="$PROJECT_DIR$/dfa/WorklistKleene.h" />
-        <option value="$PROJECT_DIR$/main.cpp" />
         <option value="$PROJECT_DIR$/dfa/Formula.h" />
         <option value="$PROJECT_DIR$/dfa/Formula.cpp" />
         <option value="$PROJECT_DIR$/dfa/NaiveKleene.cpp" />
         <option value="$PROJECT_DIR$/dfa/WorklistKleene.cpp" />
+        <option value="$PROJECT_DIR$/main.cpp" />
       </list>
     </option>
   </component>
@@ -664,7 +658,7 @@
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3288889" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23650385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23650385" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18400212" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1095,14 +1089,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="909">
-          <caret line="71" column="58" selection-start-line="71" selection-start-column="58" selection-end-line="71" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dfa/Formula.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="376">
@@ -1131,6 +1117,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="166" column="1" selection-start-line="166" selection-start-column="1" selection-end-line="166" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="710" column="23" selection-start-line="710" selection-start-column="23" selection-end-line="710" selection-end-column="23" />
           <folding />
         </state>
       </provider>
