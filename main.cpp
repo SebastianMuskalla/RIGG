@@ -30,6 +30,7 @@ pair<bool, bool> solveWithWorklistDFA (NFA* A, GameGrammar* G, vector<Letter*> w
 
     if (s->timeout_flag)
     {
+        delete s;
         return make_pair(true, true);
     }
 
@@ -52,6 +53,7 @@ pair<bool, bool> solveWithNaiveDFA (NFA* A, GameGrammar* G, vector<Letter*> word
 
     if (s->timeout_flag)
     {
+        delete s;
         return make_pair(true, true);
     }
 
@@ -70,21 +72,15 @@ pair<bool, bool> solveWithNaiveDFA (NFA* A, GameGrammar* G, vector<Letter*> word
  *
  * Provides time measuring for the 3 phases of the procedure
  */
-tuple<bool, uint, uint, uint, uint, bool> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
+pair<bool, bool> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
 {
-    auto start = chrono::steady_clock::now();
-
     // determinize the given automaton
     Determinizer* det = new Determinizer(A);
     NFA* D = det->determinize();
 
-    auto post_det = chrono::steady_clock::now();
-
     // determinize the given automaton
     Minimizer* min = new Minimizer(D);
     NFA* M = min->minimize();
-
-    auto post_min = chrono::steady_clock::now();
 
     // generate pushdown system and alternating automaton that define the equivalent game
     GrammarDFAtoPDSAFA* cachatifier = new GrammarDFAtoPDSAFA(M, G);
@@ -94,22 +90,27 @@ tuple<bool, uint, uint, uint, uint, bool> measureCachat (NFA* A, GameGrammar* G,
     Letter* init_refuter = get<2>(restuple);
     Letter* init_prover = get<3>(restuple);
 
-    auto post_gen = chrono::steady_clock::now();
 
     // solve using cachats saturation procedure
     Cachat* cachat = new Cachat(P, AFA, max_time);
     cachat->saturate();
+
+    if (cachat->timeout_flag)
+    {
+        delete det;
+        delete min;
+        delete cachatifier;
+        delete cachat;
+        delete D;
+        delete M;
+        delete AFA;
+        delete P;
+
+        return make_pair(true, true);
+    }
+
     vector<Letter*> stack_word = cachatifier->wordToStackWord(word);
     bool res = AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_refuter], stack_word);
-
-    auto end = chrono::steady_clock::now();
-
-    uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
-    uint minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
-    uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
-    uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
-
-    bool timeout_flag = cachat->timeout_flag;
 
     delete det;
     delete min;
@@ -120,8 +121,7 @@ tuple<bool, uint, uint, uint, uint, bool> measureCachat (NFA* A, GameGrammar* G,
     delete AFA;
     delete P;
 
-    return tuple<bool, uint, uint, uint, uint, bool>(res, determinize_time, minimize_time, generate_time, saturate_time,
-                                                     timeout_flag);
+    return make_pair(res, false);
 }
 
 /**
@@ -148,9 +148,10 @@ tuple<uint, uint, uint, uint, uint, uint> timeMeasuringWithTimeouts (
     auto t4 = chrono::steady_clock::now();
     auto res_worklist_dfa_2 = solveWithWorklistDFA(A, G, word2);
     auto t5 = chrono::steady_clock::now();
-
     auto cachat_min_1 = measureCachat(A, G, word1);
+    auto t6 = chrono::steady_clock::now();
     auto cachat_min_2 = measureCachat(A, G, word2);
+    auto t7 = chrono::steady_clock::now();
 
     uint naive_dfa_time = 0;
     uint worklist_time = 0;
@@ -192,35 +193,34 @@ tuple<uint, uint, uint, uint, uint, uint> timeMeasuringWithTimeouts (
         worklist_time += chrono::duration_cast<chrono::milliseconds>(t5 - t4).count();
     }
 
-    if (get<5>(cachat_min_1))
+    if (cachat_min_1.second)
     {
         cachat_timeouts++;
     }
     else
     {
-        cachat_time += get<1>(cachat_min_1) + get<2>(cachat_min_1) + get<3>(cachat_min_1) + get<4>(cachat_min_1);
+        cachat_time += chrono::duration_cast<chrono::milliseconds>(t6 - t5).count();
     }
 
-    if (get<5>(cachat_min_2))
+    if (cachat_min_2.second)
     {
         cachat_timeouts++;
     }
     else
     {
-        cachat_time += get<1>(cachat_min_2) + get<2>(cachat_min_2) + get<3>(cachat_min_2) + get<4>(cachat_min_2);
+        cachat_time += chrono::duration_cast<chrono::milliseconds>(t7 - t6).count();
     }
 
 
     return tuple<uint, uint, uint, uint, uint, uint>(naive_dfa_time, naive_dfa_timeouts, worklist_time,
                                                      worklist_dfa_timeouts, cachat_time, cachat_timeouts);
-
 }
 
 
 void benchmark ()
 {
-    vector<uint> all_nr_terminals = {5, 10, 15, 20};
-    vector<uint> all_nr_nonterminals = {5, 10, 15, 20};
+    vector<uint> all_nr_terminals = {10};
+    vector<uint> all_nr_nonterminals = {15};
     uint nr_tries = 10;
     for (int nr_states = 5; true; nr_states += 5)
     {
@@ -258,9 +258,9 @@ void benchmark ()
                     delete G;
                 }
 
-                uint naive_dfa_avg = naive_dfa_total / nr_tries;
-                uint worklist_dfa_avg = worklist_dfa_total / nr_tries;
-                uint min_cachat_avg = min_cachat_total / nr_tries;
+                uint naive_dfa_avg = naive_dfa_total / (2 * nr_tries);
+                uint worklist_dfa_avg = worklist_dfa_total / (2 * nr_tries);
+                uint min_cachat_avg = min_cachat_total / (2 * nr_tries);
 
                 cout
                 << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
