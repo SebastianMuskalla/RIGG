@@ -15,7 +15,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
     </list>
     <ignored path="RIGG.iws" />
@@ -111,7 +110,7 @@
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="665">
-              <caret line="778" column="23" selection-start-line="778" selection-start-column="23" selection-end-line="778" selection-end-column="23" />
+              <caret line="778" column="22" selection-start-line="778" selection-start-column="22" selection-end-line="778" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -1151,7 +1150,7 @@
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="665">
-          <caret line="778" column="23" selection-start-line="778" selection-start-column="23" selection-end-line="778" selection-end-column="23" />
+          <caret line="778" column="22" selection-start-line="778" selection-start-column="22" selection-end-line="778" selection-end-column="22" />
           <folding />
         </state>
       </provider>
