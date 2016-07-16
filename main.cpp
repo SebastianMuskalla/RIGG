@@ -11,6 +11,8 @@
 #include "dfa/NaiveKleene.h"
 #include "cachat/Minimizer.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 using namespace std;
 
 /**
@@ -474,11 +476,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto end2 = chrono::steady_clock::now();
 
-    auto cachat_1 = cachatWithMeasuring(A, G, word1);
-    auto cachat_2 = cachatWithMeasuring(A, G, word2);
-
-    bool res_cachat_1 = get<0>(cachat_1);
-    bool res_cachat_2 = get<0>(cachat_2);
+//    auto cachat_1 = cachatWithMeasuring(A, G, word1);
+//    auto cachat_2 = cachatWithMeasuring(A, G, word2);
+//
+//    bool res_cachat_1 = get<0>(cachat_1);
+//    bool res_cachat_2 = get<0>(cachat_2);
 
     auto cachat_min_1 = cachatMinWithMeasuring(A, G, word1);
     auto cachat_min_2 = cachatMinWithMeasuring(A, G, word2);
@@ -489,8 +491,8 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     if (
             res_naive_dfa_1 != res_worklist_dfa_1
             || res_naive_dfa_2 != res_worklist_dfa_2
-            || res_cachat_1 != res_worklist_dfa_1
-            || res_cachat_2 != res_worklist_dfa_2
+            //            || res_cachat_1 != res_worklist_dfa_1
+            //            || res_cachat_2 != res_worklist_dfa_2
             || res_cachat_min_1 != res_worklist_dfa_1
             || res_cachat_min_2 != res_worklist_dfa_2
             )
@@ -504,10 +506,10 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
         error.append(to_string(res_naive_dfa_1));
         error.append(", ");
         error.append(to_string(res_naive_dfa_2));
-        error.append("\ncachat: ");
-        error.append(to_string(res_cachat_1));
-        error.append(", ");
-        error.append(to_string(res_cachat_2));
+//        error.append("\ncachat: ");
+//        error.append(to_string(res_cachat_1));
+//        error.append(", ");
+//        error.append(to_string(res_cachat_2));
         error.append("\nmin cachat: ");
         error.append(to_string(res_cachat_min_1));
         error.append(", ");
@@ -519,10 +521,10 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
-    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
-    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
-    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
+//    uint cachat_determinize = (get<1>(cachat_1) + get<1>(cachat_2)) / 2;
+//    uint cachat_generate = (get<2>(cachat_1) + get<2>(cachat_2)) / 2;
+//    uint cachat_saturate = (get<3>(cachat_1) + get<3>(cachat_2)) / 2;
+//    uint cachat_total = cachat_determinize + cachat_generate + cachat_saturate;
 
     uint cachat_min_determinize = (get<1>(cachat_min_1) + get<1>(cachat_min_2)) / 2;
     uint cachat_min_minimize = (get<2>(cachat_min_1) + get<2>(cachat_min_2)) / 2;
@@ -533,11 +535,11 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
     return tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint>(res_worklist_dfa_1,
                                                                                                res_worklist_dfa_2,
                                                                                                worklist_time,
-//                                                                                               0, 0, 0, 0,
-                                                                                               cachat_total,
-                                                                                               cachat_determinize,
-                                                                                               cachat_generate,
-                                                                                               cachat_saturate,
+                                                                                               0, 0, 0, 0,
+//                                                                                               cachat_total,
+//                                                                                               cachat_determinize,
+//                                                                                               cachat_generate,
+//                                                                                               cachat_saturate,
                                                                                                naive_time,
                                                                                                cachat_min_total,
                                                                                                cachat_min_determinize,
@@ -701,9 +703,6 @@ void averagify ()
     cout << avg << endl;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
-
 /**
  * Generate random instances, solve them using both algorithms and print the needed time until the user terminates the program
  */
@@ -772,11 +771,58 @@ void compareSubsumption ()
     }
 }
 
-#pragma clang diagnostic pop
+
+void benchmark ()
+{
+    vector<uint> all_nr_terminals = {5, 10, 15, 20};
+    vector<uint> all_nr_nonterminals = {5, 10, 15, 20};
+    uint nr_tries = 100;
+    for (int nr_states = 5; true; nr_states += 5)
+    {
+        for (uint nr_terminals : all_nr_nonterminals)
+        {
+            for (uint nr_nonterminals : all_nr_nonterminals)
+            {
+                uint naive_dfa_total = 0;
+                uint worklist_dfa_total = 0;
+                uint min_cachat_total = 0;
+
+                for (uint i = 0; i < nr_tries; i++)
+                {
+                    NFA* A = TVAutomataGen(nr_terminals, nr_states, 1, 0.6).generate();
+                    GameGrammar* G = TVGrammarGen(A->Sigma, nr_nonterminals, nr_nonterminals, 1, 0.9, 0.9,
+                                                  0.9).generate();
+
+                    auto t = timeMeasuring(
+                            tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>>(A, G, {G->Nrefuter->get(0)},
+                                                                                        {G->Nprover->get(0)}));
+
+                    naive_dfa_total += get<7>(t);
+                    min_cachat_total += get<8>(t);
+                    worklist_dfa_total += get<2>(t);
+
+                    delete A->Sigma;
+                    delete A;
+                    delete G;
+                }
+
+                uint naive_dfa_avg = naive_dfa_total / nr_tries;
+                uint worklist_dfa_avg = worklist_dfa_total / nr_tries;
+                uint min_cachat_avg = min_cachat_total / nr_tries;
+
+                cout << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    " << naive_dfa_avg <<
+                "; " << worklist_dfa_avg << "; " << min_cachat_avg << endl;
+
+            }
+        }
+    }
+}
 
 int main ()
 {
     srand(time(NULL) * getpid());
+
+    benchmark();
 
 //    testMinimization();
 
@@ -784,9 +830,12 @@ int main ()
 
 //    measureAndPrint();
 
-    averagify();
+//    averagify();
 
 //    compareSubsumption();
 
+
     return 0;
 }
+
+#pragma clang diagnostic pop
