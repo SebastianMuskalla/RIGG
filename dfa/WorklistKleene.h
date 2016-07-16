@@ -4,6 +4,7 @@
 #include "../common/NFA.h"
 #include "../common/GameGrammar.h"
 #include "../common/Alphabet.h"
+#include "FormulaStorage.h"
 
 using namespace std;
 
@@ -12,7 +13,7 @@ using namespace std;
  *
  * Uses a worklist to only updates single values that could have been become unstable due to other updates
  */
-class WorklistKleene
+class WorklistKleene : public FormulaStorage
 {
 public:
     NFA* A;
@@ -42,6 +43,11 @@ public:
      */
     void solve ();
 
+    virtual void registerFormula (Formula* f)
+    {
+        all_formulas.insert(f);
+    }
+
 private:
     Box* identity_box;
     Formula* identity_formula;
@@ -50,6 +56,8 @@ private:
     map<Letter*, Formula*> solution;
 
     set<Letter*> todo;
+
+    set<Formula*> all_formulas;
 
     /**
      * simplify formulas
