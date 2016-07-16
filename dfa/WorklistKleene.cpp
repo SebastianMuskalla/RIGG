@@ -1,3 +1,4 @@
+#include <c++/4.8.3/chrono>
 #include "WorklistKleene.h"
 
 using namespace std;
@@ -58,6 +59,15 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
 
 void WorklistKleene::solve ()
 {
+    auto start = chrono::steady_clock::now();
+
+    if (timeout &&
+        chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() > timeout)
+    {
+        timeout_flag = true;
+        return;
+    }
+
     while (!todo.empty())
     {
         Letter* l = *todo.begin();
@@ -127,14 +137,15 @@ Formula* WorklistKleene::formulaFor (Letter* l)
     }
 }
 
-WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption) :
+WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption, uint timeout) :
         A(A),
         G(G),
         Q(A->Q),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
         Sigma(G->Sigma),
-        use_subsumption(use_subsumption)
+        use_subsumption(use_subsumption),
+        timeout(timeout)
 {
     populate();
 

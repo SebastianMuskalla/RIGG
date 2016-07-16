@@ -4,6 +4,7 @@ void Cachat::saturate ()
 {
     unsigned int iteration = 0;
     bool done = false;
+    start = chrono::steady_clock::now();
 
     if (cout_debug)
     {
@@ -25,6 +26,13 @@ void Cachat::saturate ()
         if (cout_debug)
         {
             cout << "ITERATION NR " << to_string(iteration) << endl;
+        }
+
+        if (timeout &&
+            chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() > timeout)
+        {
+            timeout_flag = true;
+            return;
         }
 
         // player 0 states (refuter)
