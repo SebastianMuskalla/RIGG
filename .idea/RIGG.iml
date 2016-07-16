@@ -25,6 +25,7 @@
       <sourceFolder url="file://$MODULE_DIR$/dfa/Formula.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dfa/NaiveKleene.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/dfa/WorklistKleene.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfa/FormulaStorage.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/GamePDS.cpp" isTestSource="false" />
