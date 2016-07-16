@@ -220,7 +220,7 @@ tuple<uint, uint, uint, uint, uint, uint> timeMeasuringWithTimeouts (
 void benchmark ()
 {
     vector<uint> all_nr_terminals = {10};
-    vector<uint> all_nr_nonterminals = {15};
+    vector<uint> all_nr_nonterminals = {20};
     uint nr_tries = 10;
     for (int nr_states = 5; true; nr_states += 5)
     {
