@@ -452,7 +452,6 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
 }
 
-
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
@@ -487,6 +486,7 @@ tuple<bool, bool, uint, uint, uint, uint, uint, uint, uint, uint, uint, uint, ui
 
     bool res_cachat_min_1 = get<0>(cachat_min_1);
     bool res_cachat_min_2 = get<0>(cachat_min_2);
+
 
     if (
             res_naive_dfa_1 != res_worklist_dfa_1
@@ -776,7 +776,7 @@ void benchmark ()
 {
     vector<uint> all_nr_terminals = {5, 10, 15, 20};
     vector<uint> all_nr_nonterminals = {5, 10, 15, 20};
-    uint nr_tries = 50;
+    uint nr_tries = 25;
     for (int nr_states = 5; true; nr_states += 5)
     {
         for (uint nr_terminals : all_nr_nonterminals)
