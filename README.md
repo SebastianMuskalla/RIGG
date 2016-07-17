@@ -74,4 +74,6 @@ determinism in the automaton. This would change the semantics of the game.
 
 This is a C++-project, originally developed for MinGW 64 under Windows, GCC 4.8.3.
 A CMake project file is contained.
+
+Note that the classes used for benchmarking use Windows system functions and may not work under linux/ MacOS.
     

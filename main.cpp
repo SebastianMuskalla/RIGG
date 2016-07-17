@@ -35,13 +35,17 @@ int main ()
             for (uint k = 1; k < (i - j); ++k)
             {
                 uint l = i - j - k;
-                uint nr_states = JUMP_FACTOR * j;
-                uint nr_terminals = JUMP_FACTOR * k;
-                uint nr_nonterminals = JUMP_FACTOR * l;
+                uint nr_states = 5 + JUMP_FACTOR * j;
+                uint nr_terminals = 5 + JUMP_FACTOR * k;
+                uint nr_nonterminals = 5 + JUMP_FACTOR * l;
 
                 uint timeouts_naive_kleene = 0;
                 uint timeouts_worklist_kleene = 0;
                 uint timeouts_cachat = 0;
+
+                uint spaceout_naive_kleene = 0;
+                uint spaceout_worklist_kleene = 0;
+                uint spaceout_cachat = 0;
 
                 uint total_naive_kleene = 0;
                 uint total_worklist_kleene = 0;
@@ -63,14 +67,16 @@ int main ()
                     }
 
                     // benchmark naive kleene for this instance
+                    BenchmarkThread* thread_naive_kleene;
+                    try
                     {
                         Event done_naive_kleene;
                         NaiveKleeneRunnable* runnable_naive_kleene = new NaiveKleeneRunnable(A, G, {init});
 
-                        BenchmarkThread* thread_naive_kleene = new BenchmarkThread("naive_kleene", 99, nullptr, -1,
-                                                                                   false,
-                                                                                   0, runnable_naive_kleene,
-                                                                                   &done_naive_kleene);
+                        thread_naive_kleene = new BenchmarkThread("naive_kleene", 99, nullptr, -1,
+                                                                  false,
+                                                                  0, runnable_naive_kleene,
+                                                                  &done_naive_kleene);
                         thread_naive_kleene->Resume();
 
                         auto status = done_naive_kleene.wait(WAIT);
@@ -94,19 +100,26 @@ int main ()
                         }
                         delete thread_naive_kleene;
                     }
+                    catch (std::bad_alloc &ba)
+                    {
+                        spaceout_naive_kleene++;
+                        delete thread_naive_kleene;
+                    }
 
                     A->resetBoxes();
 
                     // benchmark worklist kleene for this instance
+                    BenchmarkThread* thread_worklist_kleene;
+                    try
                     {
                         Event done_worklist_kleene;
                         WorklistKleeneRunnable* runnable_worklist_kleene = new WorklistKleeneRunnable(A, G, {init});
 
-                        BenchmarkThread* thread_worklist_kleene = new BenchmarkThread("worklist_kleene", 99, nullptr,
-                                                                                      -1,
-                                                                                      false,
-                                                                                      0, runnable_worklist_kleene,
-                                                                                      &done_worklist_kleene);
+                        thread_worklist_kleene = new BenchmarkThread("worklist_kleene", 99, nullptr,
+                                                                     -1,
+                                                                     false,
+                                                                     0, runnable_worklist_kleene,
+                                                                     &done_worklist_kleene);
                         thread_worklist_kleene->Resume();
                         auto status = done_worklist_kleene.wait(WAIT);
 
@@ -129,69 +142,88 @@ int main ()
                         }
                         delete thread_worklist_kleene;
                     }
+                    catch (std::bad_alloc &ba)
+                    {
+                        spaceout_worklist_kleene++;
+                        delete thread_worklist_kleene;
+                    }
 
-//                    // benchmark cachat for this instance
-//                    {
-//                        Event done_cachat;
-//                        CachatRunnable* runnable_cachat = new CachatRunnable(A, G, {init});
-//
-//                        BenchmarkThread* thread_cachat = new BenchmarkThread("cachat", 99, nullptr, -1,
-//                                                                             false,
-//                                                                             0, runnable_cachat,
-//                                                                             &done_cachat);
-//                        thread_cachat->Resume();
-//                        auto status = done_cachat.wait(WAIT);
-//
-//                        if (status != 0)
-//                        {
-//                            thread_cachat->Terminate();
-//                            timeouts_cachat++;
-//                        }
-//                        else
-//                        {
-//                            long long int time = thread_cachat->getTime();
-//                            if (time <= TIMEOUT)
-//                            {
-//                                total_cachat += time;
-//                            }
-//                            else
-//                            {
-//                                timeouts_cachat++;
-//                            }
-//                        }
-//                        delete thread_cachat;
-//                    }
+                    A->resetBoxes();
+
+                    // benchmark cachat for this instance
+                    BenchmarkThread* thread_cachat;
+                    try
+                    {
+                        Event done_cachat;
+                        CachatRunnable* runnable_cachat = new CachatRunnable(A, G, {init});
+
+                        thread_cachat = new BenchmarkThread("cachat", 99, nullptr, -1,
+                                                            false,
+                                                            0, runnable_cachat,
+                                                            &done_cachat);
+                        thread_cachat->Resume();
+                        auto status = done_cachat.wait(WAIT);
+
+                        if (status != 0)
+                        {
+                            thread_cachat->Terminate();
+                            timeouts_cachat++;
+                        }
+                        else
+                        {
+                            long long int time = thread_cachat->getTime();
+                            if (time <= TIMEOUT)
+                            {
+                                total_cachat += time;
+                            }
+                            else
+                            {
+                                timeouts_cachat++;
+                            }
+                        }
+                        delete thread_cachat;
+                    }
+                    catch (std::bad_alloc &ba)
+                    {
+                        spaceout_cachat++;
+                        delete thread_cachat;
+                    }
 
                     Alphabet* Sigma = A->Sigma;
                     delete G;
                     delete A;
                     delete Sigma;
+
                 }
 
                 uint avg_naive_kleene = 0;
                 uint avg_worklist_kleene = 0;
                 uint avg_cachat = 0;
 
-                if (NR_TRIES != timeouts_naive_kleene)
+                if (NR_TRIES != (timeouts_naive_kleene + spaceout_naive_kleene))
                 {
-                    avg_naive_kleene = total_naive_kleene / (NR_TRIES - timeouts_naive_kleene);
+                    avg_naive_kleene =
+                            total_naive_kleene / (NR_TRIES - timeouts_naive_kleene - spaceout_naive_kleene);
                 }
 
-                if (NR_TRIES != timeouts_worklist_kleene)
+                if (NR_TRIES != (timeouts_worklist_kleene + spaceout_worklist_kleene))
                 {
-                    avg_worklist_kleene = total_worklist_kleene / (NR_TRIES - timeouts_worklist_kleene);
+                    avg_worklist_kleene =
+                            total_worklist_kleene /
+                            (NR_TRIES - timeouts_worklist_kleene - spaceout_worklist_kleene);
                 }
 
-                if (NR_TRIES != timeouts_cachat)
+                if (NR_TRIES != (timeouts_cachat + spaceout_cachat))
                 {
-                    avg_cachat = total_cachat / (NR_TRIES - timeouts_cachat);
+                    avg_cachat = total_cachat / (NR_TRIES - timeouts_cachat - spaceout_cachat);
                 }
 
                 cout
                 << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
-                << avg_naive_kleene << " / " << timeouts_naive_kleene << "; "
-                << avg_worklist_kleene << " / " << timeouts_worklist_kleene << "; "
-                //                << avg_cachat << " / " << timeouts_cachat << "; "
+                << avg_naive_kleene << " / " << timeouts_naive_kleene << " / " << spaceout_naive_kleene << "; "
+                << avg_worklist_kleene << " / " << timeouts_worklist_kleene << " / " << spaceout_worklist_kleene <<
+                "; "
+                << avg_cachat << " / " << timeouts_cachat << " / " << spaceout_cachat << "; "
                 << endl << endl;
 
             }
