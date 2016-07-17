@@ -24,8 +24,8 @@ Box* NFA::boxFor (Letter* a)
     {
         return itr->second;
     }
-    // Box does not exist yet, create it
 
+    // Box does not exist yet, create it
     Box* res = new Box(this, Q, a->name);
     for (Transition* t : transitions)
     {
