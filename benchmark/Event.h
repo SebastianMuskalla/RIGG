@@ -31,7 +31,7 @@ public:
 /*! wait(timems) releases for the event ( sem=sem+1 )
     \param maxtms - max wait time in ms
     \return 0 on succes,!=0 on error  */
-    virtual unsigned int wait (unsigned long long maxtns);
+    virtual unsigned int wait (unsigned long long max_wait_milliseconds);
 
 protected:
     size_t imp_buf_size;    //!<  size of os object bufferspace
