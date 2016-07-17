@@ -8,52 +8,51 @@
 #include "BaseThread.h"
 
 
-
 #if defined(__MINGW32__)
 typedef struct _HALTHREADID
 {
-    unsigned int m_thread;
-    unsigned int m_id;            //!< thread id for plattform
+    unsigned int thread;
+    unsigned int id;            //!< thread id for plattform
 } HALTHREADID;
 #endif
 
 
-#if defined(__GNUCLINUX__)
-typedef struct _HALTHREADID
-{
-    pthread_mutex_t m_startmutex;
-    pthread_t m_thread;
-} HALTHREADID;
-
-static void* __Start_thread (void* obj)
-{
-    BaseThread* tobj = NULL;
-    unsigned long stat;
-    HALTHREADID* pthread;
-
-    tobj = (BaseThread*) obj;
-
-    pthread = (HALTHREADID*) tobj->imp_buf;
-
-    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-
-
-    if (tobj)
-    {
-        // wait for start mutex
-        pthread_mutex_lock(&pthread->m_startmutex);
-
-
-        tobj->m_activ = true;
-        stat = tobj->ExecThread(tobj->m_ref);
-        tobj->m_activ = false;
-        return (void*) stat;
-    }
-    return NULL;
-}
-
-#endif
+//#if defined(__GNUCLINUX__)
+//typedef struct _HALTHREADID
+//{
+//    pthread_mutex_t m_startmutex;
+//    pthread_t thread;
+//} HALTHREADID;
+//
+//static void* __Start_thread (void* obj)
+//{
+//    BaseThread* tobj = NULL;
+//    unsigned long stat;
+//    HALTHREADID* pthread;
+//
+//    tobj = (BaseThread*) obj;
+//
+//    pthread = (HALTHREADID*) tobj->buffer;
+//
+//    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+//    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+//
+//
+//    if (tobj)
+//    {
+//        // wait for start mutex
+//        pthread_mutex_lock(&pthread->m_startmutex);
+//
+//
+//        tobj->active = true;
+//        stat = tobj->ExecThread(tobj->reference);
+//        tobj->active = false;
+//        return (void*) stat;
+//    }
+//    return NULL;
+//}
+//
+//#endif
 
 
 #if defined(__MINGW32__)
@@ -67,9 +66,9 @@ static unsigned int __stdcall __Start_thread (void* obj)
 
     if (tobj)
     {
-        tobj->m_activ = true;
-        stat = tobj->ExecThread(tobj->m_ref);
-        tobj->m_activ = false;
+        tobj->active = true;
+        stat = tobj->ExecThread(tobj->reference);
+        tobj->active = false;
         return stat;
     }
     return 27;
@@ -77,42 +76,42 @@ static unsigned int __stdcall __Start_thread (void* obj)
 
 #endif
 
-BaseThread::BaseThread (const char* name, int priority, void* ref, int cpu, bool crrunning,
+BaseThread::BaseThread (const char* name, int priority, void* reference, int cpu_affinity, bool running,
                         unsigned int stacksize)
+        :
+        priority(priority),
+        reference(reference),
+        active(false),
+        cpu_affinity(cpu_affinity),
+        running(running)
 {
     HALTHREADID* pthread;
 
-    m_priority = priority;
-    m_ref = ref;
-    m_activ = false;
-    m_cpu = cpu;
-    m_crrunnung = crrunning;
 
-    //sys.registerthread(this);
-
-    imp_buf_size = sizeof(HALTHREADID);
-    imp_buf = (unsigned char*) malloc(imp_buf_size);
-    if (imp_buf)
+    buffer_size = sizeof(HALTHREADID);
+    buffer = (unsigned char*) malloc(buffer_size);
+    if (buffer)
     {
-        memset(imp_buf, 0, imp_buf_size);
-        pthread = (HALTHREADID*) imp_buf;
+        memset(buffer, 0, buffer_size);
+        pthread = (HALTHREADID*) buffer;
 
 
 #if defined(__MINGW32__)
-        pthread->m_thread = _beginthreadex(NULL,                         // void *security,
-                                           0,                            // unsigned stack_size,
-                                           &__Start_thread,  //unsigned ( __stdcall *start_address )( void * ),
-                                           (void*) this,
-                                           CREATE_SUSPENDED,            // unsigned initflag,
-                                           &pthread->m_id                          // unsigned * thrdaddr
+        pthread->thread = _beginthreadex(NULL,                         // void *security,
+                                         0,                            // unsigned stack_size,
+                                         &__Start_thread,  //unsigned ( __stdcall *start_address )( void * ),
+                                         (void*) this,
+                                         CREATE_SUSPENDED,            // unsigned initflag,
+                                         &pthread->id                          // unsigned * thrdaddr
         );
         if (priority != 0)
         {
-            BOOL stat = SetThreadPriority((HANDLE) pthread->m_thread, priority);
+            BOOL stat = SetThreadPriority((HANDLE) pthread->thread, priority);
         }
-        if (pthread->m_id != NULL)
+        if (pthread->id != NULL)
         {
-            if (crrunning) ResumeThread((HANDLE) pthread->m_thread);
+            if (running)
+                ResumeThread((HANDLE) pthread->thread);
         }
         else
         {
@@ -147,12 +146,12 @@ BaseThread::BaseThread (const char* name, int priority, void* ref, int cpu, bool
         {
             pthread_attr_setstacksize(&attr, (size_t) stacksize);
         }
-        pthread_create(&pthread->m_thread, &attr, &__Start_thread, (void*) this);
+        pthread_create(&pthread->thread, &attr, &__Start_thread, (void*) this);
 
         pthread_attr_destroy(&attr);
 
 
-        if (crrunning)
+        if (running)
         {
             pthread_mutex_unlock(&pthread->m_startmutex);
         }
@@ -161,66 +160,63 @@ BaseThread::BaseThread (const char* name, int priority, void* ref, int cpu, bool
 }
 
 
-void BaseThread::Resume ()
+void BaseThread::resume ()
 {
     HALTHREADID* pthread;
 
-    pthread = (HALTHREADID*) imp_buf;
+    pthread = (HALTHREADID*) buffer;
 
 #if defined(__MINGW32__)
-    if (pthread->m_id != NULL)
+    if (pthread->id != NULL)
     {
-        ResumeThread((HANDLE) pthread->m_thread);
+        ResumeThread((HANDLE) pthread->thread);
     }
 #endif
-#if defined(__GNUCLINUX__)
-
-    pthread_mutex_unlock(&pthread->m_startmutex);
-#endif
+//#if defined(__GNUCLINUX__)
+//    pthread_mutex_unlock(&pthread->m_startmutex);
+//#endif
 }
 
 BaseThread::~BaseThread ()
 {
 
-//    m_isdyn = false;
-    if ((imp_buf != NULL) && (imp_buf_size != 0))
+    if ((buffer != NULL) && (buffer_size != 0))
     {
-        Terminate();
+        terminate();
 
-        imp_buf_size = 0;
-        free(imp_buf);
-        imp_buf = NULL;
+        buffer_size = 0;
+        free(buffer);
+        buffer = NULL;
     }
-    m_activ = false;
-    //sys.unregisterthread(this);
+    active = false;
 }
 
-bool BaseThread::Terminate ()
+bool BaseThread::terminate ()
 {
     HALTHREADID* pthread;
-    pthread = (HALTHREADID*) imp_buf;
+    pthread = (HALTHREADID*) buffer;
     bool term = false;
 
-    if ((imp_buf != NULL) && (imp_buf_size != 0))
+    if ((buffer != NULL) && (buffer_size != 0))
     {
 #if defined(__MINGW32__)
-        term = (TerminateThread((HANDLE) pthread->m_thread, 0xFFFFFFFF) != 0);
+        term = (TerminateThread((HANDLE) pthread->thread, 0xFFFFFFFF) != 0);
 #endif
-#if defined(__GNUCLINUX__)
-        if (pthread->m_thread)
-        {
-            pthread_mutex_destroy(&pthread->m_startmutex);
-
-            pthread_cancel(pthread->m_thread);
-            pthread_join(pthread->m_thread, NULL);
-            memset(&pthread->m_thread, 0, sizeof(pthread->m_thread));
-            term = true;
-        }
-#endif
+//#if defined(__GNUCLINUX__)
+//        if (pthread->thread)
+//        {
+//            pthread_mutex_destroy(&pthread->m_startmutex);
+//
+//            pthread_cancel(pthread->thread);
+//            pthread_join(pthread->thread, NULL);
+//            memset(&pthread->thread, 0, sizeof(pthread->thread));
+//            term = true;
+//        }
+//#endif
     }
     if (term)
     {
-        m_activ = false;
+        active = false;
     }
     return term;
 }

@@ -77,13 +77,13 @@ int main ()
                                                                   false,
                                                                   0, runnable_naive_kleene,
                                                                   &done_naive_kleene);
-                        thread_naive_kleene->Resume();
+                        thread_naive_kleene->resume();
 
                         auto status = done_naive_kleene.wait(WAIT);
 
                         if (status != 0)
                         {
-                            thread_naive_kleene->Terminate();
+                            thread_naive_kleene->terminate();
                             timeouts_naive_kleene++;
                         }
                         else
@@ -106,8 +106,6 @@ int main ()
                         delete thread_naive_kleene;
                     }
 
-                    A->resetBoxes();
-
                     // benchmark worklist kleene for this instance
                     BenchmarkThread* thread_worklist_kleene;
                     try
@@ -120,12 +118,12 @@ int main ()
                                                                      false,
                                                                      0, runnable_worklist_kleene,
                                                                      &done_worklist_kleene);
-                        thread_worklist_kleene->Resume();
+                        thread_worklist_kleene->resume();
                         auto status = done_worklist_kleene.wait(WAIT);
 
                         if (status != 0)
                         {
-                            thread_worklist_kleene->Terminate();
+                            thread_worklist_kleene->terminate();
                             timeouts_worklist_kleene++;
                         }
                         else
@@ -148,8 +146,6 @@ int main ()
                         delete thread_worklist_kleene;
                     }
 
-                    A->resetBoxes();
-
                     // benchmark cachat for this instance
                     BenchmarkThread* thread_cachat;
                     try
@@ -161,12 +157,12 @@ int main ()
                                                             false,
                                                             0, runnable_cachat,
                                                             &done_cachat);
-                        thread_cachat->Resume();
+                        thread_cachat->resume();
                         auto status = done_cachat.wait(WAIT);
 
                         if (status != 0)
                         {
-                            thread_cachat->Terminate();
+                            thread_cachat->terminate();
                             timeouts_cachat++;
                         }
                         else

@@ -26,12 +26,10 @@ public:
     Alphabet* Nrefuter;
     Alphabet* Sigma;
 
-    bool timeout_flag = false;
-
 /**
      * Generate solver for given game instance
      */
-    NaiveKleene (NFA* A, GameGrammar* G, uint timeout = 0);
+    NaiveKleene (NFA* A, GameGrammar* G);
 
     /**
      * Computes the formula for a given sentential form (by composing the formulas for the single letters) according to the current solution
@@ -59,13 +57,7 @@ public:
     }
 
 
-    virtual ~NaiveKleene ()
-    {
-        for (Formula* f : all_formulas)
-        {
-            delete f;
-        }
-    }
+    virtual ~NaiveKleene ();
 
 private:
     Box* identity_box;
@@ -75,8 +67,6 @@ private:
     map<Letter*, Formula*> new_solution;
 
     set<Formula*> all_formulas;
-
-    uint timeout;
 
     /**
      * Print debug information on the console during solution process

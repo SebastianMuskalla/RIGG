@@ -5,14 +5,13 @@
 #include <c++/4.8.3/chrono>
 #include "NaiveKleene.h"
 
-NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G, uint timeout) :
+NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :
         A(A),
         G(G),
         Q(A->Q),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
-        Sigma(G->Sigma),
-        timeout(timeout)
+        Sigma(G->Sigma)
 {
     populate();
 
@@ -92,15 +91,6 @@ Formula* NaiveKleene::formulaFor (Letter* l)
 
 void NaiveKleene::solve ()
 {
-    auto start = chrono::steady_clock::now();
-
-    if (timeout &&
-        chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() > timeout)
-    {
-        timeout_flag = true;
-        return;
-    }
-
     bool stable = false;
     while (!stable)
     {
@@ -204,3 +194,11 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
 }
 
 
+NaiveKleene::~NaiveKleene ()
+{
+    for (Formula* f : all_formulas)
+    {
+        delete f;
+    }
+    A->resetBoxes();
+}

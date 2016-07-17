@@ -19,8 +19,8 @@ class BenchmarkThread : public BaseThread
 
 
 public:
-    BenchmarkThread (const char* name, int priority, void* ref, int cpu, bool crrunning, unsigned int stacksize,
-                     Runnable* runnable, Event* e);
+    BenchmarkThread (const char* name, int priority, void* reference, int cpu_affinity, bool running,
+                     unsigned int stacksize, Runnable* runnable, Event* e);
 
 
     virtual ~BenchmarkThread ()
@@ -31,7 +31,7 @@ public:
         }
     }
 
-    virtual unsigned int Execute (void* ref /*!<  ref */);
+    virtual unsigned int Execute (void* ref);
 
     long long int getTime ()
     {

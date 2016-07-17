@@ -59,19 +59,10 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
 
 void WorklistKleene::solve ()
 {
-    auto start = chrono::steady_clock::now();
-
-    if (timeout &&
-        chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() > timeout)
+    while (!worklist.empty())
     {
-        timeout_flag = true;
-        return;
-    }
-
-    while (!todo.empty())
-    {
-        Letter* l = *todo.begin();
-        todo.erase(todo.begin());
+        Letter* l = *worklist.begin();
+        worklist.erase(worklist.begin());
 
         Formula* old_value = solution[l];
 
@@ -101,14 +92,7 @@ void WorklistKleene::solve ()
         }
         else
         {
-            if (use_subsumption)
-            {
-                solution[l] = new_value->simplify();
-            }
-            else
-            {
-                solution[l] = new_value;
-            }
+            solution[l] = new_value;
 
             if (cout_debug)
             {
@@ -119,7 +103,7 @@ void WorklistKleene::solve ()
             auto itrpair = dependencies.equal_range(l);
             for (auto itr = itrpair.first; itr != itrpair.second; ++itr)
             {
-                todo.insert(itr->second);
+                worklist.insert(itr->second);
             }
         }
     }
@@ -137,15 +121,13 @@ Formula* WorklistKleene::formulaFor (Letter* l)
     }
 }
 
-WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption, uint timeout) :
+WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G) :
         A(A),
         G(G),
         Q(A->Q),
         Nprover(G->Nprover),
         Nrefuter(G->Nrefuter),
-        Sigma(G->Sigma),
-        use_subsumption(use_subsumption),
-        timeout(timeout)
+        Sigma(G->Sigma)
 {
     populate();
 
@@ -179,12 +161,12 @@ void WorklistKleene::populateSolutionAndWorklist ()
     for (Letter* l : Nprover->letters)
     {
         solution[l] = Formula::falseFormula(this);
-        todo.insert(l);
+        worklist.insert(l);
     }
     for (Letter* l : Nrefuter->letters)
     {
         solution[l] = Formula::falseFormula(this);
-        todo.insert(l);
+        worklist.insert(l);
     }
 }
 
