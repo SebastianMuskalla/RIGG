@@ -96,6 +96,8 @@ public:
     NFA (NFA const &) = delete;
 
     NFA &operator= (NFA const &) = delete;
+
+    void resetBoxes ();
 };
 
 #endif //RIGG_NFA_H
