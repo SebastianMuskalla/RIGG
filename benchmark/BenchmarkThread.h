@@ -9,30 +9,33 @@
 #include "BaseThread.h"
 #include "Runnable.h"
 
+using namespace std;
+
 class BenchmarkThread : public BaseThread
 {
     Runnable* runnable;
     Event* e;
+    long long int time;
 
 
 public:
     BenchmarkThread (const char* name, int priority, void* ref, int cpu, bool crrunning, unsigned int stacksize,
-                     Runnable* runnable, Event* e) :
-            BaseThread(name, priority, ref, cpu, crrunning, stacksize),
-            runnable(runnable),
-            e(e)
-    { }
+                     Runnable* runnable, Event* e);
 
 
     virtual ~BenchmarkThread ()
     {
-        delete runnable;
+        if (runnable)
+        {
+            delete runnable;
+        }
     }
 
-    virtual unsigned int Execute (void* ref /*!<  ref */)
+    virtual unsigned int Execute (void* ref /*!<  ref */);
+
+    long long int getTime ()
     {
-        // measure time here
-        return runnable->execute(e);
+        return time;
     }
 };
 
