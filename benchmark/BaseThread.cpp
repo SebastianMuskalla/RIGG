@@ -7,6 +7,8 @@
 #include <process.h>
 #include "BaseThread.h"
 
+
+
 #if defined(__MINGW32__)
 typedef struct _HALTHREADID
 {

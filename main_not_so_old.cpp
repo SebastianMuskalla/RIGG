@@ -98,31 +98,6 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
 
 int main (int argc, char* argv[]) // or char** argv )
 {
-    cout << argc << endl;
-    if (argc != 5)
-    {
-        cout << "usage: naivekleene/worklistkleene/cachat NR_OF_STATES NR_OF_TERMINALS NR_OF_NONTERMINALS" << endl;
-        return 0;
-    }
-
-    string algo(argv[1]);
-    string nr_states_string(argv[2]);
-    string nr_terminals_string(argv[3]);
-    string nr_nonterminals_string(argv[4]);
-
-    uint nr_states = atoi(nr_states_string.c_str());
-    uint nr_terminals = atoi(nr_terminals_string.c_str());
-    uint nr_nonterminals = atoi(nr_nonterminals_string.c_str());
-
-    NFA* A = TVAutomataGen(3, 3, 0.8, 0.8).generate();
-    GameGrammar* G = TVGrammarGen(A->Sigma, 3, 3, 0.75, 0.85, 0.85, 0.85).generate();
-
-    if (algo == "naivekleene")
-    {
-
-    }
-
-    return 0;
 }
 
 #pragma clang diagnostic pop

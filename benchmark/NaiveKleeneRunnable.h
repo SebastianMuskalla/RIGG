@@ -34,7 +34,6 @@ public:
         {
             delete s;
         }
-        cout << "destructor called" << endl;
     }
 
     virtual unsigned int execute (Event* e)
@@ -51,10 +50,7 @@ private:
         s = new NaiveKleene(A, G);
         s->solve();
         Formula* sol = s->formulaFor(word);
-        bool res = sol->isRejecting();
-        cout << sol->toString() << endl;
-//        sleep(3000);
-        return res;
+        return sol->isRejecting();
     }
 
 };
