@@ -8,34 +8,39 @@
 
 #include <c++/4.8.3/cstdlib>
 
+/**
+ * implements a mutex
+ */
 class Event
 {
 public:
 
-/*!
- A constructor. */
     Event ();
 
-/*!
-  A destructor. */
     virtual ~Event ();
 
-/*! wait() waits for the event
+    /**
+     * wait until the event has been triggered
      */
     virtual unsigned int wait ();
 
-/*! signal() releases for the event ( sem=sem+1 )
+
+    /**
+     * wait until the event has been trigger, or after the specified time has elapsed
+     *
+     * returns 0 on succes,!=0 on error
+     */
+    virtual unsigned int wait (unsigned long long max_wait_milliseconds);
+
+
+    /**
+     * triggers the event
      */
     virtual void signal ();
 
-/*! wait(timems) releases for the event ( sem=sem+1 )
-    \param maxtms - max wait time in ms
-    \return 0 on succes,!=0 on error  */
-    virtual unsigned int wait (unsigned long long max_wait_milliseconds);
-
 protected:
-    size_t imp_buf_size;    //!<  size of os object bufferspace
-    unsigned char* imp_buf;        //!<  buffer space for os object
+    size_t buffer_size;
+    unsigned char* buffer;
 };
 
 #endif //RIGG_EVENT_H

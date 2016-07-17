@@ -5,7 +5,16 @@
 #include "BenchmarkThread.h"
 #include <c++/4.8.3/chrono>
 
-unsigned int BenchmarkThread::Execute (void* ref /*!<  ref */)
+BenchmarkThread::BenchmarkThread (const char* name, int priority, void* reference, int cpu_affinity, bool running,
+                                  unsigned int stacksize,
+                                  Runnable* runnable, Event* e) :
+        BaseThread(name, priority, reference, cpu_affinity, running, stacksize),
+        runnable(runnable),
+        e(e)
+{
+}
+
+unsigned int BenchmarkThread::Execute (void* ref)
 {
     auto start = chrono::high_resolution_clock::now();
     auto res = runnable->execute(e);
@@ -14,10 +23,4 @@ unsigned int BenchmarkThread::Execute (void* ref /*!<  ref */)
     return res;
 }
 
-BenchmarkThread::BenchmarkThread (const char* name, int priority, void* ref, int cpu, bool crrunning,
-                                  unsigned int stacksize,
-                                  Runnable* runnable, Event* e) :
-        BaseThread(name, priority, ref, cpu, crrunning, stacksize),
-        runnable(runnable),
-        e(e)
-{ }
+

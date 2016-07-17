@@ -23,12 +23,10 @@ public:
     Alphabet* Nrefuter;
     Alphabet* Sigma;
 
-    bool timeout_flag = false;
-
     /**
      * Generate solver for given game instance
      */
-    WorklistKleene (NFA* A, GameGrammar* G, bool use_subsumption = false, uint timeout = 0);
+    WorklistKleene (NFA* A, GameGrammar* G);
 
     /**
      * Computes the formula for a given sentential form (by composing the formulas for the single letters) according to the current solution
@@ -57,6 +55,7 @@ public:
         {
             delete f;
         }
+        A->resetBoxes();
     }
 
 private:
@@ -66,16 +65,9 @@ private:
     multimap<Letter*, Letter*> dependencies;
     map<Letter*, Formula*> solution;
 
-    set<Letter*> todo;
+    set<Letter*> worklist;
 
     set<Formula*> all_formulas;
-
-    uint timeout;
-
-    /**
-     * simplify formulas
-     */
-    const bool use_subsumption;
 
     /**
      * Print debug information on the console during solution process

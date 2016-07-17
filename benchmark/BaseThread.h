@@ -11,43 +11,68 @@
 class BaseThread
 {
 public:
-    /*! constructor. */
-    BaseThread (const char* name,            //!< name of the thread
-                int priority,                //!< priority 0..99
-                void* ref,                    //!< value will be pased to virtual Execute methode
-                int cpu = -1,                //!< cpu affinity
-                bool crrunning = true,        //!< if true thread will run after creation or hold if false
-                unsigned int stacksize = 0    //!< stacksize of the thread ( 0= default stacksize for plattform
+    BaseThread (const char* name,
+                int priority,
+                void* ref,
+                int cpu_affinity = -1,
+                bool running = true,
+                unsigned int stacksize = 0
     );
 
-    /*! destructor. */
     virtual ~BaseThread ();
 
-    /*! Resume() resumes a thread created with crrunnung=false */
-    void Resume ();
+    /**
+     * resume a thread that was created with "running = false "
+     */
+    void resume ();
 
-    /*! Terminate() terminates a running thread */
-    virtual bool Terminate ();
+    /*! terminate() terminates a running thread */
+    virtual bool terminate ();
 
-    /*! pure virtual Execute() methode */
-    virtual unsigned int Execute (void* ref /*!<  ref */
-    )
-    { return 0; }
+    /**
+     * purely virtual execute method
+     */
+    virtual unsigned int Execute (void* ref)
+    {
+        return 0;
+    }
 
-    /*! helper methode for threadstart */
+    /**
+     * helper method for executing
+     */
     unsigned int ExecThread (void* ref);
 
-    int m_priority;    //!< priority member
-    void* m_ref;        //!< ref for Execute
-    int m_cpu;        //!< cpu affinity
-    unsigned int m_activ;        //!< thread is active
-    unsigned int m_crrunnung;    //!< thread marker run after create
+    /**
+     * thread priority, in 0..99
+     */
+    int priority;
+    /**
+     * reference of the Runnable that should be executed
+     */
+    void* reference;
+    /**
+     * CPU affinity
+     */
+    int cpu_affinity;
+    /**
+     * thread active?
+     */
+    bool active;
+    /**
+     * should thread run directly after it was created
+     */
+    bool running;
 
 protected:
-    size_t imp_buf_size;    /*!<  size of os object bufferspace */
+    /**
+     * size of buffersize for OS object
+     */
+    size_t buffer_size;
 public:
-    unsigned char* imp_buf;        /*!<  buffer space for os object */
-
+    /**
+     * buffer for OS object
+     */
+    unsigned char* buffer;
 };
 
 
