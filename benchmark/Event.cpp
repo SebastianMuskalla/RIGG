@@ -124,7 +124,7 @@ unsigned int Event::wait ()
     return 0;
 }
 
-unsigned int Event::wait (unsigned long long maxtns)
+unsigned int Event::wait (unsigned long long max_wait_milliseconds)
 {
 #if defined(__MINGW32__)
     HANDLE* p_sema;
@@ -135,7 +135,7 @@ unsigned int Event::wait (unsigned long long maxtns)
 
 #if defined(__MINGW32__)
     p_sema = (HANDLE*) imp_buf;
-    if (WaitForSingleObject(*p_sema, (DWORD) (maxtns / 1000000ll)) != WAIT_OBJECT_0)
+    if (WaitForSingleObject(*p_sema, (DWORD) (max_wait_milliseconds)) != WAIT_OBJECT_0)
     {
         return 0xFFFFFFFF;
     }

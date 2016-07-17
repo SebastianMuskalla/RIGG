@@ -10,7 +10,7 @@ unsigned int BenchmarkThread::Execute (void* ref /*!<  ref */)
     auto start = chrono::high_resolution_clock::now();
     auto res = runnable->execute(e);
     auto end = chrono::high_resolution_clock::now();
-    time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+    time = chrono::duration_cast<chrono::microseconds>(end - start).count();
     return res;
 }
 

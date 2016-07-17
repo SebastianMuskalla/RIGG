@@ -21,11 +21,12 @@ int main ()
     srand(time(NULL) * getpid());
 
     uint JUMP_FACTOR = 5;
-    uint NR_TRIES = 1;
-    uint NS_TO_S = 1000ll * 1000ll * 1000ll;
-    uint MS_TO_S = 1000ll;
-    uint TIMEOUT = 10ll * MS_TO_S;
-    uint WAIT = 11ll * NS_TO_S;
+    uint NR_TRIES = 50;
+
+    uint SECONDS_FROM_MS = 1000ll;
+    uint SECONDS_FROM_US = 1000000ll;
+    uint TIMEOUT = 10 * SECONDS_FROM_US;
+    uint WAIT = 11 * SECONDS_FROM_MS;
 
     for (uint i = 3; ; ++i)
     {
@@ -46,7 +47,7 @@ int main ()
                 uint total_worklist_kleene = 0;
                 uint total_cachat = 0;
 
-                for (uint t = 0; t < NR_TRIES; t++)
+                for (uint t = 0; t < NR_TRIES; ++t)
                 {
                     NFA* A = TVAutomataGen(nr_terminals, nr_states, 0.8, 0.8).generate();
                     GameGrammar* G = TVGrammarGen(A->Sigma, nr_nonterminals, nr_nonterminals, 0.75, 0.85, 0.85,
@@ -70,6 +71,8 @@ int main ()
                                                                                    false,
                                                                                    0, runnable_naive_kleene,
                                                                                    &done_naive_kleene);
+                        thread_naive_kleene->Resume();
+
                         auto status = done_naive_kleene.wait(WAIT);
 
                         if (status != 0)
@@ -102,6 +105,7 @@ int main ()
                                                                                       false,
                                                                                       0, runnable_worklist_kleene,
                                                                                       &done_worklist_kleene);
+                        thread_worklist_kleene->Resume();
                         auto status = done_worklist_kleene.wait(WAIT);
 
                         if (status != 0)
@@ -133,6 +137,7 @@ int main ()
                                                                              false,
                                                                              0, runnable_cachat,
                                                                              &done_cachat);
+                        thread_cachat->Resume();
                         auto status = done_cachat.wait(WAIT);
 
                         if (status != 0)
@@ -159,43 +164,39 @@ int main ()
                     delete G;
                     delete A;
                     delete Sigma;
-
-
-                    uint avg_naive_kleene = 0;
-                    uint avg_worklist_kleene = 0;
-                    uint avg_cachat = 0;
-
-                    if (NR_TRIES != timeouts_naive_kleene)
-                    {
-                        avg_naive_kleene = total_naive_kleene / (NR_TRIES - timeouts_naive_kleene);
-                    }
-
-                    if (NR_TRIES != timeouts_worklist_kleene)
-                    {
-                        avg_worklist_kleene = total_worklist_kleene / (NR_TRIES - timeouts_worklist_kleene);
-                    }
-
-                    if (NR_TRIES != timeouts_cachat)
-                    {
-                        avg_cachat = total_cachat / (NR_TRIES - timeouts_cachat);
-                    }
-
-                    cout
-                    << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
-                    << avg_naive_kleene << " / " << timeouts_naive_kleene << "; "
-                    << avg_worklist_kleene << " / " << timeouts_worklist_kleene << "; "
-                    << avg_cachat << " / " << timeouts_cachat << "; "
-                    << endl;
-
                 }
+
+                uint avg_naive_kleene = 0;
+                uint avg_worklist_kleene = 0;
+                uint avg_cachat = 0;
+
+                if (NR_TRIES != timeouts_naive_kleene)
+                {
+                    avg_naive_kleene = total_naive_kleene / (NR_TRIES - timeouts_naive_kleene);
+                }
+
+                if (NR_TRIES != timeouts_worklist_kleene)
+                {
+                    avg_worklist_kleene = total_worklist_kleene / (NR_TRIES - timeouts_worklist_kleene);
+                }
+
+                if (NR_TRIES != timeouts_cachat)
+                {
+                    avg_cachat = total_cachat / (NR_TRIES - timeouts_cachat);
+                }
+
+                cout
+                << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
+                << avg_naive_kleene << " / " << timeouts_naive_kleene << "; "
+                << avg_worklist_kleene << " / " << timeouts_worklist_kleene << "; "
+                << avg_cachat << " / " << timeouts_cachat << "; "
+                << endl << endl;
 
             }
         }
 
     }
-
     return 0;
-
 }
 
 
