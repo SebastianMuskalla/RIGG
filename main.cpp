@@ -95,6 +95,8 @@ int main ()
                         delete thread_naive_kleene;
                     }
 
+                    A->resetBoxes();
+
                     // benchmark worklist kleene for this instance
                     {
                         Event done_worklist_kleene;
@@ -128,37 +130,37 @@ int main ()
                         delete thread_worklist_kleene;
                     }
 
-                    // benchmark cachat for this instance
-                    {
-                        Event done_cachat;
-                        CachatRunnable* runnable_cachat = new CachatRunnable(A, G, {init});
-
-                        BenchmarkThread* thread_cachat = new BenchmarkThread("cachat", 99, nullptr, -1,
-                                                                             false,
-                                                                             0, runnable_cachat,
-                                                                             &done_cachat);
-                        thread_cachat->Resume();
-                        auto status = done_cachat.wait(WAIT);
-
-                        if (status != 0)
-                        {
-                            thread_cachat->Terminate();
-                            timeouts_cachat++;
-                        }
-                        else
-                        {
-                            long long int time = thread_cachat->getTime();
-                            if (time <= TIMEOUT)
-                            {
-                                total_cachat += time;
-                            }
-                            else
-                            {
-                                timeouts_cachat++;
-                            }
-                        }
-                        delete thread_cachat;
-                    }
+//                    // benchmark cachat for this instance
+//                    {
+//                        Event done_cachat;
+//                        CachatRunnable* runnable_cachat = new CachatRunnable(A, G, {init});
+//
+//                        BenchmarkThread* thread_cachat = new BenchmarkThread("cachat", 99, nullptr, -1,
+//                                                                             false,
+//                                                                             0, runnable_cachat,
+//                                                                             &done_cachat);
+//                        thread_cachat->Resume();
+//                        auto status = done_cachat.wait(WAIT);
+//
+//                        if (status != 0)
+//                        {
+//                            thread_cachat->Terminate();
+//                            timeouts_cachat++;
+//                        }
+//                        else
+//                        {
+//                            long long int time = thread_cachat->getTime();
+//                            if (time <= TIMEOUT)
+//                            {
+//                                total_cachat += time;
+//                            }
+//                            else
+//                            {
+//                                timeouts_cachat++;
+//                            }
+//                        }
+//                        delete thread_cachat;
+//                    }
 
                     Alphabet* Sigma = A->Sigma;
                     delete G;
@@ -189,7 +191,7 @@ int main ()
                 << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
                 << avg_naive_kleene << " / " << timeouts_naive_kleene << "; "
                 << avg_worklist_kleene << " / " << timeouts_worklist_kleene << "; "
-                << avg_cachat << " / " << timeouts_cachat << "; "
+                //                << avg_cachat << " / " << timeouts_cachat << "; "
                 << endl << endl;
 
             }

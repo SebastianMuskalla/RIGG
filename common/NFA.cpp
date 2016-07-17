@@ -108,3 +108,15 @@ NFA::~NFA ()
         delete b;
     }
 }
+
+void NFA::resetBoxes ()
+{
+    box_for_letter.clear();
+    for (Box* b : all_boxes)
+    {
+        delete b;
+    }
+    all_boxes.clear();
+}
+
+
