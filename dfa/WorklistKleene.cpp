@@ -1,4 +1,3 @@
-#include <c++/4.8.3/chrono>
 #include "WorklistKleene.h"
 
 using namespace std;
@@ -223,7 +222,7 @@ Formula* WorklistKleene::formulaFor (vector<Letter*> word)
         if (cout_debug)
         {
             cout << "        formula for letter " << (*itr)->toString() << " is: " << formulaFor(*itr)->toString() <<
-            endl;
+                 endl;
             cout << "        composition is " << res->toString() << endl;
         }
     }

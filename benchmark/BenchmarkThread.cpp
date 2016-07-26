@@ -3,7 +3,7 @@
 //
 
 #include "BenchmarkThread.h"
-#include <c++/4.8.3/chrono>
+#include <chrono>
 
 BenchmarkThread::BenchmarkThread (const char* name, int priority, void* reference, int cpu_affinity, bool running,
                                   unsigned int stacksize,

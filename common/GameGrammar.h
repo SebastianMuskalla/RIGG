@@ -1,8 +1,8 @@
 #ifndef RIGG_GAMEGRAMMAR_H
 #define RIGG_GAMEGRAMMAR_H
 
-#include <c++/4.8.3/unordered_map>
-#include <c++/4.8.3/map>
+#include <unordered_map>
+#include <map>
 #include "Alphabet.h"
 
 using namespace std;
@@ -34,7 +34,7 @@ public:
             Sigma(Sigma),
             Nrefuter(Nrefuter),
             Nprover(Nprover)
-    { }
+    {}
 
     /**
      * We do not delete the terminal alphabet

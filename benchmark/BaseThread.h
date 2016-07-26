@@ -6,7 +6,7 @@
 #define RIGG_BASETHREAD_H
 
 
-#include <c++/4.8.3/cstdlib>
+#include <cstdlib>
 
 class BaseThread
 {

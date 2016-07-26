@@ -1,7 +1,7 @@
 #ifndef RIGG_CACHAT_H
 #define RIGG_CACHAT_H
 
-#include <c++/4.8.3/chrono>
+#include <chrono>
 #include "GamePDS.h"
 #include "PAFA.h"
 
@@ -34,7 +34,7 @@ public:
             P(P),
             AFA(AFA),
             timeout(timeout)
-    { }
+    {}
 
     bool timeout_flag = false;
 

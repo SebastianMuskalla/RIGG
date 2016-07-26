@@ -1,7 +1,7 @@
 #ifndef RIGG_PDSTRANSITION_H
 #define RIGG_PDSTRANSITION_H
 
-#include <c++/4.8.3/vector>
+#include <vector>
 #include "../common/Letter.h"
 
 using namespace std;
@@ -29,7 +29,7 @@ public:
             read(read),
             write(write),
             target(target)
-    { }
+    {}
 
     virtual string toString () const;
 
