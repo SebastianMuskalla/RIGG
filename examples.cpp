@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <unistd.h>
 #include "common/Types.h"
 #include "common/Alphabet.h"
 #include "common/NFA.h"
