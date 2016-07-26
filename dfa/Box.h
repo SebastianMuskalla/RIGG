@@ -20,13 +20,18 @@ using namespace std;
  */
 class Box : public Printable<Box>
 {
+    friend class NFA;
+
 private:
 /**
  * memoization: values will be computed on first usage
  */
     Ternary rejecting = UNDEFINED;
 
+    Box (NFA* A, Alphabet* Q, string name);
+
 public:
+
     /**
      * automaton for which the box is
      */
@@ -44,9 +49,6 @@ public:
      */
     string name;
 
-    Box (NFA* A, Alphabet* Q, string name);
-
-public:
     /**
      * state-pairs forming the box
      */
@@ -77,13 +79,13 @@ public:
         return content == other.content;
     }
 
-    /**
-     * test function that contains empty boxes with a specified name
-     */
-    static Box* test (string name)
-    {
-        return new Box(nullptr, new Alphabet(), name);
-    }
+//    /**
+//     * test function that contains empty boxes with a specified name
+//     */
+//    static Box* test (string name)
+//    {
+//        return new Box(nullptr, new Alphabet(), name);
+//    }
 
     Box (Box const &) = delete;
 

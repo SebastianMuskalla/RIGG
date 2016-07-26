@@ -6,7 +6,9 @@
 #define RIGG_TYPES_H
 
 #ifndef uint64
+
 #define uint64 unsigned long long int
+
 #endif
 
 

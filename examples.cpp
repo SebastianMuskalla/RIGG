@@ -24,7 +24,6 @@ using namespace std;
  */
 void printEverything ()
 {
-
     Alphabet* Sigma = new Alphabet();
     Letter* a = Sigma->addLetter("a");
     Letter* b = Sigma->addLetter("b");
@@ -147,70 +146,68 @@ void printEverything ()
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
 }
 
-/**
- * Test for the formula composition
- *
- * Doesnt work currently
- */
-void testFormulaComposition ()
-{
-    Box* ba = Box::test("a");
-    Box* bb = Box::test("b");
-    Box* bc = Box::test("c");
-    Box* bd = Box::test("d");
-    Box* be = Box::test("e");
-    Box* bf = Box::test("f");
-    Box* bg = Box::test("g");
-    Box* bh = Box::test("h");
-
-    Clause* c1 = new Clause();
-    c1->boxes.push_back(ba);
-    c1->boxes.push_back(bb);
-
-    Clause* c2 = new Clause();
-    c2->boxes.push_back(bc);
-    c2->boxes.push_back(bd);
-
-    Clause* c3 = new Clause();
-    c3->boxes.push_back(be);
-    c3->boxes.push_back(bf);
-
-    Clause* c4 = new Clause();
-    c4->boxes.push_back(bg);
-    c4->boxes.push_back(bh);
-
-    Formula* F = new Formula(nullptr); // fix this
-    F->clauses.push_back(c1);
-    F->clauses.push_back(c2);
-
-    Formula* G = new Formula(nullptr); // fix this
-    G->clauses.push_back(c3);
-    G->clauses.push_back(c4);
-
-    cout << c1->toString() << endl;
-    cout << c2->toString() << endl;
-    cout << c3->toString() << endl;
-    cout << c4->toString() << endl;
-
-    cout << F->toString() << endl;
-    cout << G->toString() << endl;
-
-    Formula* FG = (F->composeWith(G));
-    cout << FG->toString() << endl;
-
-    cout << F->implies(G) << endl;
-    cout << FG->implies(F) << endl;
-    cout << F->implies(FG) << endl;
-
-    Formula* TRUEFORM = new Formula(nullptr); // fix this
-    Formula* FALSEFORM = new Formula(nullptr); // fix this
-    FALSEFORM->clauses.push_back(new Clause());
-
-    cout << (TRUEFORM->implies(F)) << endl;
-    cout << (F->implies(TRUEFORM)) << endl;
-    cout << (FALSEFORM->implies(F)) << endl;
-    cout << (F->implies(FALSEFORM)) << endl;
-};
+///**
+// * Test for the formula composition
+// */
+//void testFormulaComposition ()
+//{
+//    Box* ba = Box::test("a");
+//    Box* bb = Box::test("b");
+//    Box* bc = Box::test("c");
+//    Box* bd = Box::test("d");
+//    Box* be = Box::test("e");
+//    Box* bf = Box::test("f");
+//    Box* bg = Box::test("g");
+//    Box* bh = Box::test("h");
+//
+//    Clause* c1 = new Clause();
+//    c1->boxes.push_back(ba);
+//    c1->boxes.push_back(bb);
+//
+//    Clause* c2 = new Clause();
+//    c2->boxes.push_back(bc);
+//    c2->boxes.push_back(bd);
+//
+//    Clause* c3 = new Clause();
+//    c3->boxes.push_back(be);
+//    c3->boxes.push_back(bf);
+//
+//    Clause* c4 = new Clause();
+//    c4->boxes.push_back(bg);
+//    c4->boxes.push_back(bh);
+//
+//    Formula* F = new Formula(nullptr); // fix this
+//    F->clauses.push_back(c1);
+//    F->clauses.push_back(c2);
+//
+//    Formula* G = new Formula(nullptr); // fix this
+//    G->clauses.push_back(c3);
+//    G->clauses.push_back(c4);
+//
+//    cout << c1->toString() << endl;
+//    cout << c2->toString() << endl;
+//    cout << c3->toString() << endl;
+//    cout << c4->toString() << endl;
+//
+//    cout << F->toString() << endl;
+//    cout << G->toString() << endl;
+//
+//    Formula* FG = (F->composeWith(G));
+//    cout << FG->toString() << endl;
+//
+//    cout << F->implies(G) << endl;
+//    cout << FG->implies(F) << endl;
+//    cout << F->implies(FG) << endl;
+//
+//    Formula* TRUEFORM = new Formula(nullptr); // fix this
+//    Formula* FALSEFORM = new Formula(nullptr); // fix this
+//    FALSEFORM->clauses.push_back(new Clause());
+//
+//    cout << (TRUEFORM->implies(F)) << endl;
+//    cout << (F->implies(TRUEFORM)) << endl;
+//    cout << (FALSEFORM->implies(F)) << endl;
+//    cout << (F->implies(FALSEFORM)) << endl;
+//};
 
 /**
  * Tests the reachability algorithm for AFAs
@@ -717,6 +714,8 @@ void averagify ()
 
 int main ()
 {
+    printEverything();
+
     srand(time(NULL) * getpid());
 
     measureAndPrint();

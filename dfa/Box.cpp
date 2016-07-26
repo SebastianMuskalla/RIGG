@@ -4,7 +4,19 @@ using namespace std;
 
 Box* Box::composeWith (Box* r)
 {
-    Box* res = new Box(A, Q, this->name + r->name);
+    string newname = name;
+    newname.append(r->name);
+
+    if (name == "id")
+    {
+        newname = r->name;
+    }
+    if (r->name == "id")
+    {
+        newname = name;
+    }
+
+    Box* res = new Box(A, Q, newname);
     for (pair<Letter*, Letter*> cnt : content)
     {
         auto range = r->content.equal_range(cnt.second);
