@@ -1,11 +1,8 @@
 #ifndef RIGG_CACHAT_H
 #define RIGG_CACHAT_H
 
-#include <chrono>
 #include "GamePDS.h"
 #include "PAFA.h"
-
-typedef unsigned long long int uint;
 
 using namespace std;
 
@@ -25,18 +22,11 @@ class Cachat
 
     bool cout_debug = false;
 
-    chrono::steady_clock::time_point start;
-    uint timeout;
-
-
 public:
-    Cachat (GamePDS* P, PAFA* AFA, uint timeout = 0) :
+    Cachat (GamePDS* P, PAFA* AFA) :
             P(P),
-            AFA(AFA),
-            timeout(timeout)
+            AFA(AFA)
     {}
-
-    bool timeout_flag = false;
 
     void saturate ();
 
