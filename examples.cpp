@@ -57,6 +57,10 @@ void printEverything ()
     WorklistKleene* s = new WorklistKleene(A, G);
     s->solve();
 
+    cout << "BASIC EXAMPLE FROM THE PAPER:" << endl;
+
+    cout << "############################" << endl;
+
     cout << "GRAMMAR:" << endl;
     cout << G->toString() << endl;
 
@@ -144,6 +148,10 @@ void printEverything ()
     vector<Letter*> stack_Y = cachatifier->wordToStackWord({Y});
 
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
+
+    cout << "############################" << endl;
+
+    cout << endl;
 }
 
 ///**
@@ -569,10 +577,8 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
     }
 }
 
-/**
- * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
- */
-tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
+
+tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithWorklist (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -613,7 +619,7 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
         || res_cachat_worklist_2 != res_worklist_dfa_2
             )
     {
-        string error = "results differ:";
+        string error = "RESULTS DIFFER:";
         error.append("\ndfa worklist:");
         error.append(to_string(res_worklist_dfa_1));
         error.append(", ");
@@ -650,34 +656,136 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
     );
 }
 
+tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithoutWorklist (
+        tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
+{
+    NFA* A = get<0>(t);
+    GameGrammar* G = get<1>(t);
+    vector<Letter*> word1 = get<2>(t);
+    vector<Letter*> word2 = get<3>(t);
+
+    auto start = chrono::steady_clock::now();
+
+    auto res_worklist_dfa_1 = solveWithWorklistDFA(A, G, word1);
+    auto res_worklist_dfa_2 = solveWithWorklistDFA(A, G, word2);
+
+    auto end = chrono::steady_clock::now();
+
+    auto res_naive_dfa_1 = solveWithNaiveDFA(A, G, word1);
+    auto res_naive_dfa_2 = solveWithNaiveDFA(A, G, word2);
+
+    auto end2 = chrono::steady_clock::now();
+
+    auto cachat_1 = measureCachat(A, G, word1);
+    auto cachat_2 = measureCachat(A, G, word2);
+
+    bool res_cachat_1 = get<0>(cachat_1);
+    bool res_cachat_2 = get<0>(cachat_2);
+
+
+    if (res_naive_dfa_1 != res_worklist_dfa_1
+        || res_naive_dfa_2 != res_worklist_dfa_2
+        || res_cachat_1 != res_worklist_dfa_1
+        || res_cachat_2 != res_worklist_dfa_2
+            )
+    {
+        string error = "RESULTS DIFFER:";
+        error.append("\ndfa worklist:");
+        error.append(to_string(res_worklist_dfa_1));
+        error.append(", ");
+        error.append(to_string(res_worklist_dfa_2));
+        error.append("\ndfa naive:");
+        error.append(to_string(res_naive_dfa_1));
+        error.append(", ");
+        error.append(to_string(res_naive_dfa_2));
+        error.append("\ncachat: ");
+        error.append(to_string(res_cachat_1));
+        error.append(", ");
+        error.append(to_string(res_cachat_2));
+        throw error;
+    }
+
+    auto worklist_time = chrono::duration_cast<chrono::milliseconds>(end - start).count() / 2;
+
+    auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
+
+    uint64 cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
+
+
+    return tuple<bool, bool, uint64, uint64, uint64, uint64>(res_worklist_dfa_1,
+                                                             res_worklist_dfa_2,
+                                                             naive_time,
+                                                             worklist_time,
+                                                             cachat_time,
+                                                             0
+    );
+}
+
+/**
+ * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
+ */
+tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
+        tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t, bool with_cachat_worklist = false)
+{
+    if (with_cachat_worklist)
+    {
+        return timeMeasuringWithWorklist(t);
+    }
+    else
+    {
+        return timeMeasuringWithoutWorklist(t);
+    }
+};
+
 
 /**
  * Generate random instances, solve them using both algorithms and print the needed time until the user terminates the program
  */
 void measureAndPrint ()
 {
+    unsigned int nr_states = 8;
+    unsigned int nr_terminals = 5;
+    unsigned int nr_nonterminals_per_player = 5;
+
+    // enabling this makes it very slow ...
+    bool include_cachat_worklist = false;
+
+    cout << "RANDOM GENERATED EXAMPLES:" << endl;
+    cout << "############################" << endl;
+    cout << "#states:       " << nr_states << endl;
+    cout << "#terminals:    " << nr_terminals << endl;
+    cout << "#nonterminals: " << 2 * nr_nonterminals_per_player << endl;
+    cout << "############################" << endl;
+    cout << endl;
+
     while (true)
     {
-        NFA* A = TVAutomataGen(5, 5, 0.8, 0.8).generate();
-        GameGrammar* G = TVGrammarGen(A->Sigma, 5, 5, 0.75, 0.85, 0.85, 0.85).generate();
+        NFA* A = TVAutomataGen(nr_terminals, nr_states, 0.8, 0.8).generate();
+        GameGrammar* G = TVGrammarGen(A->Sigma, nr_nonterminals_per_player, nr_nonterminals_per_player, 0.75, 0.85,
+                                      0.85, 0.85).generate();
 
         try
         {
             auto t = timeMeasuring(
                     tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>>(A, G, {G->Nrefuter->get(0)},
-                                                                                {G->Nprover->get(0)}));
-
+                                                                                {G->Nprover->get(0)}),
+                    include_cachat_worklist);
 
             cout << "naive dfa:       " << get<2>(t) << endl;
             cout << "worklist dfa:    " << get<3>(t) << endl;
             cout << "cachat:          " << get<4>(t) << endl;
-            cout << "worklist cachat: " << get<5>(t) << endl;
-            cout << endl << endl;
 
+            if (include_cachat_worklist)
+            {
+                cout << "worklist cachat: " << get<5>(t) << endl;
+            }
 
-            delete A->Sigma;
+            cout << endl;
+
+            Alphabet* Sigma = A->Sigma;
             delete A;
             delete G;
+            delete Sigma;
         }
         catch (string s)
         {
