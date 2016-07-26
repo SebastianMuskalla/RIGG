@@ -6,7 +6,7 @@
 #define RIGG_EVENT_H
 
 
-#include <c++/4.8.3/cstdlib>
+#include <cstdlib>
 
 /**
  * implements a mutex

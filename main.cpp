@@ -1,5 +1,5 @@
 #include <iostream>
-#include <c++/4.8.3/chrono>
+#include <chrono>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
@@ -28,7 +28,7 @@ int main ()
     uint TIMEOUT = 10 * SECONDS_FROM_US;
     uint WAIT = 11 * SECONDS_FROM_MS;
 
-    for (uint i = 3; ; ++i)
+    for (uint i = 3;; ++i)
     {
         for (uint j = 1; j < i; ++j)
         {
@@ -215,12 +215,13 @@ int main ()
                 }
 
                 cout
-                << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
-                << avg_naive_kleene << " / " << timeouts_naive_kleene << " / " << spaceout_naive_kleene << "; "
-                << avg_worklist_kleene << " / " << timeouts_worklist_kleene << " / " << spaceout_worklist_kleene <<
-                "; "
-                << avg_cachat << " / " << timeouts_cachat << " / " << spaceout_cachat << "; "
-                << endl << endl;
+                        << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    "
+                        << avg_naive_kleene << " / " << timeouts_naive_kleene << " / " << spaceout_naive_kleene << "; "
+                        << avg_worklist_kleene << " / " << timeouts_worklist_kleene << " / " << spaceout_worklist_kleene
+                        <<
+                        "; "
+                        << avg_cachat << " / " << timeouts_cachat << " / " << spaceout_cachat << "; "
+                        << endl << endl;
 
             }
         }

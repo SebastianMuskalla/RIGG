@@ -1,5 +1,5 @@
 #include <iostream>
-#include <c++/4.8.3/chrono>
+#include <chrono>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"

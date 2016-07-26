@@ -2,7 +2,6 @@
 // Created by Sebastian on 15.07.2016.
 //
 
-#include <c++/4.8.3/chrono>
 #include "NaiveKleene.h"
 
 NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :

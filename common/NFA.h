@@ -3,8 +3,8 @@
 
 class Box;
 
-#include <c++/4.8.3/set>
-#include <c++/4.8.3/unordered_map>
+#include <set>
+#include <unordered_map>
 #include "Alphabet.h"
 #include "Letter.h"
 #include "Transition.h"
