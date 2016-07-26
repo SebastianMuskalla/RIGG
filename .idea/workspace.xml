@@ -12,7 +12,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a15b0ea-f8c2-4d6c-b340-d1c5ea639d97" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
     </list>
     <ignored path="RIGG.iws" />
@@ -48,7 +47,17 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="859">
               <caret line="111" column="23" selection-start-line="111" selection-start-column="23" selection-end-line="111" selection-end-column="23" />
-              <folding />
+              <folding>
+                <marker date="1469563760142" expanded="true" signature="9:47" ph="..." />
+                <marker date="1469563760142" expanded="true" signature="355:459" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="490:898" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="940:970" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="1002:1660" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="1737:2073" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="2088:2232" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="2258:2371" ph="{...}" />
+                <marker date="1469563760142" expanded="true" signature="2398:2537" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -58,7 +67,13 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
               <caret line="6" column="26" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
-              <folding />
+              <folding>
+                <marker date="1469563760150" expanded="true" signature="71:568" ph="{...}" />
+                <marker date="1469563760150" expanded="true" signature="612:732" ph="{...}" />
+                <marker date="1469563760150" expanded="true" signature="764:1139" ph="{...}" />
+                <marker date="1469563760150" expanded="true" signature="1166:1630" ph="{...}" />
+                <marker date="1469563760150" expanded="true" signature="1725:1759" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,8 +81,8 @@
       <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="9" column="1059" selection-start-line="9" selection-start-column="1059" selection-end-line="9" selection-end-column="1059" />
+            <state relative-caret-position="119">
+              <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -108,7 +123,10 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
               <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="26" />
-              <folding />
+              <folding>
+                <marker date="1469563760140" expanded="true" signature="54:86" ph="..." />
+                <marker date="1469563760140" expanded="true" signature="290:878" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -570,12 +588,12 @@
       <updated>1467120258126</updated>
       <workItem from="1469559246971" duration="3606000" />
       <workItem from="1469563018872" duration="398000" />
-      <workItem from="1469563765221" duration="124000" />
+      <workItem from="1469563765221" duration="155000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4128000" />
+    <option name="totallyTimeSpent" value="4159000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -957,7 +975,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="26" />
-          <folding />
+          <folding>
+            <marker date="1469563760140" expanded="true" signature="54:86" ph="..." />
+            <marker date="1469563760140" expanded="true" signature="290:878" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -965,7 +986,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="859">
           <caret line="111" column="23" selection-start-line="111" selection-start-column="23" selection-end-line="111" selection-end-column="23" />
-          <folding />
+          <folding>
+            <marker date="1469563760142" expanded="true" signature="9:47" ph="..." />
+            <marker date="1469563760142" expanded="true" signature="355:459" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="490:898" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="940:970" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="1002:1660" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="1737:2073" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="2088:2232" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="2258:2371" ph="{...}" />
+            <marker date="1469563760142" expanded="true" signature="2398:2537" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -973,14 +1004,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="26" selection-start-line="6" selection-start-column="26" selection-end-line="6" selection-end-column="26" />
-          <folding />
+          <folding>
+            <marker date="1469563760150" expanded="true" signature="71:568" ph="{...}" />
+            <marker date="1469563760150" expanded="true" signature="612:732" ph="{...}" />
+            <marker date="1469563760150" expanded="true" signature="764:1139" ph="{...}" />
+            <marker date="1469563760150" expanded="true" signature="1166:1630" ph="{...}" />
+            <marker date="1469563760150" expanded="true" signature="1725:1759" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="9" column="1059" selection-start-line="9" selection-start-column="1059" selection-end-line="9" selection-end-column="1059" />
+        <state relative-caret-position="119">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
           <folding />
         </state>
       </provider>

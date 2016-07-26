@@ -37,7 +37,7 @@
       <sourceFolder url="file://$MODULE_DIR$/benchmark/NaiveKleeneRunnable.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/benchmark/BaseThread.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/benchmark/Runnable.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/benchmark_win.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/CachatWorklist.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cachat/Determinizer.cpp" isTestSource="false" />
