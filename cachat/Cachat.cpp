@@ -26,7 +26,7 @@ void Cachat::saturate ()
         {
             cout << "ITERATION NR " << to_string(iteration) << endl;
         }
-        
+
         // player 0 states (refuter)
         for (Letter* p : P->player0_states->letters)
         {
