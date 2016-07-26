@@ -26,7 +26,7 @@ class TVAutomataGen
     set<Letter*> final_states;
 
 public:
-    TVAutomataGen (unsigned int nr_letters, unsigned int nr_states, double density,
+    TVAutomataGen (unsigned long long int nr_letters, unsigned int nr_states, double density,
                    double final_rate);
 
     /**
