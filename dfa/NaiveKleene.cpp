@@ -14,11 +14,7 @@ NaiveKleene::NaiveKleene (NFA* A, GameGrammar* G) :
 {
     populate();
 
-    identity_box = new Box(A, Q, "ID");
-    for (Letter* q : Q->letters)
-    {
-        identity_box->content.emplace(q, q);
-    }
+    identity_box = A->identityBox();
 
     identity_formula = Formula::wrap(identity_box, this);
 
@@ -69,7 +65,7 @@ Formula* NaiveKleene::formulaFor (vector<Letter*> word)
         if (cout_debug)
         {
             cout << "        formula for letter " << (*itr)->toString() << " is: " << formulaFor(*itr)->toString() <<
-            endl;
+                 endl;
             cout << "        composition is " << res->toString() << endl;
         }
     }

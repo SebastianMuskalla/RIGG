@@ -8,7 +8,7 @@ NFA::NFA (Alphabet* Sigma, Alphabet* Q, Letter* initial_state, set<Letter*> fina
         Q(Q),
         initial_state(initial_state),
         final_states(final_states)
-{ }
+{}
 
 Transition* NFA::addTransition (Letter* source, Letter* label, Letter* target)
 {
@@ -117,6 +117,16 @@ void NFA::resetBoxes ()
         delete b;
     }
     all_boxes.clear();
+}
+
+Box* NFA::identityBox ()
+{
+    Box* res = new Box(this, Q, "id");
+    for (Letter* q : Q->letters)
+    {
+        res->content.emplace(q, q);
+    }
+    return res;
 }
 
 

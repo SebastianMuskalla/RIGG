@@ -98,6 +98,8 @@ public:
     NFA &operator= (NFA const &) = delete;
 
     void resetBoxes ();
+
+    Box* identityBox ();
 };
 
 #endif //RIGG_NFA_H
