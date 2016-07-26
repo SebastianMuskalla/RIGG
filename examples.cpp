@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include "common/Types.h"
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
@@ -486,8 +487,8 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
  *
  * Provides time measuring for the 3 phases of the procedure
  */
-tuple<bool, uint, uint, uint, uint> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word,
-                                                   bool use_worklist = false)
+tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word,
+                                                           bool use_worklist = false)
 {
     auto start = chrono::steady_clock::now();
 
@@ -523,10 +524,10 @@ tuple<bool, uint, uint, uint, uint> measureCachat (NFA* A, GameGrammar* G, vecto
 
         auto end = chrono::steady_clock::now();
 
-        uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
-        uint minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
-        uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
-        uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+        uint64 determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+        uint64 minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
+        uint64 generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
+        uint64 saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
 
 
         delete det;
@@ -538,7 +539,8 @@ tuple<bool, uint, uint, uint, uint> measureCachat (NFA* A, GameGrammar* G, vecto
         delete AFA;
         delete P;
 
-        return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
+        return tuple<bool, uint64, uint64, uint64, uint64>(res, determinize_time, minimize_time, generate_time,
+                                                           saturate_time);
     }
     else
     {
@@ -549,10 +551,10 @@ tuple<bool, uint, uint, uint, uint> measureCachat (NFA* A, GameGrammar* G, vecto
 
         auto end = chrono::steady_clock::now();
 
-        uint determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
-        uint minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
-        uint generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
-        uint saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+        uint64 determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+        uint64 minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
+        uint64 generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
+        uint64 saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
 
 
         delete det;
@@ -564,14 +566,15 @@ tuple<bool, uint, uint, uint, uint> measureCachat (NFA* A, GameGrammar* G, vecto
         delete AFA;
         delete P;
 
-        return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
+        return tuple<bool, uint64, uint64, uint64, uint64>(res, determinize_time, minimize_time, generate_time,
+                                                           saturate_time);
     }
 }
 
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
-tuple<bool, bool, uint, uint, uint, uint> timeMeasuring (
+tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -636,16 +639,16 @@ tuple<bool, bool, uint, uint, uint, uint> timeMeasuring (
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-    uint cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
-    uint cachat_worklist_time = (get<4>(cachat_worklist_1) + get<4>(cachat_worklist_2)) / 2;
+    uint64 cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
+    uint64 cachat_worklist_time = (get<4>(cachat_worklist_1) + get<4>(cachat_worklist_2)) / 2;
 
 
-    return tuple<bool, bool, uint, uint, uint, uint>(res_worklist_dfa_1,
-                                                     res_worklist_dfa_2,
-                                                     naive_time,
-                                                     worklist_time,
-                                                     cachat_time,
-                                                     cachat_worklist_time
+    return tuple<bool, bool, uint64, uint64, uint64, uint64>(res_worklist_dfa_1,
+                                                             res_worklist_dfa_2,
+                                                             naive_time,
+                                                             worklist_time,
+                                                             cachat_time,
+                                                             cachat_worklist_time
     );
 }
 
@@ -691,8 +694,8 @@ void measureAndPrint ()
  */
 void averagify ()
 {
-    uint total = 0;
-    uint nr_tries = 1;
+    uint64 total = 0;
+    uint64 nr_tries = 1;
     for (int i = 0; i < nr_tries; ++i)
     {
         NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
@@ -707,7 +710,7 @@ void averagify ()
         delete G;
     }
 
-    uint avg = total / (2 * nr_tries);
+    uint64 avg = total / (2 * nr_tries);
     cout << avg << endl;
 }
 

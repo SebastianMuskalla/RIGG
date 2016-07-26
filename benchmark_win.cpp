@@ -1,9 +1,9 @@
 #include <iostream>
 #include <chrono>
+#include "common/Types.h"
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
-#include "cachat/Cachat.h"
 #include "randomgen/TVGrammarGen.h"
 #include "randomgen/TVAutomataGen.h"
 #include "benchmark/BenchmarkThread.h"
@@ -20,38 +20,38 @@ int main ()
 {
     srand(time(NULL) * getpid());
 
-    uint JUMP_FACTOR = 5;
-    uint NR_TRIES = 50;
+    uint64 JUMP_FACTOR = 5;
+    uint64 NR_TRIES = 50;
 
-    uint SECONDS_FROM_MS = 1000ll;
-    uint SECONDS_FROM_US = 1000000ll;
-    uint TIMEOUT = 10 * SECONDS_FROM_US;
-    uint WAIT = 11 * SECONDS_FROM_MS;
+    uint64 SECONDS_FROM_MS = 1000ll;
+    uint64 SECONDS_FROM_US = 1000000ll;
+    uint64 TIMEOUT = 10 * SECONDS_FROM_US;
+    uint64 WAIT = 11 * SECONDS_FROM_MS;
 
-    for (uint i = 3;; ++i)
+    for (uint64 i = 3;; ++i)
     {
-        for (uint j = 1; j < i; ++j)
+        for (uint64 j = 1; j < i; ++j)
         {
-            for (uint k = 1; k < (i - j); ++k)
+            for (uint64 k = 1; k < (i - j); ++k)
             {
-                uint l = i - j - k;
-                uint nr_states = 5 + JUMP_FACTOR * j;
-                uint nr_terminals = 5 + JUMP_FACTOR * k;
-                uint nr_nonterminals = 5 + JUMP_FACTOR * l;
+                uint64 l = i - j - k;
+                uint64 nr_states = 5 + JUMP_FACTOR * j;
+                uint64 nr_terminals = 5 + JUMP_FACTOR * k;
+                uint64 nr_nonterminals = 5 + JUMP_FACTOR * l;
 
-                uint timeouts_naive_kleene = 0;
-                uint timeouts_worklist_kleene = 0;
-                uint timeouts_cachat = 0;
+                uint64 timeouts_naive_kleene = 0;
+                uint64 timeouts_worklist_kleene = 0;
+                uint64 timeouts_cachat = 0;
 
-                uint spaceout_naive_kleene = 0;
-                uint spaceout_worklist_kleene = 0;
-                uint spaceout_cachat = 0;
+                uint64 spaceout_naive_kleene = 0;
+                uint64 spaceout_worklist_kleene = 0;
+                uint64 spaceout_cachat = 0;
 
-                uint total_naive_kleene = 0;
-                uint total_worklist_kleene = 0;
-                uint total_cachat = 0;
+                uint64 total_naive_kleene = 0;
+                uint64 total_worklist_kleene = 0;
+                uint64 total_cachat = 0;
 
-                for (uint t = 0; t < NR_TRIES; ++t)
+                for (uint64 t = 0; t < NR_TRIES; ++t)
                 {
                     NFA* A = TVAutomataGen(nr_terminals, nr_states, 0.8, 0.8).generate();
                     GameGrammar* G = TVGrammarGen(A->Sigma, nr_nonterminals, nr_nonterminals, 0.75, 0.85, 0.85,
@@ -192,9 +192,9 @@ int main ()
 
                 }
 
-                uint avg_naive_kleene = 0;
-                uint avg_worklist_kleene = 0;
-                uint avg_cachat = 0;
+                uint64 avg_naive_kleene = 0;
+                uint64 avg_worklist_kleene = 0;
+                uint64 avg_cachat = 0;
 
                 if (NR_TRIES != (timeouts_naive_kleene + spaceout_naive_kleene))
                 {

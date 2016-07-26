@@ -5,8 +5,6 @@
 #include "GamePDS.h"
 #include "PAFA.h"
 
-typedef unsigned long long int uint;
-
 using namespace std;
 
 /**

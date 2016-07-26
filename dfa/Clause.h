@@ -6,8 +6,7 @@ class Formula;
 #include "Box.h"
 #include "Formula.h"
 #include "Ternary.h"
-
-typedef unsigned long long int uint;
+#include "../common/Types.h"
 
 using namespace std;
 
@@ -24,13 +23,13 @@ private:
 public:
 
     Clause ()
-    { }
+    {}
 
     /**
      * We do not delete the boxes in the clause, because the same object might be used in other clauses
      */
     virtual ~Clause ()
-    { }
+    {}
 
 /**
      * list of boxes of which the clause consits
@@ -72,13 +71,13 @@ public:
 
 private:
     /**
-     * Given an array of uints of length k with entries in 0...g, tries to increment position start
+     * Given an array of uint64s of length k with entries in 0...g, tries to increment position start
      *
      * If overflow is triggered, go to the next position and reset later position
      *
      * returns the next position on which the next increment should happen afterwards or k if no further increment is possible
      */
-    uint increment (uint* func, uint k, uint g, uint start);
+    uint64 increment (uint64* func, uint64 k, uint64 g, uint64 start);
 };
 
 #endif //RIGG_CLAUSE_H
