@@ -15,7 +15,8 @@ TVGrammarGen::TVGrammarGen (Alphabet* Sigma, unsigned int nr_refuter_nonterminal
         final_rate(final_rate),
         left_rate(left_rate),
         right_rate(right_rate)
-{ }
+{
+}
 
 GameGrammar* TVGrammarGen::generate ()
 {
@@ -41,18 +42,34 @@ GameGrammar* TVGrammarGen::generate ()
 
             if (((double) rand() / RAND_MAX) > final_rate)
             {
-                Letter* Y;
-                unsigned int to_id = rand() % nr_refuter_nonterminals + nr_prover_nonterminals;
-                if (to_id < nr_refuter_nonterminals)
                 {
-                    Y = Nrefuter->get(to_id);
+                    Letter* Y;
+                    unsigned int to_id = rand() % (nr_refuter_nonterminals + nr_prover_nonterminals);
+                    if (to_id < nr_refuter_nonterminals)
+                    {
+                        Y = Nrefuter->get(to_id);
+                    } else
+                    {
+                        to_id -= nr_refuter_nonterminals;
+                        Y = Nprover->get(to_id);
+                    }
+                    rhs.push_back(Y);
                 }
-                else
+
+                if (((double) rand() / RAND_MAX) > 0.5)
                 {
-                    to_id -= nr_refuter_nonterminals;
-                    Y = Nprover->get(to_id);
+                    Letter* Z;
+                    unsigned int to_id = rand() % (nr_refuter_nonterminals + nr_prover_nonterminals);
+                    if (to_id < nr_refuter_nonterminals)
+                    {
+                        Z = Nrefuter->get(to_id);
+                    } else
+                    {
+                        to_id -= nr_refuter_nonterminals;
+                        Z = Nprover->get(to_id);
+                    }
+                    rhs.push_back(Z);
                 }
-                rhs.push_back(Y);
 
             }
 
@@ -85,8 +102,7 @@ GameGrammar* TVGrammarGen::generate ()
                 if (to_id < nr_refuter_nonterminals)
                 {
                     Y = Nrefuter->get(to_id);
-                }
-                else
+                } else
                 {
                     to_id -= nr_refuter_nonterminals;
                     Y = Nprover->get(to_id);
