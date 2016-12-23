@@ -1,7 +1,7 @@
 #ifndef RIGG_GAMEPDS_H
 #define RIGG_GAMEPDS_H
 
-#include <c++/4.8.3/set>
+#include <set>
 #include "../common/Alphabet.h"
 #include "PDSTransition.h"
 
@@ -30,7 +30,7 @@ public:
             player1_states(),
             Gamma(),
             transitions()
-    { }
+    {}
 
     virtual ~GamePDS ()
     {

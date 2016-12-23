@@ -1,8 +1,8 @@
 #ifndef RIGG_DETERMINIZER_H
 #define RIGG_DETERMINIZER_H
 
-#include <c++/4.8.3/set>
-#include <c++/4.8.3/algorithm>
+#include <set>
+#include <algorithm>
 #include "../common/NFA.h"
 
 using namespace std;

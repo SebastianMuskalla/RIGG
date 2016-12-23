@@ -1,7 +1,7 @@
 #ifndef RIGG_LETTER_H
 #define RIGG_LETTER_H
 
-#include <c++/4.8.3/string>
+#include <string>
 
 #include "Printable.h"
 
@@ -41,8 +41,7 @@ private:
             alphabet(alphabet),
             index(index),
             name(name)
-    { }
-
+    {}
 
 };
 
