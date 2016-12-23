@@ -1,8 +1,8 @@
 #ifndef RIGG_ALPHABET_H
 #define RIGG_ALPHABET_H
 
-#include <c++/4.8.3/vector>
-#include <c++/4.8.3/string>
+#include <vector>
+#include <string>
 #include "Letter.h"
 
 using namespace std;
@@ -18,9 +18,8 @@ public:
      */
     vector<Letter*> letters;
 
-
     Alphabet ()
-    { }
+    {}
 
     virtual ~Alphabet ();
 

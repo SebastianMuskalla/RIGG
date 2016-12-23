@@ -1,5 +1,5 @@
 #include <iostream>
-#include <c++/4.8.3/chrono>
+#include <chrono>
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
@@ -452,7 +452,6 @@ tuple<bool, uint, uint, uint, uint> cachatMinWithMeasuring (NFA* A, GameGrammar*
     return tuple<bool, uint, uint, uint, uint>(res, determinize_time, minimize_time, generate_time, saturate_time);
 }
 
-
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
@@ -677,7 +676,6 @@ void printEverything ()
     cout << AFA->acceptsFromControlState(AFA->pds_state_to_afa_state[init_prover], stack_Y) << endl;
 }
 
-
 /**
  * Computes the every time Cachat's saturation algorithm needs for 10 random generated examples
  */
@@ -710,8 +708,8 @@ void measureAndPrint ()
 {
     while (true)
     {
-        NFA* A = TVAutomataGen(3, 3, 0.8, 0.8).generate();
-        GameGrammar* G = TVGrammarGen(A->Sigma, 3, 3, 0.75, 0.85, 0.85, 0.85).generate();
+        NFA* A = TVAutomataGen(10, 10, 0.8, 0.8).generate();
+        GameGrammar* G = TVGrammarGen(A->Sigma, 10, 10, 0.75, 0.85, 0.85, 0.85).generate();
 
         try
         {
@@ -771,7 +769,6 @@ void compareSubsumption ()
     }
 }
 
-
 void benchmark ()
 {
     vector<uint> all_nr_terminals = {5, 10, 15, 20};
@@ -811,7 +808,7 @@ void benchmark ()
                 uint min_cachat_avg = min_cachat_total / nr_tries;
 
                 cout << nr_states << "/" << nr_terminals << "/" << nr_nonterminals << ":    " << naive_dfa_avg <<
-                "; " << worklist_dfa_avg << "; " << min_cachat_avg << endl;
+                     "; " << worklist_dfa_avg << "; " << min_cachat_avg << endl;
 
             }
         }
@@ -822,13 +819,13 @@ int main ()
 {
     srand(time(NULL) * getpid());
 
-    benchmark();
+//    benchmark();
 
 //    testMinimization();
 
 //    printEverything();
 
-//    measureAndPrint();
+    measureAndPrint();
 
 //    averagify();
 

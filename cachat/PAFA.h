@@ -1,8 +1,8 @@
 #ifndef RIGG_PAFA_H
 #define RIGG_PAFA_H
 
-#include <c++/4.8.3/map>
-#include <c++/4.8.3/algorithm>
+#include <map>
+#include <algorithm>
 #include "GamePDS.h"
 #include "../common/Alphabet.h"
 #include "AFATransition.h"

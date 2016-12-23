@@ -8,8 +8,8 @@ class Clause;
 #include "../common/Letter.h"
 #include "../common/NFA.h"
 #include "Clause.h"
-#include <c++/4.8.3/map>
-#include <c++/4.8.3/algorithm>
+#include <map>
+#include <algorithm>
 #include "../common/Printable.h"
 #include "Ternary.h"
 

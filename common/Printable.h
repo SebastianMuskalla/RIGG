@@ -5,9 +5,8 @@
 #ifndef RIGG_PRINTABLE_H
 #define RIGG_PRINTABLE_H
 
-#include <c++/4.8.3/string>
-//#include <ostream>
-#include <c++/4.8.3/iostream>
+#include <string>
+#include <iostream>
 
 using namespace std;
 

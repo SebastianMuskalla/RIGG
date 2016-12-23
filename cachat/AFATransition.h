@@ -1,7 +1,7 @@
 #ifndef RIGG_AFATRANSITION_H
 #define RIGG_AFATRANSITION_H
 
-#include <c++/4.8.3/set>
+#include <set>
 #include "../common/Letter.h"
 
 using namespace std;
@@ -24,7 +24,7 @@ public:
             label(label),
             source(source),
             targets(targets)
-    { }
+    {}
 
     virtual string toString () const;
 
