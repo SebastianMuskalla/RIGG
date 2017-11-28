@@ -818,13 +818,128 @@ void averagify ()
     cout << avg << endl;
 }
 
+void cachatExample ()
+{
+//    Rules:
+//
+//    p # -> f #;
+//    p a -> p _;
+//    f a -> p a;
+//    f a -> f a a;
+//    f # -> f #;
+//
+//    Control States:
+//
+//    p Abelard 1;
+//    f Abelard 2;
+//
+//    Interesting Configurations:
+//
+//    p a a a #;
+//    p #;
+
+    // states of the reachability player (player 0 / Eloise)
+    Alphabet* reach_states = new Alphabet(); // empty
+
+    // states of the safety player (player 1 / Abelard)
+    Alphabet* safety_states = new Alphabet();
+    Letter* p = safety_states->addLetter("p");
+    Letter* f = safety_states->addLetter("f");
+
+    // stack alphabet
+    Alphabet* stack_alphabet = new Alphabet();
+    Letter* a = stack_alphabet->addLetter("a");
+    Letter* bot = stack_alphabet->addLetter("#");
+
+    GamePDS* pds = new GamePDS();
+    pds->Gamma = stack_alphabet;
+    pds->player0_states = reach_states;
+    pds->player1_states = safety_states;
+
+    pds->transitions.insert(new PDSTransition(p, bot, {bot}, f)); // p # -> f #;
+    pds->transitions.insert(new PDSTransition(p, a, {}, p));      // p a -> p _;
+    pds->transitions.insert(new PDSTransition(f, a, {a}, p));     // f a -> p a;
+    pds->transitions.insert(new PDSTransition(f, a, {a, a}, f));  // f a -> f a a;
+    pds->transitions.insert(new PDSTransition(f, bot, {bot}, f)); // f # -> f #;
+
+    PAFA* pafa = new PAFA(pds);
+    pafa->control_states = new Alphabet();
+    for (Letter* l : reach_states->letters)
+    {
+        Letter* l_pafa = pafa->control_states->addLetter(l->name);
+        pafa->pds_state_to_afa_state.emplace(l, l_pafa);
+    }
+    for (Letter* l : safety_states->letters)
+    {
+        Letter* l_pafa = pafa->control_states->addLetter(l->name);
+        pafa->pds_state_to_afa_state.emplace(l, l_pafa);
+    }
+
+    // set the final state
+    Letter* final_state_pds = p;
+    Letter* final_state_pafa = pafa->pds_state_to_afa_state[final_state_pds];
+
+    pafa->final_states.insert(final_state_pafa);
+
+    // add transitions accepting sigma*
+    for (Letter* gamma : stack_alphabet->letters)
+    {
+        pafa->transitions.insert(new AFATransition(final_state_pafa, gamma, {final_state_pafa}));
+    }
+
+    cout << "PUSHDOWN SYSTEM:" << endl;
+    cout << pds->toString() << endl;
+    cout << endl;
+    cout << "INITIAL AFA:" << endl;
+    cout << pafa->toString() << endl;
+    cout << endl;
+    cout << "BAD STATE:" << endl;
+    cout << final_state_pafa->name << endl;
+    cout << endl;
+
+    cout << "######################" << endl;
+    cout << "    RUNNING CACHAT" << endl;
+    cout << "######################" << endl;
+
+    // solve using cachats saturation procedure
+    Cachat* cachat = new Cachat(pds, pafa);
+    cachat->saturate();
+
+    cout << "SATURATED AFA:" << endl;
+    cout << pafa->toString() << endl;
+    cout << endl;
+
+    Letter* initial_state_pds = p;
+    Letter* initial_state_pafa = pafa->pds_state_to_afa_state[initial_state_pds];
+    vector<Letter*> initial_stack_content = {a, bot};
+
+    bool res = pafa->acceptsFromControlState(initial_state_pafa, initial_stack_content);
+
+    cout << "######################" << endl;
+    cout << "    RESULT " << endl;
+    cout << "######################" << endl;
+
+    cout << "INITIAL STATE: " << initial_state_pds->name << endl;
+    cout << "INITIAL STACK CONTENT: ";
+    for (Letter* l : initial_stack_content)
+        cout << l->name;
+    cout << endl;
+
+    cout << "INITIAL CONFIG IN WR OF REACH PLAYER: " << res << endl;
+
+    delete pafa;
+    delete pds;
+}
+
 int main ()
 {
-    printEverything();
+//    printEverything();
 
-    srand(time(NULL) * getpid());
+//    srand(time(NULL) * getpid());
 
-    measureAndPrint();
+//    measureAndPrint();
+
+    cachatExample();
 
     return 0;
 }
