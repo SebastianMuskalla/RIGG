@@ -18,7 +18,6 @@ public:
      */
     vector<Letter*> letters;
 
-
     Alphabet ()
     {}
 

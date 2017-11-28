@@ -42,7 +42,7 @@ GameGrammar* TVGrammarGen::generate ()
             if (((double) rand() / RAND_MAX) > final_rate)
             {
                 Letter* Y;
-                unsigned int to_id = rand() % nr_refuter_nonterminals + nr_prover_nonterminals;
+                unsigned int to_id = rand() % (nr_refuter_nonterminals + nr_prover_nonterminals);
                 if (to_id < nr_refuter_nonterminals)
                 {
                     Y = Nrefuter->get(to_id);
