@@ -43,7 +43,6 @@ private:
             name(name)
     {}
 
-
 };
 
 #endif //RIGG_LETTER_H

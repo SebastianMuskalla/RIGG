@@ -547,8 +547,7 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
 
         return tuple<bool, uint64, uint64, uint64, uint64>(res, determinize_time, minimize_time, generate_time,
                                                            saturate_time);
-    }
-    else
+    } else
     {
         Cachat* cachat = new Cachat(P, AFA);
         cachat->saturate();
@@ -730,8 +729,7 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
     if (with_cachat_worklist)
     {
         return timeMeasuringWithWorklist(t);
-    }
-    else
+    } else
     {
         return timeMeasuringWithoutWorklist(t);
     }
@@ -743,9 +741,9 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
  */
 void measureAndPrint ()
 {
-    unsigned int nr_states = 8;
-    unsigned int nr_terminals = 5;
-    unsigned int nr_nonterminals_per_player = 5;
+    unsigned int nr_states = 3;
+    unsigned int nr_terminals = 3;
+    unsigned int nr_nonterminals_per_player = 3;
 
     // enabling this makes it very slow ...
     bool include_cachat_worklist = false;

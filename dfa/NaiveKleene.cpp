@@ -77,8 +77,7 @@ Formula* NaiveKleene::formulaFor (Letter* l)
     if (G->isNonterminal(l))
     {
         return solution[l];
-    }
-    else
+    } else
     {
         return Formula::wrap(A->boxFor(l), this);
     }
@@ -87,8 +86,12 @@ Formula* NaiveKleene::formulaFor (Letter* l)
 void NaiveKleene::solve ()
 {
     bool stable = false;
+
+    uint64 itr = 0;
+
     while (!stable)
     {
+        itr++;
         stable = true;
         for (Letter* l : N)
         {
@@ -117,6 +120,10 @@ void NaiveKleene::solve ()
             solution = new_solution;
             new_solution.clear();
         }
+    }
+    if (cout_debug)
+    {
+        cout << "stable after " << itr << " iterations";
     }
 }
 
@@ -173,8 +180,7 @@ Formula* NaiveKleene::recomputeValue (Letter* l)
         if (and_mode)
         {
             res = res->formulaAnd(tmp);
-        }
-        else
+        } else
         {
             res = res->formulaOr(tmp);
         }
