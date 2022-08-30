@@ -23,7 +23,7 @@ public:
 
     virtual ~Alphabet ();
 
-/**
+    /**
      * number of letters currently in the alphabet
      */
     unsigned long long int size () const
@@ -39,6 +39,9 @@ public:
         return letters[index];
     }
 
+    /**
+     * add a letter with the specified name
+     */
     Letter* addLetter (string name);
 
     virtual string toString () const;

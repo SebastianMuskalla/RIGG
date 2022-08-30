@@ -6,7 +6,7 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
 {
     bool and_mode = l->alphabet == Nprover;
 
-    if (cout_debug)
+    if (DEBUG_LEVEL > 2)
     {
         cout << "    recomputing formula for " << l->toString() << endl;
         cout << "    owned by prover: " << and_mode << endl;
@@ -22,7 +22,7 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
     auto itr = itrpair.first;
     Formula* res = formulaFor(itr->second);
 
-    if (cout_debug)
+    if (DEBUG_LEVEL > 2)
     {
         cout << "    formula for first rule is: " << res->toString() << endl;
     }
@@ -33,7 +33,7 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
     {
         Formula* tmp = formulaFor(itr->second);
 
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "    formula for next rule is: " << tmp->toString() << endl;
         }
@@ -47,7 +47,7 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
             res = res->formulaOr(tmp);
         }
 
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "    result of and/or is " << res->toString() << endl;
         }
@@ -58,14 +58,25 @@ Formula* WorklistKleene::recomputeValue (Letter* l)
 
 void WorklistKleene::solve ()
 {
+    unsigned int iteration_count = 0;
+
     while (!worklist.empty())
     {
+        iteration_count++;
+        if (iteration_count % 1)
+        {
+            if (DEBUG_LEVEL > 0)
+            {
+                cout << "iteraton number " << iteration_count << endl;
+            }
+        }
+
         Letter* l = *worklist.begin();
         worklist.erase(worklist.begin());
 
         Formula* old_value = solution[l];
 
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "picked up " << l->toString() << " from worklist" << endl;
             cout << "old value: " << old_value->toString() << endl;
@@ -73,7 +84,7 @@ void WorklistKleene::solve ()
 
         Formula* new_value = recomputeValue(l);
 
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "new value: " << new_value->toString() << endl;
             cout << "implication check..." << endl;
@@ -84,7 +95,7 @@ void WorklistKleene::solve ()
         if (new_value->implies(old_value))
         {
             // value was stable, dont need to do anything
-            if (cout_debug)
+            if (DEBUG_LEVEL > 2)
             {
                 cout << "stable: new value implies old value" << endl;
             }
@@ -93,7 +104,7 @@ void WorklistKleene::solve ()
         {
             solution[l] = new_value;
 
-            if (cout_debug)
+            if (DEBUG_LEVEL > 2)
             {
                 cout << "unstable: insert dependencies" << endl;
             }
@@ -102,6 +113,9 @@ void WorklistKleene::solve ()
             auto itrpair = dependencies.equal_range(l);
             for (auto itr = itrpair.first; itr != itrpair.second; ++itr)
             {
+
+                cout << "Inserting " << itr->second << "to worklist" << endl;
+
                 worklist.insert(itr->second);
             }
         }
@@ -134,7 +148,7 @@ WorklistKleene::WorklistKleene (NFA* A, GameGrammar* G) :
 
     identity_formula = Formula::wrap(identity_box, this);
 
-    if (cout_debug)
+    if (DEBUG_LEVEL > 2)
     {
         cout << "initial values" << endl;
         for (auto pair : solution)
@@ -183,7 +197,7 @@ void WorklistKleene::populateDependencies ()
 
 Formula* WorklistKleene::formulaFor (vector<Letter*> word)
 {
-    if (cout_debug)
+    if (DEBUG_LEVEL > 2)
     {
         cout << "        computing forumula for ";
         for (Letter* l : word)
@@ -195,7 +209,7 @@ Formula* WorklistKleene::formulaFor (vector<Letter*> word)
 
     if (word.empty())
     {
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "        epsilon: " << identity_formula->toString() << endl;
         }
@@ -205,7 +219,7 @@ Formula* WorklistKleene::formulaFor (vector<Letter*> word)
     auto itr = word.begin();
     Formula* res = formulaFor(*itr);
 
-    if (cout_debug)
+    if (DEBUG_LEVEL > 2)
     {
         cout << "        formula for first letter " << (*itr)->toString() << " is: " << res->toString() << endl;
     }
@@ -215,7 +229,7 @@ Formula* WorklistKleene::formulaFor (vector<Letter*> word)
     {
         res = res->composeWith(formulaFor(*itr));
 
-        if (cout_debug)
+        if (DEBUG_LEVEL > 2)
         {
             cout << "        formula for letter " << (*itr)->toString() << " is: " << formulaFor(*itr)->toString() <<
                  endl;

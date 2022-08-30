@@ -87,7 +87,7 @@ void NaiveKleene::solve ()
 {
     bool stable = false;
 
-    uint64 itr = 0;
+    unsigned long long int itr = 0;
 
     while (!stable)
     {

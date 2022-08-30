@@ -72,7 +72,7 @@ private:
     /**
      * Print debug information on the console during solution process
      */
-    bool cout_debug = false;
+    constexpr static unsigned int DEBUG_LEVEL = 3;
 
     /**
      * Initially populate solution, worklist and dependencies

@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
 #include <unistd.h>
-#include "common/Types.h"
 #include "common/Alphabet.h"
 #include "common/NFA.h"
 #include "dfa/WorklistKleene.h"
@@ -493,7 +492,7 @@ bool solveWithCachat (NFA* A, GameGrammar* G, vector<Letter*> word)
  *
  * Provides time measuring for the 3 phases of the procedure
  */
-tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word,
+tuple<bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int> measureCachat (NFA* A, GameGrammar* G, vector<Letter*> word,
                                                            bool use_worklist = false)
 {
     auto start = chrono::steady_clock::now();
@@ -530,10 +529,10 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
 
         auto end = chrono::steady_clock::now();
 
-        uint64 determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
-        uint64 minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
-        uint64 generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
-        uint64 saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+        unsigned long long int determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+        unsigned long long int minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
+        unsigned long long int generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
+        unsigned long long int saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
 
 
         delete det;
@@ -545,7 +544,7 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
         delete AFA;
         delete P;
 
-        return tuple<bool, uint64, uint64, uint64, uint64>(res, determinize_time, minimize_time, generate_time,
+        return tuple<bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int>(res, determinize_time, minimize_time, generate_time,
                                                            saturate_time);
     } else
     {
@@ -556,10 +555,10 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
 
         auto end = chrono::steady_clock::now();
 
-        uint64 determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
-        uint64 minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
-        uint64 generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
-        uint64 saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
+        unsigned long long int determinize_time = chrono::duration_cast<chrono::milliseconds>(post_det - start).count();
+        unsigned long long int minimize_time = chrono::duration_cast<chrono::milliseconds>(post_min - post_det).count();
+        unsigned long long int generate_time = chrono::duration_cast<chrono::milliseconds>(post_gen - post_min).count();
+        unsigned long long int saturate_time = chrono::duration_cast<chrono::milliseconds>(end - post_gen).count();
 
 
         delete det;
@@ -571,13 +570,13 @@ tuple<bool, uint64, uint64, uint64, uint64> measureCachat (NFA* A, GameGrammar* 
         delete AFA;
         delete P;
 
-        return tuple<bool, uint64, uint64, uint64, uint64>(res, determinize_time, minimize_time, generate_time,
+        return tuple<bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int>(res, determinize_time, minimize_time, generate_time,
                                                            saturate_time);
     }
 }
 
 
-tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithWorklist (
+tuple<bool, bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int> timeMeasuringWithWorklist (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -619,19 +618,19 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithWorklist (
             )
     {
         string error = "RESULTS DIFFER:";
-        error.append("\ndfa worklist:");
+        error.append("\nsummaries worklist:");
         error.append(to_string(res_worklist_dfa_1));
         error.append(", ");
         error.append(to_string(res_worklist_dfa_2));
-        error.append("\ndfa naive:");
+        error.append("\nsummaries naive:");
         error.append(to_string(res_naive_dfa_1));
         error.append(", ");
         error.append(to_string(res_naive_dfa_2));
-        error.append("\ncachat: ");
+        error.append("\nsaturation: ");
         error.append(to_string(res_cachat_1));
         error.append(", ");
         error.append(to_string(res_cachat_2));
-        error.append("\nworklist cachat: ");
+        error.append("\nworklist saturation: ");
         error.append(to_string(res_cachat_worklist_1));
         error.append(", ");
         error.append(to_string(res_cachat_worklist_2));
@@ -642,11 +641,11 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithWorklist (
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-    uint64 cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
-    uint64 cachat_worklist_time = (get<4>(cachat_worklist_1) + get<4>(cachat_worklist_2)) / 2;
+    unsigned long long int cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
+    unsigned long long int cachat_worklist_time = (get<4>(cachat_worklist_1) + get<4>(cachat_worklist_2)) / 2;
 
 
-    return tuple<bool, bool, uint64, uint64, uint64, uint64>(res_worklist_dfa_1,
+    return tuple<bool, bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int>(res_worklist_dfa_1,
                                                              res_worklist_dfa_2,
                                                              naive_time,
                                                              worklist_time,
@@ -655,7 +654,7 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithWorklist (
     );
 }
 
-tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithoutWorklist (
+tuple<bool, bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int> timeMeasuringWithoutWorklist (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t)
 {
     NFA* A = get<0>(t);
@@ -689,15 +688,15 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithoutWorklist (
             )
     {
         string error = "RESULTS DIFFER:";
-        error.append("\ndfa worklist:");
+        error.append("\nsummaries worklist:");
         error.append(to_string(res_worklist_dfa_1));
         error.append(", ");
         error.append(to_string(res_worklist_dfa_2));
-        error.append("\ndfa naive:");
+        error.append("\nsummaries naive:");
         error.append(to_string(res_naive_dfa_1));
         error.append(", ");
         error.append(to_string(res_naive_dfa_2));
-        error.append("\ncachat: ");
+        error.append("\nsaturation: ");
         error.append(to_string(res_cachat_1));
         error.append(", ");
         error.append(to_string(res_cachat_2));
@@ -708,10 +707,10 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithoutWorklist (
 
     auto naive_time = chrono::duration_cast<chrono::milliseconds>(end2 - end).count() / 2;
 
-    uint64 cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
+    unsigned long long int cachat_time = (get<4>(cachat_1) + get<4>(cachat_2)) / 2;
 
 
-    return tuple<bool, bool, uint64, uint64, uint64, uint64>(res_worklist_dfa_1,
+    return tuple<bool, bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int>(res_worklist_dfa_1,
                                                              res_worklist_dfa_2,
                                                              naive_time,
                                                              worklist_time,
@@ -723,7 +722,7 @@ tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuringWithoutWorklist (
 /**
  * Takes a game instance (NFA, PDS, two initial sentential forms), solve it using both algorithms and measure the time it takes
  */
-tuple<bool, bool, uint64, uint64, uint64, uint64> timeMeasuring (
+tuple<bool, bool, unsigned long long int, unsigned long long int, unsigned long long int, unsigned long long int> timeMeasuring (
         tuple<NFA*, GameGrammar*, vector<Letter*>, vector<Letter*>> t, bool with_cachat_worklist = false)
 {
     if (with_cachat_worklist)
@@ -769,13 +768,13 @@ void measureAndPrint ()
                                                                                 {G->Nprover->get(0)}),
                     include_cachat_worklist);
 
-            cout << "naive dfa:       " << get<2>(t) << endl;
-            cout << "worklist dfa:    " << get<3>(t) << endl;
-            cout << "cachat:          " << get<4>(t) << endl;
+            cout << "naive summaries:       " << get<2>(t) << endl;
+            cout << "worklist summaries:    " << get<3>(t) << endl;
+            cout << "saturation:          " << get<4>(t) << endl;
 
             if (include_cachat_worklist)
             {
-                cout << "worklist cachat: " << get<5>(t) << endl;
+                cout << "worklist saturation: " << get<5>(t) << endl;
             }
 
             cout << endl;
@@ -798,8 +797,8 @@ void measureAndPrint ()
  */
 void averagify ()
 {
-    uint64 total = 0;
-    uint64 nr_tries = 1;
+    unsigned long long int total = 0;
+    unsigned long long int nr_tries = 1;
     for (int i = 0; i < nr_tries; ++i)
     {
         NFA* A = TVAutomataGen(10, 5, 0.8, 0.8).generate();
@@ -814,7 +813,7 @@ void averagify ()
         delete G;
     }
 
-    uint64 avg = total / (2 * nr_tries);
+    unsigned long long int avg = total / (2 * nr_tries);
     cout << avg << endl;
 }
 
@@ -933,11 +932,11 @@ void cachatExample ()
 
 int main ()
 {
-//    printEverything();
+    printEverything();
 
-//    srand(time(NULL) * getpid());
+    srand(time(NULL) * getpid());
 
-//    measureAndPrint();
+    measureAndPrint();
 
     cachatExample();
 

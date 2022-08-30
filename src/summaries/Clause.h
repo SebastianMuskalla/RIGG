@@ -6,8 +6,6 @@ class Formula;
 #include "Box.h"
 #include "Formula.h"
 #include "Ternary.h"
-#include "../common/Types.h"
-
 using namespace std;
 
 /**
@@ -77,7 +75,7 @@ private:
      *
      * returns the next position on which the next increment should happen afterwards or k if no further increment is possible
      */
-    uint64 increment (uint64* func, uint64 k, uint64 g, uint64 start);
+    unsigned long long int increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g, unsigned long long int start);
 };
 
 #endif //RIGG_CLAUSE_H

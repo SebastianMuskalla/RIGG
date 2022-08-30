@@ -6,16 +6,16 @@ vector<Clause*> Clause::composeWith (Formula* G)
 {
     vector<Clause*> res;
 
-    uint64 nr_boxes = boxes.size();
-    uint64* mapping = new uint64[nr_boxes]();
-    uint64 nr_clauses = G->clauses.size();
-    uint64 start_index = 0;
+    unsigned long long int nr_boxes = boxes.size();
+    unsigned long long int* mapping = new unsigned long long int[nr_boxes]();
+    unsigned long long int nr_clauses = G->clauses.size();
+    unsigned long long int start_index = 0;
 
     while (true)
     {
         Clause* clause = new Clause();
 
-        for (uint64 i = 0; i < nr_boxes; ++i)
+        for (unsigned long long int i = 0; i < nr_boxes; ++i)
         {
             Box* rho = boxes.at(i);
             Clause* H = G->clauses.at(mapping[i]);
@@ -39,13 +39,13 @@ vector<Clause*> Clause::composeWith (Formula* G)
     return res;
 }
 
-uint64 Clause::increment (uint64* func, uint64 k, uint64 g,
-                          uint64 start)
+unsigned long long int Clause::increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g,
+                                          unsigned long long int start)
 {
     bool reset = false;
 
     // assert(hint >= 0);
-    for (uint64 i = start; i < k; ++i)
+    for (unsigned long long int i = start; i < k; ++i)
     {
         if (func[i] < g)
         {
