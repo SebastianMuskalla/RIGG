@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef RIGG_BOX_H
 #define RIGG_BOX_H
 
@@ -45,7 +62,7 @@ public:
      *
      * usually comes from the word that was used to generate the box
      *
-     * name is ignored when checking for equality, because differents words might induce the same box (behavior on the automaton)
+     * name is ignored when checking for equality, because different words might induce the same box (behavior on the automaton)
      */
     string name;
 
@@ -57,7 +74,7 @@ public:
     /**
      * compose two boxes according to relational composition
      */
-    Box* composeWith (Box* r);
+    Box* composeWith (Box* other);
 
     /**
      * compose a box with a whole clause, which results in a list of boxes
@@ -67,29 +84,21 @@ public:
     /**
      * string representation
      */
-    virtual string toString () const;
+    string toString () const override;
 
     bool isRejecting ();
 
     /**
      * check boxes for equality of the content (ignores the name)
      */
-    bool operator== (const Box &other) const
+    bool operator== (const Box& other) const
     {
         return content == other.content;
     }
 
-//    /**
-//     * test function that contains empty boxes with a specified name
-//     */
-//    static Box* test (string name)
-//    {
-//        return new Box(nullptr, new Alphabet(), name);
-//    }
+    Box (Box const&) = delete;
 
-    Box (Box const &) = delete;
-
-    Box &operator= (Box const &) = delete;
+    Box& operator= (Box const&) = delete;
 };
 
 #endif //RIGG_BOX_H

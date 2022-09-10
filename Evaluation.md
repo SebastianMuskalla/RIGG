@@ -6,7 +6,7 @@ Experimental evaluation
 
 We present the experimental evaluation of our tool.
 
-Note that the data that we present was created using the code in the **benchmark** branch of the algorithm.
+Note that the data that we present was created using the code in the **benchmark** branch of the repository.
 
 For the experimental evaluation, we have generated random instances of regular inclusion grammar games and solved them using a set of three algorithms.
 
@@ -25,7 +25,7 @@ The algorithms are described in more detail in the *Theoretical background* sect
    (i.e. one that updates the information about every non-terminal in every iteration)
 2. A summary-based solver using chaotic iteration\
    (i.e. a worklist-based implementation of Kleene iteration that tracks dependencies and updates information on-demand)
-3. A saturation-based solver using Cachat's algorithm
+3. A saturation-based solver using SaturationSolver's algorithm
 
 
 ### Experiments
@@ -42,26 +42,26 @@ A triple `x/y/z` in the first column specifies the parameters of the random gene
 * `y` is the number of terminals shared between the automaton and the grammar
 * `z` is the number of nonterminals of the grammar per player (so the total number of nonterminals is `2z`)
 
-The `avg. time` column (for each of the algorithms) is the average time (in miliseconds) the algorithm needed to solve the instances **that could be solved within a 10 second interval**.\
+The `avg. time` column (for each of the algorithms) is the average time (in milliseconds) the algorithm needed to solve the instances **that could be solved within a 10 second interval**.\
 The `timeout` is the percentage of instances that could not be solved within a 10 second interval. (`0` means no timeouts, `100` means no instance could be solved).
 
-| Parameters | Summaries (naive) |           | Summaries (worklist) |           | Saturation  |           |
-|-----------:|------------------:|----------:|---------------------:|----------:|------------:|----------:|
-|            |       `avg. time` | `timeout` |          `avg. time` | `timeout` | `avg. time` | `timeout` |
-| ` 5/ 5/ 5` |           `65.2`  |      `2%` |                `0.8` |      `0%` |      `94.7` |      `0%` |
-| ` 5/ 5/10` |            `5.4`  |      `4%` |                `7.4` |      `0%` |     `701.7` |      `0%` |
-| ` 5/10/ 5` |           `13.9`  |      `0%` |                `0.3` |      `0%` |     `375.7` |      `0%` |
-| ` 5/ 5/15` |            `6.0`  |      `0%` |                `1.1` |      `0%` |    `1618.6` |      `0%` |
-| ` 5/10/10` |           `32.0`  |      `2%` |              `122.1` |      `0%` |    `2214.4` |      `0%` |
-| ` 5/15/ 5` |           `44.5`  |      `0%` |                `0.2` |      `0%` |     `620.7` |      `0%` |
-| ` 5/ 5/20` |            `3.4`  |      `0%` |                `1.4` |      `0%` |    `3434.6` |      `4%` |
-| ` 5/10/15` |          `217.7`  |      `0%` |                `7.4` |      `0%` |    `5263.0` |     `16%` |
-| `10/ 5/ 5` |            `8.8`  |      `2%` |                `0.6` |      `0%` |    `2737.8` |      `2%` |
-| `10/ 5/10` |            `9.0`  |      `6%` |               `69.8` |      `0%` |    `6484.9` |     `66%` |
-| `15/ 5/ 5` |           `30.7`  |      `0%` |                `0.2` |      `0%` |    `5442.4` |     `52%` |
-| `10/10/ 5` |            `9.7`  |      `0%` |                `0.2` |      `0%` |    `7702.1` |     `92%` |
-| `10/15/15` |          `252.3`  |      `0%` |                `1.9` |      `0%` |       `n/a` |    `100%` |
-| `10/15/20` |           `12.9`  |      `0%` |                `1.8` |      `0%` |       `n/a` |    `100%` |
+| Parameters | Summaries (naive) |           | Summaries (worklist) |           | SaturationSolver |           |
+|-----------:|------------------:|----------:|---------------------:|----------:|-----------------:|----------:|
+|            |       `avg. time` | `timeout` |          `avg. time` | `timeout` |      `avg. time` | `timeout` |
+| ` 5/ 5/ 5` |            `65.2` |      `2%` |                `0.8` |      `0%` |           `94.7` |      `0%` |
+| ` 5/ 5/10` |             `5.4` |      `4%` |                `7.4` |      `0%` |          `701.7` |      `0%` |
+| ` 5/10/ 5` |            `13.9` |      `0%` |                `0.3` |      `0%` |          `375.7` |      `0%` |
+| ` 5/ 5/15` |             `6.0` |      `0%` |                `1.1` |      `0%` |         `1618.6` |      `0%` |
+| ` 5/10/10` |            `32.0` |      `2%` |              `122.1` |      `0%` |         `2214.4` |      `0%` |
+| ` 5/15/ 5` |            `44.5` |      `0%` |                `0.2` |      `0%` |          `620.7` |      `0%` |
+| ` 5/ 5/20` |             `3.4` |      `0%` |                `1.4` |      `0%` |         `3434.6` |      `4%` |
+| ` 5/10/15` |           `217.7` |      `0%` |                `7.4` |      `0%` |         `5263.0` |     `16%` |
+| `10/ 5/ 5` |             `8.8` |      `2%` |                `0.6` |      `0%` |         `2737.8` |      `2%` |
+| `10/ 5/10` |             `9.0` |      `6%` |               `69.8` |      `0%` |         `6484.9` |     `66%` |
+| `15/ 5/ 5` |            `30.7` |      `0%` |                `0.2` |      `0%` |         `5442.4` |     `52%` |
+| `10/10/ 5` |             `9.7` |      `0%` |                `0.2` |      `0%` |         `7702.1` |     `92%` |
+| `10/15/15` |           `252.3` |      `0%` |                `1.9` |      `0%` |            `n/a` |    `100%` |
+| `10/15/20` |            `12.9` |      `0%` |                `1.8` |      `0%` |            `n/a` |    `100%` |
 
 ### Evaluation
 

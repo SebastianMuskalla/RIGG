@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef RIGG_DETERMINIZER_H
 #define RIGG_DETERMINIZER_H
 
@@ -16,38 +33,20 @@ using namespace std;
  */
 class Determinizer
 {
-    NFA* A;
-    Alphabet* Q;
-    Alphabet* Sigma;
-    Alphabet* PQ;
-    map<set<Letter*>, Letter*> set_to_state;
-    set<set<Letter*>> worklist;
-    set<set<Letter*>> done;
-    set<Transition*> nfa_trans;
-    set<Transition*> dfa_trans;
-    set<Letter*> dfa_final_states;
-    Letter* init_letter;
-
     /**
      * helper function that computes a string representation for a set
      */
-    string setToString (set<Letter*> set);
+    static string setToString (const set<Letter*>& set);
 
 public:
-
-    /**
-     * given the NFA A that should be determinize
-     */
-    Determinizer (NFA* A);
-
     /**
      * determinize and return the result
      */
-    NFA* determinize ();
+    static NFA* determinize (NFA* A);
 
-    Determinizer (Determinizer const &) = delete;
+    Determinizer (Determinizer const&) = delete;
 
-    Determinizer &operator= (Determinizer const &) = delete;
+    Determinizer& operator= (Determinizer const&) = delete;
 };
 
 #endif //RIGG_DETERMINIZER_H

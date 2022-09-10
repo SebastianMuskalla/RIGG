@@ -1,28 +1,47 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "Box.h"
+
+#include <utility>
 
 using namespace std;
 
-Box* Box::composeWith (Box* r)
+Box* Box::composeWith (Box* other)
 {
-    string newname = name;
-    newname.append(r->name);
+    string newName = name;
+    newName.append(other->name);
 
     if (name == "id")
     {
-        newname = r->name;
+        newName = other->name;
     }
-    if (r->name == "id")
+    if (other->name == "id")
     {
-        newname = name;
+        newName = name;
     }
 
-    Box* res = new Box(A, Q, newname);
-    for (pair<Letter*, Letter*> cnt : content)
+    Box* res = new Box(A, Q, newName);
+    for (pair<Letter*, Letter*> qp : content)
     {
-        auto range = r->content.equal_range(cnt.second);
-        for (auto itr = range.first; itr != range.second; ++itr)
+        auto range = other->content.equal_range(qp.second);
+        for (auto pr = range.first; pr != range.second; ++pr)
         {
-            res->content.emplace(cnt.first, itr->second);
+            res->content.emplace(qp.first, pr->second);
         }
     }
     return res;
@@ -31,6 +50,7 @@ Box* Box::composeWith (Box* r)
 vector<Box*> Box::composeWith (Clause* r)
 {
     vector<Box*> res;
+    res.reserve(r->boxes.size());
     for (Box* b : r->boxes)
     {
         res.push_back(composeWith(b));
@@ -72,12 +92,12 @@ bool Box::isRejecting ()
         return false;
     }
 
-    Letter* init = A->initial_state;
+    Letter* init = A->initialState;
     auto bounds = content.equal_range(init);
 
     for (auto itr = bounds.first; itr != bounds.second; ++itr)
     {
-        if (A->final_states.find(itr->second) != A->final_states.end())
+        if (A->finalStates.find(itr->second) != A->finalStates.end())
         {
             rejecting = NO;
             return false;
@@ -90,7 +110,7 @@ bool Box::isRejecting ()
 Box::Box (NFA* A, Alphabet* Q, string name) :
         A(A),
         Q(Q),
-        name(name)
+        name(std::move(name))
 {
-    A->all_boxes.insert(this);
+    A->allBoxes.insert(this);
 }

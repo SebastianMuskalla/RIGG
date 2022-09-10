@@ -1,21 +1,45 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 //
 // Created by Sebastian on 15.07.2016.
 //
 
 #include "Minimizer.h"
 
-Minimizer::Minimizer (NFA* DFA) :
-        DFA(DFA),
-        Sigma(DFA->Sigma),
-        Q(DFA->Q)
+NFA* Minimizer::minimize (NFA* DFA)
 {
+    Alphabet* Sigma = DFA->Sigma;
+    Alphabet* Q = DFA->Q;
+
+    // partition of the DFA states into sets of states
+    set<set<Letter*>> partition;
+
+    // worklist of the sets of states in the current partition that have to be considered
+    vector<set<Letter*>> worklist;
+
+    // create the initial partition of final states F and non-final states
     set<Letter*> F;
     set<Letter*> nonF;
 
     for (Letter* q : Q->letters)
     {
 
-        if (DFA->final_states.find(q) != DFA->final_states.end())
+        if (DFA->finalStates.find(q) != DFA->finalStates.end())
         {
             F.insert(q);
         }
@@ -25,12 +49,20 @@ Minimizer::Minimizer (NFA* DFA) :
         }
     }
 
+    // if there is no final state, we can return a trivial DFA that rejects every input
     if (F.empty())
     {
-        trivial = true;
-        return;
+        auto* singleton = new Alphabet();
+        Letter* q = singleton->addLetter("q");
+        NFA* dfaWithEmptyLanguage = new NFA(Sigma, singleton, q, set<Letter*>());
+        for (Letter* a : Sigma->letters)
+        {
+            dfaWithEmptyLanguage->addTransition(q, a, q);
+        }
+        return dfaWithEmptyLanguage;
     }
 
+    // otherwise, we have to create the partition and initialize the worklist with F
     partition.insert(F);
 
     if (!nonF.empty())
@@ -39,99 +71,82 @@ Minimizer::Minimizer (NFA* DFA) :
     }
 
     worklist.push_back(F);
-}
 
-NFA* Minimizer::minimize ()
-{
-    if (trivial)
-    {
-        Alphabet* singleton = new Alphabet();
-        Letter* q = singleton->addLetter("q");
-        NFA* min_DFA = new NFA(Sigma, singleton, q, set<Letter*>());
-        for (Letter* a : Sigma->letters)
-        {
-            min_DFA->addTransition(q, a, q);
-        }
-        return min_DFA;
-    }
 
     while (!worklist.empty())
     {
-        // pick state set A from worklist
-        set<Letter*> A = *worklist.begin();
+        // pick state set setA from worklist
+        set<Letter*> setA = *worklist.begin();
         worklist.erase(worklist.begin());
 
         // for each a in Sigma do
         for (Letter* a : Sigma->letters)
         {
-            // let X be the set of states for which a transition on c leads to a state in A
-            set<Letter*> X;
+            // let setX be the set of states for which a transition on c leads to a state in setA
+            set<Letter*> setX;
             for (Transition* t : DFA->transitions)
             {
-                if (t->label == a && A.find(t->target) != A.end())
+                if (t->label == a && setA.find(t->target) != setA.end())
                 {
-                    X.insert(t->source);
+                    setX.insert(t->source);
                 }
             }
 
-            // if X is empty, XcapY will also be empty
-            if (!X.empty())
+            // if setX is empty, the intersection XcapY will also be empty
+            if (!setX.empty())
             {
-
-                // for each set Y in partition ...
+                // for each set Y in the partition ...
                 for (auto itr = partition.begin(); itr != partition.end();)
                 {
+                    set<Letter*> setY = *itr;
+                    set<Letter*> intersection; // intersection of X and Y
+                    set<Letter*> difference; // difference Y minus X
 
-                    set<Letter*> Y = *itr;
-                    set<Letter*> YcapX;
-                    set<Letter*> YwithoutX;
-
-                    for (Letter* q : Y)
+                    for (Letter* q : setY)
                     {
-                        if (X.find(q) != X.end())
+                        if (setX.find(q) != setX.end())
                         {
-                            YcapX.insert(q);
+                            intersection.insert(q);
                         }
                         else
                         {
-                            YwithoutX.insert(q);
+                            difference.insert(q);
                         }
                     }
 
-                    // ... for which XcapY is nonempty and Y \ X is nonempty
-                    if (!YcapX.empty() && !YwithoutX.empty())
+                    // ... for which  intersection and difference are nonempty
+                    if (!intersection.empty() && !difference.empty())
                     {
-                        // replace Y in P by the two sets X ∩ Y and Y \ X
+                        // replace setY in P by the two sets setX ∩ setY and setY \ setX
 
                         // we need to be careful to not invalidate itr
-                        auto new_itr = itr;
-                        ++new_itr;
+                        auto newItr = itr;
+                        ++newItr;
                         partition.erase(itr);
-                        itr = new_itr;
+                        itr = newItr;
 
-                        partition.insert(YcapX);
-                        partition.insert(YwithoutX);
+                        partition.insert(intersection);
+                        partition.insert(difference);
 
-                        auto w_itr = find(worklist.begin(), worklist.end(), Y);
-                        if (w_itr != worklist.end())
+                        auto worklistItr = find(worklist.begin(), worklist.end(), setY);
+                        if (worklistItr != worklist.end())
                         {
-                            // if Y is in W
-                            // replace Y in W by the same two sets
-                            worklist.erase(w_itr);
-                            worklist.push_back(YcapX);
-                            worklist.push_back(YwithoutX);
+                            // if setY is in W
+                            // replace setY in W by the same two sets
+                            worklist.erase(worklistItr);
+                            worklist.push_back(intersection);
+                            worklist.push_back(difference);
                         }
                         else
                         {
                             // else add the smaller of the two sets
-
-                            if (YcapX.size() <= YwithoutX.size())
+                            if (intersection.size() <= difference.size())
                             {
-                                worklist.push_back(YcapX);
+                                worklist.push_back(intersection);
                             }
                             else
                             {
-                                worklist.push_back(YwithoutX);
+                                worklist.push_back(difference);
                             }
                         }
                     }
@@ -144,58 +159,57 @@ NFA* Minimizer::minimize ()
         } // a in Sigma
     } // while worklist not empty
 
+    // we have obtained the final partition, we can now construct the minimal DFA
+
     // convert the partition to a new set of states
+    auto* newStates = new Alphabet();
+    set<Letter*> newFinalStates;
+    map<Letter*, Letter*> oldStateToNewState;
 
-    Alphabet* PQ = new Alphabet();
-    set<Letter*> new_final_states;
-    map<Letter*, Letter*> old_state_to_new_state;
-
-
-    for (set<Letter*> Y : partition)
+    for (const set<Letter*>& setQ : partition)
     {
-
         string name = "[";
-        for (Letter* l : Y)
+        for (Letter* l : setQ)
         {
             name.append(l->toString());
         }
 
         name.append("]");
 
-        Letter* state = PQ->addLetter(name);
+        Letter* state = newStates->addLetter(name);
 
-        for (Letter* l : Y)
+        for (Letter* l : setQ)
         {
-            old_state_to_new_state[l] = state;
+            oldStateToNewState[l] = state;
         }
 
-        // if one state in Y is final, all states in Y are final
-        if (DFA->final_states.find(*Y.begin()) != DFA->final_states.end())
+        // if one state in setQ is final, all states in setQ are final
+        if (DFA->finalStates.find(*setQ.begin()) != DFA->finalStates.end())
         {
-            new_final_states.insert(state);
+            newFinalStates.insert(state);
         }
-
     }
 
-    Letter* new_initial_state = old_state_to_new_state[DFA->initial_state];
+    Letter* newInitialState = oldStateToNewState[DFA->initialState];
 
-    NFA* minDFA = new NFA(Sigma, PQ, new_initial_state, new_final_states);
+    NFA* minDFA = new NFA(Sigma, newStates, newInitialState, newFinalStates);
 
-    for (set<Letter*> Y : partition)
+    // remap the transitions
+    // the algorithm makes sure that for each set of states in the partition, we just need to consider one transition per letter
+    for (const set<Letter*>& setQ : partition)
     {
-        Letter* state_source = old_state_to_new_state[*Y.begin()];
+        Letter* sourceState = oldStateToNewState[*setQ.begin()];
 
         for (Transition* t : DFA->transitions)
         {
-            if (t->source == *Y.begin())
+            if (t->source == *setQ.begin())
             {
-                Letter* state_target = old_state_to_new_state[t->target];
-                minDFA->addTransition(state_source, t->label, state_target);
+                Letter* target = oldStateToNewState[t->target];
+                minDFA->addTransition(sourceState, t->label, target);
             }
         }
 
     }
 
     return minDFA;
-
 }

@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "Clause.h"
 
 using namespace std;
@@ -6,16 +23,16 @@ vector<Clause*> Clause::composeWith (Formula* G)
 {
     vector<Clause*> res;
 
-    unsigned long long int nr_boxes = boxes.size();
-    unsigned long long int* mapping = new unsigned long long int[nr_boxes]();
-    unsigned long long int nr_clauses = G->clauses.size();
-    unsigned long long int start_index = 0;
+    unsigned long long int numberBoxes = boxes.size();
+    auto* mapping = new unsigned long long int[numberBoxes]();
+    unsigned long long int numberClauses = G->clauses.size();
+    unsigned long long int initialIndex = 0;
 
     while (true)
     {
-        Clause* clause = new Clause();
+        auto* clause = new Clause();
 
-        for (unsigned long long int i = 0; i < nr_boxes; ++i)
+        for (unsigned long long int i = 0; i < numberBoxes; ++i)
         {
             Box* rho = boxes.at(i);
             Clause* H = G->clauses.at(mapping[i]);
@@ -26,21 +43,22 @@ vector<Clause*> Clause::composeWith (Formula* G)
 
         res.push_back(clause);
 
-        start_index = increment(mapping, nr_boxes, nr_clauses - 1, start_index);
+        initialIndex = increment(mapping, numberBoxes, numberClauses - 1, initialIndex);
 
-        if (start_index == nr_boxes)
+        if (initialIndex == numberBoxes)
         {
-            goto _postloop;
+            goto _postLoop;
         }
 
     }
-    _postloop:
+    _postLoop:
     delete[] mapping;
     return res;
 }
 
-unsigned long long int Clause::increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g,
-                                          unsigned long long int start)
+unsigned long long int
+Clause::increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g,
+                   unsigned long long int start)
 {
     bool reset = false;
 
@@ -137,7 +155,7 @@ bool Clause::contains (Clause* c)
 
 Clause* Clause::wrap (Box* box)
 {
-    Clause* c = new Clause();
+    auto* c = new Clause();
     c->boxes.push_back(box);
     return c;
 }

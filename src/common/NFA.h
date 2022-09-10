@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef RIGG_NFA_H
 #define RIGG_NFA_H
 
@@ -8,34 +25,36 @@ class Box;
 #include "Alphabet.h"
 #include "Letter.h"
 #include "Transition.h"
-#include "../dfa/Box.h"
+#include "../summaries/Box.h"
 
 using namespace std;
 
 /**
- * non-deterministical finite automaton
+ * non-deterministic finite automaton
  */
 class NFA : public Printable<NFA>
 {
     friend class Box;
 
 private:
-    set<Box*> all_boxes;
+    set<Box*> allBoxes;
 
 public:
     /**
-     * We do not delete the input alphabet!
+     * we do not delete the input alphabet!
      */
     virtual ~NFA ();
 
-/**
+    /**
      * input alphabet
      */
     Alphabet* Sigma;
+
     /**
      * control states
      */
     Alphabet* Q;
+
     /**
      * transitions
      */
@@ -44,23 +63,23 @@ public:
     /**
      * pointer to initial state
      */
-    Letter* initial_state;
+    Letter* initialState;
     /**
      * set of final states
      */
-    set<Letter*> final_states;
+    set<Letter*> finalStates;
 
     /**
      * memoize boxes to avoid unnecessary recomputations
      */
-    unordered_map<Letter*, Box*> box_for_letter;
+    unordered_map<Letter*, Box*> boxForLetter;
 
     /**
      * construct automaton with given input alphabet, control states, initial state and final states
      *
      * transitions can be added later
      */
-    NFA (Alphabet* Sigma, Alphabet* Q, Letter* initial_state, set<Letter*> final_states);
+    NFA (Alphabet* Sigma, Alphabet* Q, Letter* initialState, set<Letter*> finalStates);
 
     /**
      * construct a given transition with specified source, label and target, add it to the NFA and return a pointer to it
@@ -91,11 +110,11 @@ public:
     /**
      * string representation
      */
-    virtual string toString () const;
+    string toString () const override;
 
-    NFA (NFA const &) = delete;
+    NFA (NFA const&) = delete;
 
-    NFA &operator= (NFA const &) = delete;
+    NFA& operator= (NFA const&) = delete;
 
     void resetBoxes ();
 

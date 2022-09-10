@@ -1,26 +1,43 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "PAFA.h"
+
 #include "../common/PointeeComparator.h"
 
 using namespace std;
 
-bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
+bool PAFA::acceptsFromControlState (Letter* controlState, vector<Letter*> word)
 {
-    set<Letter*> S = final_states;
+    set<Letter*> S = finalStates;
 
     // backwards search
-    for (auto ritr = word.rbegin(); ritr != word.rend(); ++ritr)
+    for (auto reverseItr = word.rbegin(); reverseItr != word.rend(); ++reverseItr)
     {
         if (S.empty())
         {
             return false;
         }
 
-        set<Letter*> new_S;
+        set<Letter*> newS;
         for (AFATransition* t : transitions)
         {
-            if (t->label == *ritr)
+            if (t->label == *reverseItr)
             {
-
                 // check that all target states are contained in the old S
                 for (Letter* x : t->targets)
                 {
@@ -31,39 +48,37 @@ bool PAFA::acceptsFromControlState (Letter* control_state, vector<Letter*> word)
                 }
 
                 // ... if yes, insert the source state into the new S
-                new_S.insert(t->source);
+                newS.insert(t->source);
             }
 
             _continue_label:;
         }
 
-        S = new_S;
-
+        S = newS;
     }
-
-    return (S.find(control_state) != S.end());
+    return (S.find(controlState) != S.end());
 }
 
-set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector<Letter*> word)
+set<set<Letter*>> PAFA::reachableFromControlState (Letter* controlState, const vector<Letter*>& word)
 {
     // disjunction of sets of states, each inner set representing a conjunction
     set<set<Letter*>> current;
     set<set<Letter*>> next;
 
     set<Letter*> init;
-    init.insert(control_state);
+    init.insert(controlState);
     current.insert(init);
 
     for (Letter* a : word)
     {
         next.clear();
 
-        for (set<Letter*> conjunction : current)
+        for (const set<Letter*>& conjunction : current)
         {
             // we compute the successors for one conjunction at the time
-            set<set<Letter*>> inner_current;
-            set<set<Letter*>> inner_next;
-            inner_current.insert(set<Letter*>());
+            set<set<Letter*>> innerCurrent;
+            set<set<Letter*>> innerNext;
+            innerCurrent.insert(set<Letter*>());
 
             for (Letter* state : conjunction)
             {
@@ -72,23 +87,23 @@ set<set<Letter*>> PAFA::reachableFromControlState (Letter* control_state, vector
                 {
                     if (t->label == a && t->source == state)
                     {
-                        for (set<Letter*> inner_set : inner_current)
+                        for (const set<Letter*>& innerSet : innerCurrent)
                         {
-                            set<Letter*> copy(inner_set);
+                            set<Letter*> copy(innerSet);
                             copy.insert(t->targets.begin(), t->targets.end());
-                            inner_next.insert(copy);
+                            innerNext.insert(copy);
                         }
                     }
                 }
-                inner_current = inner_next;
-                inner_next.clear();
+                innerCurrent = innerNext;
+                innerNext.clear();
             }
 
-            for (set<Letter*> inner_set : inner_current)
+            for (const set<Letter*>& innerSet : innerCurrent)
             {
-                if (!inner_set.empty())
+                if (!innerSet.empty())
                 {
-                    next.insert(inner_set);
+                    next.insert(innerSet);
                 }
             }
 
@@ -105,11 +120,11 @@ string PAFA::toString () const
     res.append("Alphabet: ");
     res.append(Gamma->toString());
     res.append("\nStates: ");
-    res.append(control_states->toString());
+    res.append(controlStates->toString());
     res.append("\nFinal states: ");
 
     bool first = true;
-    for (Letter* f : final_states)
+    for (Letter* f : finalStates)
     {
         if (first)
         {
@@ -131,7 +146,7 @@ string PAFA::toString () const
     return res;
 }
 
-bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
+bool PAFA::addTransition (Letter* source, Letter* label, const set<Letter*>& targets)
 {
     // adding transitions with empty target set is not very helpful
     if (targets.empty())
@@ -139,14 +154,11 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
         return false;
     }
 
-    AFATransition* t = new AFATransition(source, label, targets);
+    auto* t = new AFATransition(source, label, targets);
 
-    PointeeComparator<AFATransition> eq = {t};
+    PointeeComparator<AFATransition> eq = PointeeComparator(t);
 
     auto itr = find_if(transitions.begin(), transitions.end(), eq);
-
-//    auto itr = find_if(transitions.begin(), transitions.end(), [&compare] (const AFATransition*&arg)
-//    { return *arg == *compare; });
 
     if (itr == transitions.end())
     {
@@ -164,15 +176,15 @@ bool PAFA::addTransition (Letter* source, Letter* label, set<Letter*> targets)
 PAFA::PAFA (GamePDS* P) :
         Gamma(P->Gamma),
         P(P),
-        control_states(),
-        pds_state_to_afa_state(),
-        final_states(),
+        controlStates(),
+        pdsStateToAFAState(),
+        finalStates(),
         transitions()
-{ }
+{}
 
 PAFA::~PAFA ()
 {
-    delete control_states;
+    delete controlStates;
     for (AFATransition* t : transitions)
     {
         delete t;

@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef RIGG_FORMULA_H
 #define RIGG_FORMULA_H
 
@@ -17,7 +34,7 @@ private:
      * memoization: values will be computed on first usage
      */
     mutable Ternary rejecting;
-    mutable Ternary is_false;
+    mutable Ternary unsatisfiable;
 
     FormulaStorage* storage;
 
@@ -27,11 +44,11 @@ private:
 public:
 
 
-    Formula (FormulaStorage* storage) :
+    explicit Formula (FormulaStorage* storage) :
             rejecting(UNDEFINED),
-            is_false(UNDEFINED),
+            unsatisfiable(UNDEFINED),
             storage(storage)
-    { }
+    {}
 
 /**
      * list of clauses of the formula
@@ -45,7 +62,7 @@ public:
      */
     virtual ~Formula ();
 
-/**
+    /**
      * returns true iff the formulas is rejecting, i.e. every clause in it is rejecting
      *
      * Memoization is used: upon the first call, rejecting will be initialized, afterwards, it will just be returned.
@@ -59,7 +76,7 @@ public:
     /**
      * generate string representation
      */
-    virtual string toString () const;
+    virtual string toString () const override;
 
     /**
      * F.composeWith(G) computes the composition F;G
@@ -108,19 +125,19 @@ public:
     static Formula* falseFormula (FormulaStorage* storage);
 
     /**
-     * resets the values for rejecting and false to unfedin
+     * resets the values for rejecting and false to UNDEFINED
      */
     void resetMemoization ()
     {
         rejecting = UNDEFINED;
-        is_false = UNDEFINED;
+        unsatisfiable = UNDEFINED;
     }
 
     Formula* simplify ();
 
-    Formula (Formula const &) = delete;
+    Formula (Formula const&) = delete;
 
-    Formula &operator= (Formula const &) = delete;
+    Formula& operator= (Formula const&) = delete;
 };
 
 #endif //RIGG_FORMULA_H

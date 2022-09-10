@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "Formula.h"
 
 using namespace std;
@@ -9,7 +26,7 @@ Formula* Formula::composeWith (Formula* G)
         return falseFormula(storage);
     }
 
-    Formula* res = new Formula(storage);
+    auto* res = new Formula(storage);
     for (Clause* c : clauses)
     {
         vector<Clause*> tmp = c->composeWith(G);
@@ -25,7 +42,7 @@ string Formula::toString () const
         return "FALSE";
     }
 
-    string res = "";
+    string res;
     bool first = true;
     for (Clause* c : clauses)
     {
@@ -69,15 +86,15 @@ bool Formula::implies (Formula* G)
 {
     for (Clause* c : G->clauses)
     {
-        bool find_contained = false;
-        for (auto itr = clauses.begin(); !find_contained && itr != clauses.end(); ++itr)
+        bool foundContained = false;
+        for (auto itr = clauses.begin(); !foundContained && itr != clauses.end(); ++itr)
         {
             if (c->contains(*itr))
             {
-                find_contained = true;
+                foundContained = true;
             }
         }
-        if (!find_contained)
+        if (!foundContained)
         {
             return false;
         }
@@ -93,7 +110,7 @@ Formula* Formula::wrap (Box* box, FormulaStorage* storage)
 
 Formula* Formula::wrap (Clause* c, FormulaStorage* storage)
 {
-    Formula* res = new Formula(storage);
+    auto* res = new Formula(storage);
     res->clauses.push_back(c);
     return res;
 }
@@ -105,7 +122,8 @@ Formula* Formula::formulaAnd (Formula* other)
         return Formula::falseFormula(storage);
     }
 
-    Formula* res = new Formula(storage);
+    auto* res = new Formula(storage);
+    res->clauses.reserve(clauses.size() + other->clauses.size());
 
     for (Clause* c : clauses)
     {
@@ -129,12 +147,14 @@ Formula* Formula::formulaOr (Formula* other)
         return this;
     }
 
-    Formula* res = new Formula(storage);
+    auto* res = new Formula(storage);
+    res->clauses.reserve(clauses.size() * other->clauses.size());
+
     for (Clause* c1 : clauses)
     {
         for (Clause* c2 : other->clauses)
         {
-            Clause* c = new Clause();
+            auto* c = new Clause();
             c->boxes.insert(c->boxes.end(), c1->boxes.begin(), c1->boxes.end());
             c->boxes.insert(c->boxes.end(), c2->boxes.begin(), c2->boxes.end());
             res->clauses.push_back(c);
@@ -149,8 +169,8 @@ Formula* Formula::falseFormula (FormulaStorage* storage)
 {
     if (FALSE_FORMULA.find(storage) == FALSE_FORMULA.end())
     {
-        Formula* res = new Formula(storage);
-        Clause* c = new Clause();
+        auto* res = new Formula(storage);
+        auto* c = new Clause();
         res->clauses.push_back(c);
         FALSE_FORMULA[storage] = res;
         return res;
@@ -163,36 +183,37 @@ Formula* Formula::falseFormula (FormulaStorage* storage)
 
 bool Formula::isFalse () const
 {
-    if (is_false == YES)
+    if (unsatisfiable == YES)
     {
         return true;
     }
-    if (is_false == NO)
+    if (unsatisfiable == NO)
     {
         return false;
     }
 
     if (clauses.empty())
     {
-        throw new string("Formula TRUE - Should not occur!");
+        // this should never happen because TRUE will never occur as formula
+        throw exception();
     }
 
     for (Clause* c : clauses)
     {
         if (c->boxes.empty())
         {
-            is_false = YES;
+            unsatisfiable = YES;
             return true;
         }
     }
-    is_false = NO;
+    unsatisfiable = NO;
     return false;
 }
 
 Formula* Formula::simplify ()
 {
 
-    vector<Clause*> minimal_clauses;
+    vector<Clause*> minimalClauses;
 
     for (Clause* c : clauses)
     {
@@ -206,11 +227,11 @@ Formula* Formula::simplify ()
         }
         if (minimal)
         {
-            minimal_clauses.push_back(c);
+            minimalClauses.push_back(c);
         }
     }
 
-    clauses = minimal_clauses;
+    clauses = minimalClauses;
 
     // we don't need to do this, because subsumption retains the properties
     // resetMemoization();

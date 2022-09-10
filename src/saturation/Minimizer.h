@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 //
 // Created by Sebastian on 15.07.2016.
 //
@@ -9,7 +26,7 @@
 #include "../common/NFA.h"
 
 /**
- * given an DFA with no unreachable states (e.g. one produced by "Determinizer"), compute the (up to isomorphy) unique minimal DFA for the language of the given DFA, using Hopcrofts algorithm as specified by the following pseudo-code (taken from wikipedia)
+ * given an DFA with no unreachable states (e.g. one produced by "Determinizer"), compute the (up to isomorphy) unique minimal DFA for the language of the given DFA, using Hopcroft's algorithm as specified by the following pseudo-code (taken from https://en.wikipedia.org/wiki/DFA_minimization)
  *
  * P := {F, Q \ F};
  * W := {F};
@@ -32,27 +49,18 @@
  */
 class Minimizer
 {
-    NFA* DFA;
-    Alphabet* Sigma;
-    Alphabet* Q;
-    set<set<Letter*>> partition;
-    vector<set<Letter*>> worklist;
-    bool trivial = false;
 
 public:
     /**
-     * DFA to minimize (it is the obligation of the caller to guarantee that the NFA is deterministic)
+     * minimize the given DFA and return the minimal DFA
+     *
+     * it is the obligation of the caller to guarantee that the NFA is deterministic
      */
-    Minimizer (NFA* DFA);
+    static NFA* minimize (NFA* DFA);
 
-    /**
-     * Minimize it and return the minimal DFA
-     */
-    NFA* minimize ();
+    Minimizer (Minimizer const&) = delete;
 
-    Minimizer (Minimizer const &) = delete;
-
-    Minimizer &operator= (Minimizer const &) = delete;
+    Minimizer& operator= (Minimizer const&) = delete;
 };
 
 #endif //RIGG_MINIMIZER_H

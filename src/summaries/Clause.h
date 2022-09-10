@@ -1,3 +1,20 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef RIGG_CLAUSE_H
 #define RIGG_CLAUSE_H
 
@@ -6,6 +23,7 @@ class Formula;
 #include "Box.h"
 #include "Formula.h"
 #include "Ternary.h"
+
 using namespace std;
 
 /**
@@ -18,19 +36,20 @@ private:
      * memoization: values will be computed on first usage
      */
     Ternary rejecting = UNDEFINED;
+
 public:
 
     Clause ()
-    {}
+    = default;
 
     /**
      * We do not delete the boxes in the clause, because the same object might be used in other clauses
      */
     virtual ~Clause ()
-    {}
+    = default;
 
 /**
-     * list of boxes of which the clause consits
+     * list of boxes of which the clause consists
      */
     vector<Box*> boxes;
 
@@ -42,7 +61,7 @@ public:
     /**
      * string representation
      */
-    virtual string toString () const;
+    string toString () const override;
 
     /**
      * returns true iff the clause is rejecting, i.e. it contains a rejecting box
@@ -63,9 +82,9 @@ public:
      */
     static Clause* wrap (Box* b);
 
-    Clause (Clause const &) = default;
+    Clause (Clause const&) = default;
 
-    Clause &operator= (Clause const &) = default;
+    Clause& operator= (Clause const&) = default;
 
 private:
     /**
@@ -75,7 +94,9 @@ private:
      *
      * returns the next position on which the next increment should happen afterwards or k if no further increment is possible
      */
-    unsigned long long int increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g, unsigned long long int start);
+    static unsigned long long int
+    increment (unsigned long long int* func, unsigned long long int k, unsigned long long int g,
+               unsigned long long int start);
 };
 
 #endif //RIGG_CLAUSE_H

@@ -1,12 +1,25 @@
-//
-// Created by Sebastian on 08.07.2016.
-//
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#ifndef RIGG_REJECTING_H
-#define RIGG_REJECTING_H
+#ifndef RIGG_TERNARY_H
+#define RIGG_TERNARY_H
 
 /**
- * Ternaty logic, i.e. true (YES), false (NO), and unknown (UNDEFINED)
+ * Ternary logic, i.e. true (YES), false (NO), and unknown (UNDEFINED)
  */
 typedef enum
 {
@@ -15,4 +28,4 @@ typedef enum
     UNDEFINED = 2
 } Ternary;
 
-#endif //RIGG_REJECTING_H
+#endif //RIGG_TERNARY_H

@@ -1,26 +1,45 @@
+/*
+ * Copyright 2016-2022 Sebastian Muskalla
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "NFA.h"
+
+#include <utility>
 #include "PointeeComparator.h"
 
 using namespace std;
 
-NFA::NFA (Alphabet* Sigma, Alphabet* Q, Letter* initial_state, set<Letter*> final_states) :
+NFA::NFA (Alphabet* Sigma, Alphabet* Q, Letter* initialState, set<Letter*> finalStates) :
         Sigma(Sigma),
         Q(Q),
-        initial_state(initial_state),
-        final_states(final_states)
+        initialState(initialState),
+        finalStates(std::move(finalStates))
 {}
 
 Transition* NFA::addTransition (Letter* source, Letter* label, Letter* target)
 {
-    Transition* t = new Transition(source, label, target);
+    auto* t = new Transition(source, label, target);
     transitions.emplace(t);
     return t;
 }
 
 Box* NFA::boxFor (Letter* a)
 {
-    auto itr = box_for_letter.find(a);
-    if (itr != box_for_letter.end())
+    auto itr = boxForLetter.find(a);
+    if (itr != boxForLetter.end())
     {
         return itr->second;
     }
@@ -34,7 +53,7 @@ Box* NFA::boxFor (Letter* a)
             res->content.emplace(t->source, t->target);
         }
     }
-    box_for_letter.emplace(a, res);
+    boxForLetter.emplace(a, res);
     return res;
 }
 
@@ -51,11 +70,11 @@ string NFA::toString () const
     res.append("\nStates: ");
     res.append(Q->toString());
     res.append("\nInitial state: ");
-    res.append(initial_state->toString());
+    res.append(initialState->toString());
     res.append("\nFinal states: ");
 
     bool first = true;
-    for (Letter* f : final_states)
+    for (Letter* f : finalStates)
     {
         if (first)
         {
@@ -78,9 +97,9 @@ string NFA::toString () const
 
 bool NFA::tryAddTransition (Letter* source, Letter* label, Letter* target)
 {
-    Transition* t = new Transition(source, label, target);
+    auto* t = new Transition(source, label, target);
 
-    PointeeComparator<Transition> eq = {t};
+    PointeeComparator<Transition> eq = PointeeComparator(t);
 
     auto itr = find_if(transitions.begin(), transitions.end(), eq);
 
@@ -103,7 +122,7 @@ NFA::~NFA ()
     {
         delete t;
     }
-    for (Box* b : all_boxes)
+    for (Box* b : allBoxes)
     {
         delete b;
     }
@@ -111,12 +130,12 @@ NFA::~NFA ()
 
 void NFA::resetBoxes ()
 {
-    box_for_letter.clear();
-    for (Box* b : all_boxes)
+    boxForLetter.clear();
+    for (Box* b : allBoxes)
     {
         delete b;
     }
-    all_boxes.clear();
+    allBoxes.clear();
 }
 
 Box* NFA::identityBox ()
