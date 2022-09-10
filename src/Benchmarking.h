@@ -44,14 +44,27 @@
  */
 #define OPTIMIZATION_BARRIER() asm volatile("" ::: "memory")
 
-
 enum class Algorithm
 {
+    /**
+     * our algorithm
+     */
     SUMMARIES,
+
+    /**
+     * saturation algorithm based on the work by Cachat
+     */
     SATURATION,
+
+    /**
+     * use both algorithms and compare times and solutions
+     */
     BOTH
 };
 
+/**
+ * a struct for storing the parameters for benchmarking
+ */
 struct BenchmarkingParameters
 {
     LogLevel logLevel;
@@ -110,16 +123,30 @@ class Benchmarking
 {
 public:
 
+    /**
+     * evaluate the command-line arguments to create a BenchmarkingParameters object storing the values
+     *
+     * unspecified options will be assigned their default values as specified by the static members of BenchmarkingParameters
+     */
     static BenchmarkingParameters* parseArguments (int argumentCount, char* arguments[]);
 
+    /**
+     * randomly generate a game instance with the specified parameters and benchmark it
+     */
     static int benchmark (BenchmarkingParameters* parameters);
 
 private:
+
+    static BenchmarkingParameters* processArguments (int argumentCount, char* arguments[]);
+
+    static void assignDefaultValues (BenchmarkingParameters* parameters);
+
 
     /**
      * case-insensitive string comparison
      */
     static bool equalsUpToCase (string first, string second);
+
 
     /**
      * check if string is in a given array of string views
@@ -127,6 +154,10 @@ private:
     template<size_t S>
     static bool isOneOf (const string& argument, const string_view (& strings)[S]);
 
+    /**
+     * print the values of the parameters
+     * (and whether they have been specified by the user or whether the default values have been used)
+     */
     static void logParameters (const BenchmarkingParameters& parameters, const Logger& logger);
 
     static constexpr const string_view OPTION_LOGLEVEL[] = {"--log", "--loglevel"};
@@ -134,10 +165,10 @@ private:
     static constexpr const string_view OPTION_LOGLEVEL_INFO[] = {"-v", "--verbose"};
     static constexpr const string_view OPTION_LOGLEVEL_DEBUG[] = {"-vv", "--vv", "--veryverbose"};
 
-    static constexpr const string_view OPTION_LOGLEVEL_OPTION_ERROR = "ERROR";
-    static constexpr const string_view OPTION_LOGLEVEL_OPTION_NORMAL = "NORMAL";
-    static constexpr const string_view OPTION_LOGLEVEL_OPTION_INFO = "INFO";
-    static constexpr const string_view OPTION_LOGLEVEL_OPTION_DEBUG = "DEBUG";
+    static constexpr const string_view OPTION_LOGLEVEL_OPTION_ERROR[] = {"ERROR"};
+    static constexpr const string_view OPTION_LOGLEVEL_OPTION_NORMAL[] = {"NORMAL"};
+    static constexpr const string_view OPTION_LOGLEVEL_OPTION_INFO[] = {"INFO"};
+    static constexpr const string_view OPTION_LOGLEVEL_OPTION_DEBUG[] = {"DEBUG"};
 
     static constexpr const string_view OPTION_ALGORITHM[] = {"-a", "--algorithm"};
     static constexpr const string_view OPTION_ALGORITHM_SUMMARIES[] = {"Summaries", "Summary", "Kleene"};

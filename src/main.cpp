@@ -24,25 +24,28 @@
 
 int main (int argc, char* argv[])
 {
+    // check if we should show the help
     if (Help::shouldShowHelp(argc, argv))
     {
         return Help::showHelp();
     }
 
+    // check if we should run the handcrafted examples
     if (Examples::shouldRunExamples(argc, argv))
     {
         return Examples::runExamples();
     }
 
-    BenchmarkingParameters* benchmarkingParameters = Benchmarking::parseArguments(argc, argv);
-
-    if (!benchmarkingParameters)
+    // otherwise, generate a random instance with the specified parameters and benchmark it
+    try
+    {
+        BenchmarkingParameters* benchmarkingParameters = Benchmarking::parseArguments(argc, argv);
+        return Benchmarking::benchmark(benchmarkingParameters);
+    }
+    catch (exception const& e)
     {
         return EXIT_CODE_ERROR;
     }
-
-    return Benchmarking::benchmark(benchmarkingParameters);
-
 }
 
 

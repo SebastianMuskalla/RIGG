@@ -31,7 +31,7 @@ We provide two branches:
 
 Copyright 2016-2022 Sebastian Muskalla
 
-GPLv3 License, see [LICENSE](LICENSE)
+RIGG is free and open-source software, licensed under the GPLv3 (GNU General Public License), see [LICENSE](LICENSE).
 
 ### Warning
 

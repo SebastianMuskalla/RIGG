@@ -42,591 +42,20 @@ bool Benchmarking::isOneOf (const string& argument, const string_view (& strings
 
 BenchmarkingParameters* Benchmarking::parseArguments (int argumentCount, char** arguments)
 {
-    auto benchmarkingParameters = new BenchmarkingParameters();
+    BenchmarkingParameters* benchmarkingParameters;
 
-    Logger* logger = new CoutLogger();
-
-    // parse arguments
-    for (int i = 1; i < argumentCount; i++)
+    try
     {
-        string argument(arguments[i]);
-
-        if (isOneOf(argument, OPTION_LOGLEVEL))
-        {
-            if (benchmarkingParameters->logLevelIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - log level is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected "ERROR", "INFO" or "DEBUG")");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-
-            if (equalsUpToCase(string(OPTION_LOGLEVEL_OPTION_ERROR), nextArgument))
-            {
-                benchmarkingParameters->logLevel = ERROR;
-                benchmarkingParameters->logLevelIsSet = true;
-            }
-            else if (equalsUpToCase(string(OPTION_LOGLEVEL_OPTION_NORMAL), nextArgument))
-            {
-                benchmarkingParameters->logLevel = NORMAL;
-                benchmarkingParameters->logLevelIsSet = true;
-            }
-            else if (equalsUpToCase(string(OPTION_LOGLEVEL_OPTION_INFO), nextArgument))
-            {
-                benchmarkingParameters->logLevel = INFO;
-                benchmarkingParameters->logLevelIsSet = true;
-            }
-            else if (equalsUpToCase(string(OPTION_LOGLEVEL_OPTION_DEBUG), nextArgument))
-            {
-                benchmarkingParameters->logLevel = DEBUG;
-                benchmarkingParameters->logLevelIsSet = true;
-            }
-            else
-            {
-                logger->msg(
-                        "ERROR: unexpected parameter " + nextArgument + R"(, expected "ERROR", "INFO" or "DEBUG"))");
-                return nullptr;
-            }
-        }
-        else if (isOneOf(argument, OPTION_LOGLEVEL_ERROR))
-        {
-            if (benchmarkingParameters->logLevelIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - log level is already set");
-                return nullptr;
-            }
-
-            benchmarkingParameters->logLevel = ERROR;
-            benchmarkingParameters->logLevelIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_LOGLEVEL_INFO))
-        {
-            if (benchmarkingParameters->logLevelIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - log level is already set");
-                return nullptr;
-            }
-
-            benchmarkingParameters->logLevel = INFO;
-            benchmarkingParameters->logLevelIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_LOGLEVEL_DEBUG))
-        {
-            if (benchmarkingParameters->logLevelIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - log level is already set");
-                return nullptr;
-            }
-
-            benchmarkingParameters->logLevel = DEBUG;
-            benchmarkingParameters->logLevelIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_ALGORITHM))
-        {
-            if (benchmarkingParameters->algorithmIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - algorithm is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected "SUMMARIES", "CACHAT" or "BOTH")");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-
-            if (isOneOf(nextArgument, OPTION_ALGORITHM_SUMMARIES))
-            {
-                benchmarkingParameters->algorithm = Algorithm::SUMMARIES;
-                benchmarkingParameters->algorithmIsSet = true;
-            }
-            else if (isOneOf(nextArgument, OPTION_ALGORITHM_SATURATION))
-            {
-                benchmarkingParameters->algorithm = Algorithm::SATURATION;
-                benchmarkingParameters->algorithmIsSet = true;
-            }
-            else if (isOneOf(nextArgument, OPTION_ALGORITHM_BOTH))
-            {
-                benchmarkingParameters->algorithm = Algorithm::BOTH;
-                benchmarkingParameters->algorithmIsSet = true;
-            }
-            else
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument +
-                            R"(, expected "SUMMARIES", "SATURATION" or "BOTH"))");
-                return nullptr;
-            }
-        }
-        else if (isOneOf(argument, OPTION_LETTERS))
-        {
-            if (benchmarkingParameters->numberOfLettersIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - number of letters is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned int integer;
-            try
-            {
-                integer = stoi(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            benchmarkingParameters->numberOfLetters = integer;
-            benchmarkingParameters->numberOfLettersIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_STATES))
-        {
-            if (benchmarkingParameters->numberOfStatesIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - number of states is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned int integer;
-            try
-            {
-                integer = stoi(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            benchmarkingParameters->numberOfStates = integer;
-            benchmarkingParameters->numberOfStatesIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_SEED))
-        {
-            if (benchmarkingParameters->seedIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - seed is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned long longInteger;
-            try
-            {
-                // we parse it as long because it may exceed the limit of (signed) int
-                longInteger = stol(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            if (longInteger > UINT_MAX)
-            {
-                logger->msg("ERROR: parameter " + nextArgument + " is too long");
-                return nullptr;
-            }
-
-            auto integer = (unsigned int) longInteger;
-
-            benchmarkingParameters->seed = integer;
-            benchmarkingParameters->seedIsSet = true;
-
-        }
-        else if (isOneOf(argument, OPTION_NONTERMINALS))
-        {
-            if (benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
-            {
-                logger->msg("ERROR: option " + argument +
-                            " - number of nonterminals for the Existential Player is already set");
-                return nullptr;
-            }
-
-            if (benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
-            {
-                logger->msg("ERROR: option " + argument +
-                            " - number of nonterminals for the Universal Player is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned int integer;
-            try
-            {
-                integer = stoi(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            benchmarkingParameters->numberOfNonterminalsExistential = integer;
-            benchmarkingParameters->numberOfNonterminalsUniversal = integer;
-            benchmarkingParameters->numberOfNonterminalsExistentialIsSet = true;
-            benchmarkingParameters->numberOfNonterminalsUniversalIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_NONTERMINALS_UNIVERSAL))
-        {
-            if (benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
-            {
-                logger->msg("ERROR: option " + argument +
-                            " - number of nonterminals for the Universal Player is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned int integer;
-            try
-            {
-                integer = stoi(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            benchmarkingParameters->numberOfNonterminalsUniversal = integer;
-            benchmarkingParameters->numberOfNonterminalsUniversalIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_NONTERMINALS_EXISTENTIAL))
-        {
-            if (benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
-            {
-                logger->msg("ERROR: option " + argument +
-                            " - number of nonterminals for the Existential Player is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected an integer)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            unsigned int integer;
-            try
-            {
-                integer = stoi(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected an integer");
-                return nullptr;
-            }
-
-            benchmarkingParameters->numberOfNonterminalsExistential = integer;
-            benchmarkingParameters->numberOfNonterminalsExistentialIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_AUTOMATONDENSITY))
-        {
-            if (benchmarkingParameters->automatonDensityIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - automaton density is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->automatonDensity = rate;
-            benchmarkingParameters->automatonDensityIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_AUTOMATONFINALS))
-        {
-            if (benchmarkingParameters->automatonRateOfFinalsIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - automaton final rate is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->automatonRateOfFinals = rate;
-            benchmarkingParameters->automatonRateOfFinalsIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_GRAMMARDENSITY))
-        {
-            if (benchmarkingParameters->grammarDensityIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - grammar density is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->grammarDensity = rate;
-            benchmarkingParameters->grammarDensityIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_GRAMMARFINALS))
-        {
-            if (benchmarkingParameters->grammarRateOfFinalsIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - grammar final rate is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->grammarRateOfFinals = rate;
-            benchmarkingParameters->grammarRateOfFinalsIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_GRAMMARLEFT))
-        {
-            if (benchmarkingParameters->grammarRateOfLeftIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - grammar left rate is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->grammarRateOfLeft = rate;
-            benchmarkingParameters->grammarRateOfLeftIsSet = true;
-        }
-        else if (isOneOf(argument, OPTION_GRAMMARRIGHT))
-        {
-            if (benchmarkingParameters->grammarRateOfRightIsSet)
-            {
-                logger->msg("ERROR: option " + argument + " - grammar right rate is already set");
-                return nullptr;
-            }
-
-            if (i + 1 >= argumentCount)
-            {
-                logger->msg(R"(ERROR: expected a double)");
-                return nullptr;
-            }
-
-            i++;
-            string nextArgument(arguments[i]);
-            double rate;
-            try
-            {
-                rate = stod(nextArgument);
-            }
-            catch (exception const& e)
-            {
-                logger->msg("ERROR: unexpected parameter " + nextArgument + ", expected a double");
-                return nullptr;
-            }
-
-            benchmarkingParameters->grammarRateOfRight = rate;
-            benchmarkingParameters->grammarRateOfRightIsSet = true;
-        }
-        else
-        {
-            logger->msg("ERROR: unexpected argument " + argument);
-            logger->msg("use -h (or --help) to show a list of the available arguments");
-            return nullptr;
-        }
-
-
-    } // for
-
-    // assign default values for the options that have not been set
-    if (!benchmarkingParameters->logLevelIsSet)
+        benchmarkingParameters = processArguments(argumentCount, arguments);
+    }
+    catch (runtime_error const& e)
     {
-        benchmarkingParameters->logLevel = BenchmarkingParameters::LOGLEVEL_DEFAULT;
+        cout << "ERROR: " << e.what() << endl;
+        cout << "Use -h (or --help) to show a list of the available arguments" << endl;
+        throw exception();
     }
 
-    if (!benchmarkingParameters->algorithmIsSet)
-    {
-        benchmarkingParameters->algorithm = BenchmarkingParameters::ALGORITHM_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->numberOfLettersIsSet)
-    {
-        benchmarkingParameters->numberOfLetters = BenchmarkingParameters::NUMBEROFLETTERS_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->numberOfStatesIsSet)
-    {
-        benchmarkingParameters->numberOfStates = BenchmarkingParameters::NUMBEROFSTATES_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->automatonDensityIsSet)
-    {
-        benchmarkingParameters->automatonDensity = BenchmarkingParameters::AUTOMATONDENSITY_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->automatonRateOfFinalsIsSet)
-    {
-        benchmarkingParameters->automatonRateOfFinals = BenchmarkingParameters::AUTOMATONRATEOFFINALS_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
-    {
-        benchmarkingParameters->numberOfNonterminalsUniversal = BenchmarkingParameters::NUMBEROFNONTERMINALSUNIVERSAL_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
-    {
-        benchmarkingParameters->numberOfNonterminalsExistential = BenchmarkingParameters::NUMBEROFNONTERMINALSEXISTENTIAL_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->grammarDensityIsSet)
-    {
-        benchmarkingParameters->grammarDensity = BenchmarkingParameters::GRAMMARDENSITY_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->grammarRateOfFinalsIsSet)
-    {
-        benchmarkingParameters->grammarRateOfFinals = BenchmarkingParameters::GRAMMARRATEOFFINALS_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->grammarRateOfLeftIsSet)
-    {
-        benchmarkingParameters->grammarRateOfLeft = BenchmarkingParameters::GRAMMARRATEOFLEFT_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->grammarRateOfRightIsSet)
-    {
-        benchmarkingParameters->grammarRateOfRight = BenchmarkingParameters::GRAMMARRATEOFRIGHT_DEFAULT;
-    }
-
-    if (!benchmarkingParameters->seedIsSet)
-    {
-        random_device randomDevice;
-        benchmarkingParameters->seed = randomDevice();
-    }
-
-    delete logger;
+    assignDefaultValues(benchmarkingParameters);
 
     return benchmarkingParameters;
 }
@@ -855,6 +284,540 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
     return EXIT_CODE_OK;
 }
 
+BenchmarkingParameters* Benchmarking::processArguments (int argumentCount, char** arguments)
+{
+    auto benchmarkingParameters = new BenchmarkingParameters();
+
+    // parse arguments
+    for (int i = 1; i < argumentCount; i++)
+    {
+        string argument(arguments[i]);
+
+        if (isOneOf(argument, OPTION_LOGLEVEL))
+        {
+            if (benchmarkingParameters->logLevelIsSet)
+            {
+                throw runtime_error("option " + argument + " - log level is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error(R"(expected "ERROR", "INFO" or "DEBUG")");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+
+            if (isOneOf(argument, OPTION_LOGLEVEL_OPTION_ERROR))
+            {
+                benchmarkingParameters->logLevel = ERROR;
+                benchmarkingParameters->logLevelIsSet = true;
+            }
+            else if (isOneOf(argument, OPTION_LOGLEVEL_OPTION_NORMAL))
+            {
+                benchmarkingParameters->logLevel = NORMAL;
+                benchmarkingParameters->logLevelIsSet = true;
+            }
+            else if (isOneOf(argument, OPTION_LOGLEVEL_OPTION_INFO))
+            {
+                benchmarkingParameters->logLevel = INFO;
+                benchmarkingParameters->logLevelIsSet = true;
+            }
+            else if (isOneOf(argument, OPTION_LOGLEVEL_OPTION_DEBUG))
+            {
+                benchmarkingParameters->logLevel = DEBUG;
+                benchmarkingParameters->logLevelIsSet = true;
+            }
+            else
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + R"(, expected "ERROR", "INFO" or "DEBUG")");
+            }
+        }
+        else if (isOneOf(argument, OPTION_LOGLEVEL_ERROR))
+        {
+            if (benchmarkingParameters->logLevelIsSet)
+            {
+                throw runtime_error("option " + argument + " - log level is already set");
+            }
+
+            benchmarkingParameters->logLevel = ERROR;
+            benchmarkingParameters->logLevelIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_LOGLEVEL_INFO))
+        {
+            if (benchmarkingParameters->logLevelIsSet)
+            {
+                throw runtime_error("option " + argument + " - log level is already set");
+            }
+
+            benchmarkingParameters->logLevel = INFO;
+            benchmarkingParameters->logLevelIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_LOGLEVEL_DEBUG))
+        {
+            if (benchmarkingParameters->logLevelIsSet)
+            {
+                throw runtime_error("option " + argument + " - log level is already set");
+            }
+
+            benchmarkingParameters->logLevel = DEBUG;
+            benchmarkingParameters->logLevelIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_ALGORITHM))
+        {
+            if (benchmarkingParameters->algorithmIsSet)
+            {
+                throw runtime_error("option " + argument + " - algorithm is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error(R"(ERROR: expected "SUMMARIES", "SATURATION" or "BOTH")");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+
+            if (isOneOf(nextArgument, OPTION_ALGORITHM_SUMMARIES))
+            {
+                benchmarkingParameters->algorithm = Algorithm::SUMMARIES;
+                benchmarkingParameters->algorithmIsSet = true;
+            }
+            else if (isOneOf(nextArgument, OPTION_ALGORITHM_SATURATION))
+            {
+                benchmarkingParameters->algorithm = Algorithm::SATURATION;
+                benchmarkingParameters->algorithmIsSet = true;
+            }
+            else if (isOneOf(nextArgument, OPTION_ALGORITHM_BOTH))
+            {
+                benchmarkingParameters->algorithm = Algorithm::BOTH;
+                benchmarkingParameters->algorithmIsSet = true;
+            }
+            else
+            {
+                throw runtime_error("ERROR: unexpected parameter " + nextArgument + R"(, expected "SUMMARIES", "SATURATION" or "BOTH"))");
+            }
+        }
+        else if (isOneOf(argument, OPTION_LETTERS))
+        {
+            if (benchmarkingParameters->numberOfLettersIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of letters is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned int integer;
+            try
+            {
+                integer = stoi(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            benchmarkingParameters->numberOfLetters = integer;
+            benchmarkingParameters->numberOfLettersIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_STATES))
+        {
+            if (benchmarkingParameters->numberOfStatesIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of states is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned int integer;
+            try
+            {
+                integer = stoi(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            benchmarkingParameters->numberOfStates = integer;
+            benchmarkingParameters->numberOfStatesIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_SEED))
+        {
+            if (benchmarkingParameters->seedIsSet)
+            {
+                throw runtime_error("option " + argument + " - seed is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned long longInteger;
+            try
+            {
+                // we parse it as long because it may exceed the limit of (signed) int
+                longInteger = stol(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            if (longInteger > UINT_MAX)
+            {
+                throw runtime_error("parameter " + nextArgument + " is too long");
+            }
+
+            auto integer = (unsigned int) longInteger;
+
+            benchmarkingParameters->seed = integer;
+            benchmarkingParameters->seedIsSet = true;
+
+        }
+        else if (isOneOf(argument, OPTION_NONTERMINALS))
+        {
+            if (benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of nonterminals for the Existential Player is already set");
+            }
+
+            if (benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of nonterminals for the Universal Player is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned int integer;
+            try
+            {
+                integer = stoi(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            benchmarkingParameters->numberOfNonterminalsExistential = integer;
+            benchmarkingParameters->numberOfNonterminalsUniversal = integer;
+            benchmarkingParameters->numberOfNonterminalsExistentialIsSet = true;
+            benchmarkingParameters->numberOfNonterminalsUniversalIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_NONTERMINALS_UNIVERSAL))
+        {
+            if (benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of nonterminals for the Universal Player is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned int integer;
+            try
+            {
+                integer = stoi(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            benchmarkingParameters->numberOfNonterminalsUniversal = integer;
+            benchmarkingParameters->numberOfNonterminalsUniversalIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_NONTERMINALS_EXISTENTIAL))
+        {
+            if (benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
+            {
+                throw runtime_error("option " + argument + " - number of nonterminals for the Existential Player is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected an integer");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            unsigned int integer;
+            try
+            {
+                integer = stoi(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected an integer");
+            }
+
+            benchmarkingParameters->numberOfNonterminalsExistential = integer;
+            benchmarkingParameters->numberOfNonterminalsExistentialIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_AUTOMATONDENSITY))
+        {
+            if (benchmarkingParameters->automatonDensityIsSet)
+            {
+                throw runtime_error("option " + argument + " - automaton density is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->automatonDensity = rate;
+            benchmarkingParameters->automatonDensityIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_AUTOMATONFINALS))
+        {
+            if (benchmarkingParameters->automatonRateOfFinalsIsSet)
+            {
+                throw runtime_error("option " + argument + " - final rate is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->automatonRateOfFinals = rate;
+            benchmarkingParameters->automatonRateOfFinalsIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_GRAMMARDENSITY))
+        {
+            if (benchmarkingParameters->grammarDensityIsSet)
+            {
+                throw runtime_error("option " + argument + " - grammar density is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->grammarDensity = rate;
+            benchmarkingParameters->grammarDensityIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_GRAMMARFINALS))
+        {
+            if (benchmarkingParameters->grammarRateOfFinalsIsSet)
+            {
+                throw runtime_error("option " + argument + " - grammar final rate  is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->grammarRateOfFinals = rate;
+            benchmarkingParameters->grammarRateOfFinalsIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_GRAMMARLEFT))
+        {
+            if (benchmarkingParameters->grammarRateOfLeftIsSet)
+            {
+                throw runtime_error("option " + argument + " - grammar left rate  is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->grammarRateOfLeft = rate;
+            benchmarkingParameters->grammarRateOfLeftIsSet = true;
+        }
+        else if (isOneOf(argument, OPTION_GRAMMARRIGHT))
+        {
+            if (benchmarkingParameters->grammarRateOfRightIsSet)
+            {
+                throw runtime_error("option " + argument + " - grammar right rate  is already set");
+            }
+
+            if (i + 1 >= argumentCount)
+            {
+                throw runtime_error("expected a double");
+            }
+
+            i++;
+            string nextArgument(arguments[i]);
+            double rate;
+            try
+            {
+                rate = stod(nextArgument);
+            }
+            catch (exception const& e)
+            {
+                throw runtime_error("unexpected parameter " + nextArgument + ", expected a double");
+            }
+
+            benchmarkingParameters->grammarRateOfRight = rate;
+            benchmarkingParameters->grammarRateOfRightIsSet = true;
+        }
+        else
+        {
+            throw runtime_error("invalid argument " + argument);
+        }
+
+
+    } // for
+
+    return benchmarkingParameters;
+}
+
+void Benchmarking::assignDefaultValues (BenchmarkingParameters* benchmarkingParameters)
+{
+    if (!benchmarkingParameters->logLevelIsSet)
+    {
+        benchmarkingParameters->logLevel = BenchmarkingParameters::LOGLEVEL_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->algorithmIsSet)
+    {
+        benchmarkingParameters->algorithm = BenchmarkingParameters::ALGORITHM_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->numberOfLettersIsSet)
+    {
+        benchmarkingParameters->numberOfLetters = BenchmarkingParameters::NUMBEROFLETTERS_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->numberOfStatesIsSet)
+    {
+        benchmarkingParameters->numberOfStates = BenchmarkingParameters::NUMBEROFSTATES_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->automatonDensityIsSet)
+    {
+        benchmarkingParameters->automatonDensity = BenchmarkingParameters::AUTOMATONDENSITY_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->automatonRateOfFinalsIsSet)
+    {
+        benchmarkingParameters->automatonRateOfFinals = BenchmarkingParameters::AUTOMATONRATEOFFINALS_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->numberOfNonterminalsUniversalIsSet)
+    {
+        benchmarkingParameters->numberOfNonterminalsUniversal = BenchmarkingParameters::NUMBEROFNONTERMINALSUNIVERSAL_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->numberOfNonterminalsExistentialIsSet)
+    {
+        benchmarkingParameters->numberOfNonterminalsExistential = BenchmarkingParameters::NUMBEROFNONTERMINALSEXISTENTIAL_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->grammarDensityIsSet)
+    {
+        benchmarkingParameters->grammarDensity = BenchmarkingParameters::GRAMMARDENSITY_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->grammarRateOfFinalsIsSet)
+    {
+        benchmarkingParameters->grammarRateOfFinals = BenchmarkingParameters::GRAMMARRATEOFFINALS_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->grammarRateOfLeftIsSet)
+    {
+        benchmarkingParameters->grammarRateOfLeft = BenchmarkingParameters::GRAMMARRATEOFLEFT_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->grammarRateOfRightIsSet)
+    {
+        benchmarkingParameters->grammarRateOfRight = BenchmarkingParameters::GRAMMARRATEOFRIGHT_DEFAULT;
+    }
+
+    if (!benchmarkingParameters->seedIsSet)
+    {
+        random_device randomDevice;
+        benchmarkingParameters->seed = randomDevice();
+    }
+}
+
 void Benchmarking::logParameters (const BenchmarkingParameters& parameters, const Logger& logger)
 {
     logger.msg("Benchmarking a randomly generated instance");
@@ -907,3 +870,5 @@ void Benchmarking::logParameters (const BenchmarkingParameters& parameters, cons
     logger.msg("Right rate of the grammar: " + to_string(parameters.grammarRateOfRight) + " (" + (parameters.grammarRateOfRightIsSet ? "provided by user" : "default value") + ")", 1);
 
 }
+
+
