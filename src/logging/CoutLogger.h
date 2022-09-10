@@ -25,6 +25,8 @@ using namespace std;
 
 /**
  * a logger that prints everything to cout
+ *
+ * the log will split the string into lines and print each line with the specified indentation
  */
 class CoutLogger : public Logger
 {
@@ -38,6 +40,11 @@ public:
         {
             cout << string(indentationLevel * INDENTATION_CONSTANT, ' ').append(line) << endl;
         }
+    }
+
+    bool accepts (LogLevel) const override
+    {
+        return true;
     }
 
     void newline () const override

@@ -26,6 +26,9 @@ using namespace std;
 
 /**
  * a logger that logs everything with a certain priority to cout
+ *
+ * it behaves as CoutLogger: it splits the string into lines and prints each line with the specified indentation
+ * it will additionally prefix each line with a marker for the LogLevel
  */
 class FilteredCoutLogger : public CoutLogger
 {
@@ -57,6 +60,11 @@ class FilteredCoutLogger : public CoutLogger
 public:
     explicit FilteredCoutLogger (const LogLevel verbosity) : verbosity(verbosity)
     {}
+
+    bool accepts (LogLevel logLevel) const override
+    {
+        return logLevel <= verbosity;
+    }
 
     void log (LogLevel logLevel, string message, unsigned int indentationLevel = 0) const override
     {

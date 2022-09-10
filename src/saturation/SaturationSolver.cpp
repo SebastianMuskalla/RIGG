@@ -29,7 +29,10 @@ void SaturationSolver::saturate ()
         done = true;
         iteration++;
 
-        logger.debug("Iteration number " + to_string(iteration), 1);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("Iteration number " + to_string(iteration), 1);
+        }
 
         for (Letter* p : P->statesExistential->letters)
         {
@@ -58,8 +61,11 @@ void SaturationSolver::saturate ()
             }
         }
 
-        logger.debug("AFA after processing states of the Existential Player:", 2);
-        logger.debug(AFA->toString(), 3);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("AFA after processing states of the Existential Player:", 2);
+            logger.debug(AFA->toString(), 3);
+        }
 
         for (Letter* p : P->statesUniversal->letters)
         {
@@ -123,8 +129,11 @@ void SaturationSolver::saturate ()
             }
         }
 
-        logger.debug("AFA after processing states of the Universal Player:", 2);
-        logger.debug(AFA->toString(), 3);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("AFA after processing states of the Universal Player:", 2);
+            logger.debug(AFA->toString(), 3);
+        }
 
     } // while !done
 

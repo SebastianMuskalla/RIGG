@@ -40,32 +40,60 @@ typedef enum
 class Logger
 {
 public:
+    /**
+     * log a message with the specified LogLevel and indentation
+     *
+     * how a logger treats LogLevel and indentation is up to the implementation
+     */
     virtual void log (LogLevel logLevel, string message, unsigned int indentationLevel = 0) const
+    = 0;
+
+    /**
+     * check if this logger accepts messages of the specified log level
+     *
+     * this can be used to avoid constructing complicated strings that will not get printed anyhow
+     */
+    virtual bool accepts (LogLevel logLevel) const
     = 0;
 
     virtual ~Logger ()
     = default;
 
+    /**
+     * print an empty line
+     */
     virtual void newline () const
     {
         msg("");
     }
 
+    /**
+     * log a message with LogLevel ERROR
+     */
     virtual void important (string message, unsigned int indentationLevel = 0) const
     {
         log(ERROR, std::move(message), indentationLevel);
     }
 
+    /**
+     * log a message with LogLevel NORMAL
+     */
     virtual void msg (string message, unsigned int indentationLevel = 0) const
     {
         log(NORMAL, std::move(message), indentationLevel);
     }
 
+    /**
+     * log a message with LogLevel INFO
+     */
     virtual void info (string message, unsigned int indentationLevel = 0) const
     {
         log(INFO, std::move(message), indentationLevel);
     }
 
+    /**
+     * log a message with LogLevel DEBUG
+     */
     virtual void debug (string message, unsigned int indentationLevel = 0) const
     {
         log(DEBUG, std::move(message), indentationLevel);

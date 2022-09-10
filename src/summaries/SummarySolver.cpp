@@ -23,8 +23,11 @@ Formula* SummarySolver::recomputeValue (Letter* l)
 {
     bool conjunction = l->alphabet == NUniversal;
 
-    logger.debug("recomputing formula for nonterminal " + l->toString() + ", owned by the " +
-                 (conjunction ? "Universal" : "Existential") + " player", 3);
+    if (logger.accepts(DEBUG))
+    {
+        logger.debug("recomputing formula for nonterminal " + l->toString() + ", owned by the " +
+                     (conjunction ? "Universal" : "Existential") + " player", 3);
+    }
 
     auto itrPair = G->rules.equal_range(l);
 
@@ -35,21 +38,33 @@ Formula* SummarySolver::recomputeValue (Letter* l)
 
     auto itr = itrPair.first;
 
-    logger.debug("computing formula for rule " + l->toString() + " -> " + Alphabet::wordToString(itr->second), 4);
+    if (logger.accepts(DEBUG))
+    {
+        logger.debug("computing formula for rule " + l->toString() + " -> " + Alphabet::wordToString(itr->second), 4);
+    }
 
     Formula* res = formulaFor(itr->second);
 
-    logger.debug("formula for first rule is: " + res->toString(), 4);
+    if (logger.accepts(DEBUG))
+    {
+        logger.debug("formula for first rule is: " + res->toString(), 4);
+    }
 
     ++itr;
 
     for (; itr != itrPair.second; ++itr)
     {
-        logger.debug("computing formula for rule " + l->toString() + " -> " + Alphabet::wordToString(itr->second), 4);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("computing formula for rule " + l->toString() + " -> " + Alphabet::wordToString(itr->second), 4);
+        }
 
         Formula* temp = formulaFor(itr->second);
 
-        logger.debug("formula for next rule is: " + temp->toString(), 4);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("formula for next rule is: " + temp->toString(), 4);
+        }
 
         if (conjunction)
         {
@@ -60,9 +75,11 @@ Formula* SummarySolver::recomputeValue (Letter* l)
             res = res->formulaOr(temp);
         }
 
-        logger.debug("formula for their " + string() + (conjunction ? "conjunction" : "disjunction") + " is: " +
-                     temp->toString(), 4);
-
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("formula for their " + string() + (conjunction ? "conjunction" : "disjunction") + " is: " +
+                         temp->toString(), 4);
+        }
     }
 
     return res;
@@ -78,13 +95,16 @@ void SummarySolver::solve ()
     {
         iterationCount++;
 
-        if (iterationCount < 10)
+        if (logger.accepts(DEBUG))
         {
-            logger.debug("Step number " + to_string(iterationCount), 1);
-        }
-        else if (iterationCount % 10 == 0)
-        {
-            logger.debug("... Step number " + to_string(iterationCount), 1);
+            if (iterationCount < 10)
+            {
+                logger.debug("Step number " + to_string(iterationCount), 1);
+            }
+            else if (iterationCount % 10 == 0)
+            {
+                logger.debug("... Step number " + to_string(iterationCount), 1);
+            }
         }
 
         Letter* l = *worklist.begin();
@@ -92,13 +112,19 @@ void SummarySolver::solve ()
 
         Formula* oldValue = solution[l];
 
-        logger.debug("picked up " + l->toString() + " from worklist", 1);
-        logger.debug("old value: " + oldValue->toString(), 2);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("picked up " + l->toString() + " from worklist", 1);
+            logger.debug("old value: " + oldValue->toString(), 2);
+        }
 
         Formula* newValue = recomputeValue(l);
 
-        logger.debug("new value: " + newValue->toString(), 2);
-        logger.debug("conducting implication check");
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("new value: " + newValue->toString(), 2);
+            logger.debug("conducting implication check");
+        }
 
         // we always have  oldValue implies newValue
         if (newValue->implies(oldValue))
@@ -116,8 +142,10 @@ void SummarySolver::solve ()
             auto itrPair = dependencies.equal_range(l);
             for (auto itr = itrPair.first; itr != itrPair.second; ++itr)
             {
-
-                logger.debug("Inserting " + itr->second->toString() + " into worklist", 2);
+                if (logger.accepts(DEBUG))
+                {
+                    logger.debug("Inserting " + itr->second->toString() + " into worklist", 2);
+                }
 
                 worklist.insert(itr->second);
             }
@@ -127,9 +155,12 @@ void SummarySolver::solve ()
 
     logger.info("Finished after " + to_string(iterationCount) + " steps");
 
-    for (pair<Letter*, Formula*> entry : solution)
+    if (logger.accepts(DEBUG))
     {
-        logger.debug("Solution for " + entry.first->toString() + ": " + entry.second->toString(), 1);
+        for (pair<Letter*, Formula*> entry : solution)
+        {
+            logger.debug("Solution for " + entry.first->toString() + ": " + entry.second->toString(), 1);
+        }
     }
 }
 
@@ -200,26 +231,38 @@ Formula* SummarySolver::formulaFor (vector<Letter*> word)
 {
     if (word.empty())
     {
-        logger.debug("computing formula for epsilon: " + identityFormula->toString(), 5);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("computing formula for epsilon: " + identityFormula->toString(), 5);
+        }
 
         return identityFormula;
     }
     else
     {
-        logger.debug("computing formula for " + Alphabet::wordToString(word), 5);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("computing formula for " + Alphabet::wordToString(word), 5);
+        }
 
         auto itr = word.begin();
         Formula* res = formulaFor(*itr);
 
-        logger.debug("formula for first letter " + (*itr)->toString() + " is: " + res->toString(), 6);
+        if (logger.accepts(DEBUG))
+        {
+            logger.debug("formula for first letter " + (*itr)->toString() + " is: " + res->toString(), 6);
+        }
 
         ++itr;
         for (; itr != word.end(); ++itr)
         {
             res = res->composeWith(formulaFor(*itr));
 
-            logger.debug("formula for letter " + (*itr)->toString() + " is: " + formulaFor(*itr)->toString(), 6);
-            logger.debug("composition is " + res->toString(), 5);
+            if (logger.accepts(DEBUG))
+            {
+                logger.debug("formula for letter " + (*itr)->toString() + " is: " + formulaFor(*itr)->toString(), 6);
+                logger.debug("composition is " + res->toString(), 5);
+            }
         }
         return res;
     }

@@ -101,17 +101,22 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
 
     Alphabet* Sigma = A->Sigma;
 
-    logger->info("Generated automaton:", 0);
-    logger->info(A->toString(), 1);
+    if (logger->accepts(INFO))
+    {
+        logger->info("Generated automaton:", 0);
+        logger->info(A->toString(), 1);
+    }
 
     GameGrammar* G = TVLinearGrammarGen(Sigma, parameters->numberOfNonterminalsUniversal,
                                         parameters->numberOfNonterminalsUniversal, parameters->grammarDensity,
                                         parameters->grammarRateOfFinals, parameters->grammarRateOfLeft,
                                         parameters->grammarRateOfRight).generate(sourceOfRandomness);
 
-    logger->info("Generated grammar:", 0);
-
-    logger->info(G->toString(), 1);
+    if (logger->accepts(INFO))
+    {
+        logger->info("Generated grammar:", 0);
+        logger->info(G->toString(), 1);
+    }
 
     SummarySolver* summarySolver = nullptr;
     SaturationSolver* saturationSolver = nullptr;
@@ -150,8 +155,11 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
         auto afterDeterminization = chrono::steady_clock::now();
         OPTIMIZATION_BARRIER();
 
-        logger->debug("Deterministic automaton:", 2);
-        logger->debug(D->toString(), 2);
+        if (logger->accepts(DEBUG))
+        {
+            logger->debug("Deterministic automaton:", 2);
+            logger->debug(D->toString(), 2);
+        }
 
         logger->info("Minimizing the automaton", 2);
 
@@ -161,8 +169,11 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
         auto afterMinimization = chrono::steady_clock::now();
         OPTIMIZATION_BARRIER();
 
-        logger->debug("Minimal deterministic automaton:", 2);
-        logger->debug(M->toString(), 2);
+        if (logger->accepts(DEBUG))
+        {
+            logger->debug("Minimal deterministic automaton:", 2);
+            logger->debug(M->toString(), 2);
+        }
 
         logger->info("Converting game into a pushdown game", 2);
 
@@ -177,10 +188,13 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
         auto afterCachatification = chrono::steady_clock::now();
         OPTIMIZATION_BARRIER();
 
-        logger->debug("Pushdown system:", 2);
-        logger->debug(P->toString(), 2);
-        logger->debug("AFA for the target set:", 2);
-        logger->debug(AFA->toString(), 2);
+        if (logger->accepts(DEBUG))
+        {
+            logger->debug("Pushdown system:", 2);
+            logger->debug(P->toString(), 2);
+            logger->debug("AFA for the target set:", 2);
+            logger->debug(AFA->toString(), 2);
+        }
 
         logger->info("Running the saturation solver");
 
@@ -225,7 +239,11 @@ int Benchmarking::benchmark (BenchmarkingParameters* parameters)
                 {
                     logger->info("For nonterminal " + Y->toString() + ", the " +
                                  (resultSummaries ? "Existential" : "Universal") + " Player wins", 1);
-                    logger->debug("Formula: " + formula->toString(), 2);
+
+                    if (logger->accepts(DEBUG))
+                    {
+                        logger->debug("Formula: " + formula->toString(), 2);
+                    }
                 }
                 else
                 {
@@ -825,50 +843,53 @@ void Benchmarking::logParameters (const BenchmarkingParameters& parameters, cons
     logger.important("Seed: " + to_string(parameters.seed) + " (" +
                      (parameters.seedIsSet ? "provided by user" : "randomly generated") + ")", 0);
 
-    logger.msg("Evaluation of the parameters");
-
-    switch (parameters.algorithm)
+    if (logger.accepts(NORMAL))
     {
-        case Algorithm::BOTH:
-            logger.msg("Running both algorithms, Summaries and Saturation (default)");
-            break;
-        case Algorithm::SUMMARIES:
-            logger.msg("Running the Summary algorithm");
-            break;
-        case Algorithm::SATURATION:
-            logger.msg("Running the Saturation algorithm");
-            break;
+
+        logger.msg("Evaluation of the parameters");
+
+        switch (parameters.algorithm)
+        {
+            case Algorithm::BOTH:
+                logger.msg("Running both algorithms, Summaries and Saturation (default)");
+                break;
+            case Algorithm::SUMMARIES:
+                logger.msg("Running the Summary algorithm");
+                break;
+            case Algorithm::SATURATION:
+                logger.msg("Running the Saturation algorithm");
+                break;
+        }
+
+        string logLevelString;
+        switch (parameters.logLevel)
+        {
+            case ERROR:
+                logLevelString = "ERROR (reduces output)";
+                break;
+            case NORMAL:
+                logLevelString = "NORMAL (default)";
+                break;
+            case INFO:
+                logLevelString = "INFO (verbose output)";
+                break;
+            case DEBUG:
+                logLevelString = "DEBUG (very verbose output)";
+                break;
+        }
+
+        logger.msg("LogLevel: " + logLevelString);
+        logger.msg("Number of states: " + to_string(parameters.numberOfStates) + " (" + (parameters.numberOfStatesIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Number of letters: " + to_string(parameters.numberOfLetters) + " (" + (parameters.numberOfLettersIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Number of nonterminals of the Universal Player: " + to_string(parameters.numberOfNonterminalsUniversal) + " (" + (parameters.numberOfNonterminalsUniversalIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Number of nonterminals of the Existential Player: " + to_string(parameters.numberOfNonterminalsExistential) + " (" + (parameters.numberOfNonterminalsExistentialIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Density of the automaton: " + to_string(parameters.automatonDensity) + " (" + (parameters.automatonDensityIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Final rate of the automaton: " + to_string(parameters.automatonRateOfFinals) + " (" + (parameters.automatonRateOfFinalsIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Density of the grammar: " + to_string(parameters.grammarDensity) + " (" + (parameters.grammarDensityIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Final rate of the grammar: " + to_string(parameters.grammarRateOfFinals) + " (" + (parameters.grammarRateOfFinalsIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Left rate of the grammar: " + to_string(parameters.grammarRateOfLeft) + " (" + (parameters.grammarRateOfLeftIsSet ? "provided by user" : "default value") + ")", 1);
+        logger.msg("Right rate of the grammar: " + to_string(parameters.grammarRateOfRight) + " (" + (parameters.grammarRateOfRightIsSet ? "provided by user" : "default value") + ")", 1);
     }
-
-    string logLevelString;
-    switch (parameters.logLevel)
-    {
-        case ERROR:
-            logLevelString = "ERROR (reduces output)";
-            break;
-        case NORMAL:
-            logLevelString = "NORMAL (default)";
-            break;
-        case INFO:
-            logLevelString = "INFO (verbose output)";
-            break;
-        case DEBUG:
-            logLevelString = "DEBUG (very verbose output)";
-            break;
-    }
-
-    logger.msg("LogLevel: " + logLevelString);
-    logger.msg("Number of states: " + to_string(parameters.numberOfStates) + " (" + (parameters.numberOfStatesIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Number of letters: " + to_string(parameters.numberOfLetters) + " (" + (parameters.numberOfLettersIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Number of nonterminals of the Universal Player: " + to_string(parameters.numberOfNonterminalsUniversal) + " (" + (parameters.numberOfNonterminalsUniversalIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Number of nonterminals of the Existential Player: " + to_string(parameters.numberOfNonterminalsExistential) + " (" + (parameters.numberOfNonterminalsExistentialIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Density of the automaton: " + to_string(parameters.automatonDensity) + " (" + (parameters.automatonDensityIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Final rate of the automaton: " + to_string(parameters.automatonRateOfFinals) + " (" + (parameters.automatonRateOfFinalsIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Density of the grammar: " + to_string(parameters.grammarDensity) + " (" + (parameters.grammarDensityIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Final rate of the grammar: " + to_string(parameters.grammarRateOfFinals) + " (" + (parameters.grammarRateOfFinalsIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Left rate of the grammar: " + to_string(parameters.grammarRateOfLeft) + " (" + (parameters.grammarRateOfLeftIsSet ? "provided by user" : "default value") + ")", 1);
-    logger.msg("Right rate of the grammar: " + to_string(parameters.grammarRateOfRight) + " (" + (parameters.grammarRateOfRightIsSet ? "provided by user" : "default value") + ")", 1);
-
 }
 
 

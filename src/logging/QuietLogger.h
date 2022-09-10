@@ -25,6 +25,8 @@ using namespace std;
 
 /**
  * a logger that only logs LogLevel ERROR
+ *
+ * messages of that loglevel will be printed with the specified indentation, but they will not be split into lines
  */
 class QuietLogger : public Logger
 {
@@ -33,6 +35,11 @@ private:
     static const constexpr unsigned int INDENTATION_CONSTANT = 4;
 
 public:
+
+    bool accepts (LogLevel logLevel) const override
+    {
+        return logLevel == ERROR;
+    }
 
     void log (LogLevel logLevel, string message, unsigned int indentationLevel = 0) const override
     {

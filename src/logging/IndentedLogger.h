@@ -20,12 +20,13 @@
 
 #include "Logger.h"
 
+/**
+ * a logger that delegates to another logger, but adds indentation
+ */
 class IndentedLogger : public Logger
 {
-
-
 public:
-    explicit IndentedLogger (const Logger& logger, const unsigned int additionalIndentation)
+    IndentedLogger (const Logger& logger, const unsigned int additionalIndentation)
             : logger(logger),
               additionalIndentation(additionalIndentation)
     {}
@@ -35,6 +36,11 @@ private:
     const unsigned int additionalIndentation;
 
 public:
+    bool accepts (LogLevel logLevel) const override
+    {
+        return logger.accepts(logLevel);
+    }
+
     void log (LogLevel logLevel, string message, unsigned int indentationLevel) const override
     {
         logger.log(logLevel, message, indentationLevel + additionalIndentation);

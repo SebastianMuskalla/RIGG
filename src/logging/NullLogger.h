@@ -27,6 +27,11 @@ using namespace std;
  */
 class NullLogger : public Logger
 {
+    bool accepts (LogLevel) const override
+    {
+        return false;
+    }
+
     void log (LogLevel, string, unsigned int) const override
     {
     }
