@@ -55,6 +55,7 @@ While I recently took the time to refactor and rewrite large parts of the code i
 * [Evaluation.md](Evaluation.md) - a markdown version of the experimental evaluation of the tool that was created using the *benchmark* branch
 * [LICENSE](LICENSE) - the GPLv3 license
 * [README.md](README.md) - this README file
+* [FutureWork.md](FutureWork.md) - a ToDo list
 
 ### Build instructions
 
